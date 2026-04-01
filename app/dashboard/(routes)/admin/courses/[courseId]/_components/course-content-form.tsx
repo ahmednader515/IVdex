@@ -207,7 +207,7 @@ export const CourseContentForm = ({
                             onClick={onCreate}
                             disabled={!title || isUpdating}
                             type="button"
-                            className="min-h-11 w-full bg-brand hover:bg-brand/90 sm:w-auto sm:min-w-[120px]"
+                            className="min-h-11 w-full bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-w-[120px]"
                         >
                             إنشاء الدرس
                         </Button>
@@ -255,7 +255,7 @@ export const CourseContentForm = ({
                     </Button>
                     <Button
                         type="button"
-                        className="order-2 min-h-12 w-full justify-center gap-2 bg-brand text-base font-medium hover:bg-brand/90 sm:order-2 sm:h-10 sm:min-h-10 sm:w-auto sm:text-sm"
+                        className="order-2 min-h-12 w-full justify-center gap-2 bg-brand text-base font-medium text-white hover:bg-brand/90 sm:order-2 sm:h-10 sm:min-h-10 sm:w-auto sm:text-sm"
                         onClick={() => setIsCreating((current) => !current)}
                     >
                         <PlusCircle className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />

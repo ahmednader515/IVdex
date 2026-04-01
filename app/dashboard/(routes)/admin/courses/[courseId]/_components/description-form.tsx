@@ -94,7 +94,7 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
           <Button
             disabled={!isValid || isSubmitting}
             type="submit"
-            className="mt-2 w-full min-h-11 bg-brand hover:bg-brand/90 sm:w-auto sm:min-h-10"
+            className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
           >
             {isSubmitting ? "جاري الحفظ..." : "حفظ الوصف"}
           </Button>

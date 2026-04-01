@@ -137,7 +137,7 @@ export const VideoForm = ({
                         type="button"
                         onClick={onSubmitYouTube}
                         disabled={isSubmitting || !youtubeUrl.trim()}
-                        className="w-full min-h-11 bg-brand hover:bg-brand/90 sm:w-auto"
+                        className="w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto"
                     >
                         <Link className="h-4 w-4 ml-2" />
                         {initialData.videoType === "YOUTUBE" && initialData.youtubeVideoId

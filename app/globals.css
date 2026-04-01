@@ -73,7 +73,7 @@ html[dir="rtl"] select {
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 144.695);
   --primary: oklch(0.208 0.042 145.755);
-  --primary-foreground: oklch(0.984 0.003 127.858);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.968 0.007 127.896);
   --secondary-foreground: oklch(0.208 0.042 145.755);
   --muted: oklch(0.968 0.007 127.896);
@@ -107,8 +107,9 @@ html[dir="rtl"] select {
   --card-foreground: oklch(0.985 0.002 286.375);
   --popover: oklch(0.18 0.005 285.823);
   --popover-foreground: oklch(0.985 0.002 286.375);
-  --primary: oklch(0.93 0.004 286.32);
-  --primary-foreground: oklch(0.18 0.005 285.823);
+  /* Dark primary ≈ brand #0d3e73 — pairs with white button labels */
+  --primary: oklch(0.32 0.09 264);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.25 0.006 286.033);
   --secondary-foreground: oklch(0.985 0.002 286.375);
   --muted: oklch(0.25 0.006 286.033);

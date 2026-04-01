@@ -216,7 +216,7 @@ export const ChapterForm = ({
                         <Button
                             type="submit"
                             disabled={!isValidTitle || isSubmittingTitle}
-                            className="mt-2 w-full min-h-11 bg-brand hover:bg-brand/90 sm:w-auto sm:min-h-10"
+                            className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
                             {isSubmittingTitle ? "جاري الحفظ..." : "حفظ العنوان"}
                         </Button>
@@ -253,7 +253,7 @@ export const ChapterForm = ({
                         <Button
                             type="submit"
                             disabled={!isValidDescription || isSubmittingDescription}
-                            className="mt-2 w-full min-h-11 bg-brand hover:bg-brand/90 sm:w-auto sm:min-h-10"
+                            className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
                             {isSubmittingDescription ? "جاري الحفظ..." : "حفظ الوصف"}
                         </Button>
@@ -292,7 +292,7 @@ export const ChapterForm = ({
                         <Button
                             type="submit"
                             disabled={!isValidAccess || isSubmittingAccess}
-                            className="w-full min-h-11 bg-brand hover:bg-brand/90 sm:w-auto sm:min-h-10"
+                            className="w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
                             {isSubmittingAccess ? "جاري الحفظ..." : "حفظ إعدادات المعاينة"}
                         </Button>
@@ -343,7 +343,7 @@ export const ChapterForm = ({
                     variant={initialData.isPublished ? "outline" : "default"}
                     className={cn(
                         "w-full min-h-12 text-base font-semibold sm:w-auto sm:min-h-11",
-                        !initialData.isPublished && "bg-brand hover:bg-brand/90"
+                        !initialData.isPublished && "bg-brand text-white hover:bg-brand/90"
                     )}
                 >
                     {initialData.isPublished ? (

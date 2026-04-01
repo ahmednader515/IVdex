@@ -975,7 +975,7 @@ export function EditQuizForm({
                     variant={isPublished ? "outline" : "default"}
                     className={cn(
                         "w-full min-h-12 text-base font-semibold sm:w-auto sm:min-h-11",
-                        !isPublished && "bg-brand hover:bg-brand/90"
+                        !isPublished && "bg-brand text-white hover:bg-brand/90"
                     )}
                 >
                     {isPublished ? (
@@ -1008,7 +1008,7 @@ export function EditQuizForm({
                     </Button>
                 )}
                 <Button
-                    className="min-h-11 w-full bg-brand hover:bg-brand/90 sm:w-auto"
+                    className="min-h-11 w-full bg-brand text-white hover:bg-brand/90 sm:w-auto"
                     onClick={handleUpdateQuiz}
                     disabled={isUpdatingQuiz || questions.length === 0}
                 >

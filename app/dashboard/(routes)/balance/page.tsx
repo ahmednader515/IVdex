@@ -179,7 +179,7 @@ export default function BalancePage() {
               <Button 
                 onClick={handleAddBalance}
                 disabled={isLoading}
-                className="bg-brand hover:bg-brand/90"
+                className="bg-brand text-white hover:bg-brand/90"
               >
                 {isLoading ? "جاري الإضافة..." : "إضافة الرصيد"}
               </Button>
@@ -208,7 +208,7 @@ export default function BalancePage() {
                   type="button"
                   variant={selectedPaymentMethod === "VODAFONE_CASH" ? "default" : "outline"}
                   onClick={() => setSelectedPaymentMethod("VODAFONE_CASH")}
-                  className={selectedPaymentMethod === "VODAFONE_CASH" ? "bg-brand hover:bg-brand/90" : ""}
+                  className={selectedPaymentMethod === "VODAFONE_CASH" ? "bg-brand text-white hover:bg-brand/90" : ""}
                 >
                   فودافون كاش
                 </Button>
@@ -216,7 +216,7 @@ export default function BalancePage() {
                   type="button"
                   variant={selectedPaymentMethod === "INSTAPAY" ? "default" : "outline"}
                   onClick={() => setSelectedPaymentMethod("INSTAPAY")}
-                  className={selectedPaymentMethod === "INSTAPAY" ? "bg-brand hover:bg-brand/90" : ""}
+                  className={selectedPaymentMethod === "INSTAPAY" ? "bg-brand text-white hover:bg-brand/90" : ""}
                 >
                   إنستا باي
                 </Button>

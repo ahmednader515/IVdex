@@ -277,7 +277,7 @@ const AdminCodesPage = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">إدارة الأكواد</h1>
-        <Button onClick={() => setIsDialogOpen(true)} className="bg-brand hover:bg-brand/90">
+        <Button onClick={() => setIsDialogOpen(true)} className="bg-brand text-white hover:bg-brand/90">
           <Plus className="h-4 w-4 ml-2" />
           إنشاء أكواد جديدة
         </Button>
@@ -526,7 +526,7 @@ const AdminCodesPage = () => {
             <Button
               onClick={handleGenerateCodes}
               disabled={isGenerating || !selectedCourse || !codeCount}
-              className="bg-brand hover:bg-brand/90"
+              className="bg-brand text-white hover:bg-brand/90"
             >
               {isGenerating ? "جاري الإنشاء..." : "إنشاء"}
             </Button>

@@ -271,6 +271,10 @@ export default function HomePage() {
                   <div className="w-full aspect-video bg-muted" />
                   <div className="p-4 space-y-3">
                     <div className="h-4 bg-muted rounded w-3/4" />
+                    <div className="space-y-1.5">
+                      <div className="h-3 bg-muted rounded w-full" />
+                      <div className="h-3 bg-muted rounded w-5/6" />
+                    </div>
                     <div className="h-4 bg-muted rounded w-1/2" />
                   </div>
                 </div>
@@ -320,6 +324,11 @@ export default function HomePage() {
                       <h3 className="text-lg font-semibold mb-2 line-clamp-2">
                         {course.title}
                       </h3>
+                      {course.description?.trim() ? (
+                        <p className="mb-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                          {course.description.trim()}
+                        </p>
+                      ) : null}
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                         <BookOpen className="h-4 w-4" />
                         <span>

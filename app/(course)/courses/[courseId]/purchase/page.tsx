@@ -304,7 +304,7 @@ export default function PurchasePage({
                   <p className="text-amber-700 mb-4">
                     تحتاج إلى {(course.price || 0) - userBalance} جنيه إضافية لشراء هذه الكورس
                   </p>
-                  <Button asChild className="bg-brand hover:bg-brand/90">
+                  <Button asChild className="bg-brand text-white hover:bg-brand/90">
                     <Link href="/dashboard/balance">إضافة رصيد</Link>
                   </Button>
                 </CardContent>

@@ -1,0 +1,10 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(req: NextRequest) {
+  return NextResponse.redirect(new URL("/api/admin/codes", req.url), 307);
+}
+
+export async function POST(req: NextRequest) {
+  return NextResponse.redirect(new URL("/api/admin/codes", req.url), 307);
+}
+

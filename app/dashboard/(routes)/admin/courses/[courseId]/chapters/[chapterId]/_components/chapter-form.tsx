@@ -55,11 +55,11 @@ interface ChapterFormProps {
 }
 
 const titleSchema = z.object({
-    title: z.string().min(1, { message: "عنوان الدرس مطلوب" }),
+    title: z.string().min(1, { message: "Lesson title is required" }),
 });
 
 const descriptionSchema = z.object({
-    description: z.string().min(1, { message: "الوصف مطلوب" }),
+    description: z.string().min(1, { message: "Description is required" }),
 });
 
 const accessSchema = z.object({
@@ -121,12 +121,12 @@ export const ChapterForm = ({
                 body: JSON.stringify(values),
             });
             if (!response.ok) throw new Error("Failed to update chapter title");
-            toast.success("تم حفظ عنوان الدرس");
+            toast.success("Lesson title saved");
             onSaved?.();
             router.refresh();
         } catch (error) {
             console.error("[CHAPTER_TITLE]", error);
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         }
     };
 
@@ -138,12 +138,12 @@ export const ChapterForm = ({
                 body: JSON.stringify(values),
             });
             if (!response.ok) throw new Error("Failed to update chapter description");
-            toast.success("تم حفظ وصف الدرس");
+            toast.success("Lesson description saved");
             onSaved?.();
             router.refresh();
         } catch (error) {
             console.error("[CHAPTER_DESCRIPTION]", error);
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         }
     };
 
@@ -155,12 +155,12 @@ export const ChapterForm = ({
                 body: JSON.stringify(values),
             });
             if (!res.ok) throw new Error("access");
-            toast.success("تم حفظ إعدادات المعاينة");
+            toast.success("Preview settings saved");
             onSaved?.();
             router.refresh();
         } catch (error) {
             console.error("[CHAPTER_ACCESS]", error);
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         }
     };
 
@@ -168,11 +168,11 @@ export const ChapterForm = ({
         try {
             setIsLoading(true);
             await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
-            toast.success(initialData.isPublished ? "تم إلغاء النشر" : "تم نشر الدرس");
+            toast.success(initialData.isPublished ? "Lesson unpublished" : "Lesson published");
             onSaved?.();
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
@@ -186,7 +186,7 @@ export const ChapterForm = ({
         <div className="space-y-5">
             <div className="flex items-center gap-x-2">
                 <IconBadge icon={LayoutDashboard} />
-                <h2 className="text-xl font-semibold tracking-tight">إعدادات الدرس</h2>
+                <h2 className="text-xl font-semibold tracking-tight">Lesson settings</h2>
             </div>
 
             <div className={cardClass}>
@@ -197,14 +197,14 @@ export const ChapterForm = ({
                             name="title"
                             render={({ field }) => (
                                 <FormItem className="space-y-2">
-                                    <FormLabel className="text-base font-semibold">عنوان الدرس</FormLabel>
+                                    <FormLabel className="text-base font-semibold">Lesson title</FormLabel>
                                     <FormDescription className="text-sm leading-relaxed">
-                                        يظهر للطلاب في قائمة الدروس.
+                                        Shown to students in the lesson list.
                                     </FormDescription>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmittingTitle}
-                                            placeholder="مثال: الدرس الأول — المقدمة"
+                                            placeholder="e.g. Lesson 1 — Introduction"
                                             className="min-h-12 text-base md:min-h-11"
                                             {...field}
                                         />
@@ -218,7 +218,7 @@ export const ChapterForm = ({
                             disabled={!isValidTitle || isSubmittingTitle}
                             className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
-                            {isSubmittingTitle ? "جاري الحفظ..." : "حفظ العنوان"}
+                            {isSubmittingTitle ? "Saving..." : "Save title"}
                         </Button>
                     </form>
                 </Form>
@@ -235,15 +235,15 @@ export const ChapterForm = ({
                             name="description"
                             render={({ field }) => (
                                 <FormItem className="space-y-2">
-                                    <FormLabel className="text-base font-semibold">وصف الدرس</FormLabel>
+                                    <FormLabel className="text-base font-semibold">Lesson description</FormLabel>
                                     <FormDescription className="text-sm leading-relaxed">
-                                        شرح مختصر لما يتعلمه الطالب في هذا الدرس.
+                                        A short overview of what students learn in this lesson.
                                     </FormDescription>
                                     <FormControl>
                                         <Editor
                                             onChange={field.onChange}
                                             value={field.value}
-                                            placeholder="اكتب وصف الدرس..."
+                                            placeholder="Write the lesson description..."
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -255,7 +255,7 @@ export const ChapterForm = ({
                             disabled={!isValidDescription || isSubmittingDescription}
                             className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
-                            {isSubmittingDescription ? "جاري الحفظ..." : "حفظ الوصف"}
+                            {isSubmittingDescription ? "Saving..." : "Save description"}
                         </Button>
                     </form>
                 </Form>
@@ -264,9 +264,9 @@ export const ChapterForm = ({
             <div className={cardClass}>
                 <Form {...accessForm}>
                     <form onSubmit={accessForm.handleSubmit(onSubmitAccess)} className="space-y-3">
-                        <FormLabel className="text-base font-semibold">معاينة مجانية</FormLabel>
+                        <FormLabel className="text-base font-semibold">Free preview</FormLabel>
                         <FormDescription className="text-sm leading-relaxed">
-                            يمكن جعل هذا الدرس متاحاً للمشاهدة دون شراء الكورس كاملاً.
+                            Allow this lesson to be viewed without purchasing the full course.
                         </FormDescription>
                         <FormField
                             control={accessForm.control}
@@ -281,9 +281,9 @@ export const ChapterForm = ({
                                         />
                                     </FormControl>
                                     <div className="space-y-1 leading-snug">
-                                        <span className="text-sm font-medium">درس مجاني للمعاينة</span>
+                                        <span className="text-sm font-medium">Free preview lesson</span>
                                         <p className="text-xs text-muted-foreground">
-                                            عند التفعيل يستطيع الزوار مشاهدة هذا الدرس قبل الشراء.
+                                            When enabled, visitors can watch this lesson before purchase.
                                         </p>
                                     </div>
                                 </FormItem>
@@ -294,7 +294,7 @@ export const ChapterForm = ({
                             disabled={!isValidAccess || isSubmittingAccess}
                             className="w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
                         >
-                            {isSubmittingAccess ? "جاري الحفظ..." : "حفظ إعدادات المعاينة"}
+                            {isSubmittingAccess ? "Saving..." : "Save preview settings"}
                         </Button>
                     </form>
                 </Form>
@@ -303,7 +303,7 @@ export const ChapterForm = ({
             <div className="space-y-3">
                 <div className="flex items-center gap-x-2">
                     <IconBadge icon={Files} />
-                    <h3 className="text-lg font-semibold tracking-tight">مستندات الدرس</h3>
+                    <h3 className="text-lg font-semibold tracking-tight">Lesson documents</h3>
                 </div>
                 <AttachmentsForm
                     initialData={{ attachments: initialData.attachments || [] }}
@@ -329,12 +329,12 @@ export const ChapterForm = ({
             <div className={cn(cardClass, "space-y-4")}>
                 <div>
                     <h3 className="text-base font-semibold">
-                        {initialData.isPublished ? "الدرس منشور" : "الدرس غير منشور"}
+                        {initialData.isPublished ? "Lesson is published" : "Lesson is not published"}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                         {initialData.isPublished
-                            ? "يمكن للطلاب مشاهدة هذا الدرس الآن. يمكنك إلغاء النشر لإخفائه مؤقتاً."
-                            : "لن يكون هذا الدرس مرئياً للطلاب حتى يتم نشره."}
+                            ? "Students can view this lesson now. You can unpublish to hide it temporarily."
+                            : "This lesson will not be visible to students until you publish it."}
                     </p>
                 </div>
                 <Button
@@ -348,13 +348,13 @@ export const ChapterForm = ({
                 >
                     {initialData.isPublished ? (
                         <>
-                            <EyeOff className="h-5 w-5 ml-2 shrink-0" />
-                            إلغاء النشر
+                            <EyeOff className="h-5 w-5 mr-2 shrink-0" />
+                            Unpublish
                         </>
                     ) : (
                         <>
-                            <Eye className="h-5 w-5 ml-2 shrink-0" />
-                            نشر الدرس
+                            <Eye className="h-5 w-5 mr-2 shrink-0" />
+                            Publish lesson
                         </>
                     )}
                 </Button>

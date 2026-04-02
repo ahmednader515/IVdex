@@ -57,7 +57,7 @@ export function InlineChapterEditor({
     try {
       const res = await fetch(`/api/courses/${courseId}/chapters/${chapterId}`);
       if (!res.ok) {
-        throw new Error("تعذر تحميل الدرس");
+        throw new Error("Could not load lesson");
       }
       const data = await res.json();
       setChapter({
@@ -78,7 +78,7 @@ export function InlineChapterEditor({
       });
       if (bumpFormKey) setReloadKey((k) => k + 1);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "حدث خطأ");
+      setError(e instanceof Error ? e.message : "Something went wrong");
       setChapter(null);
     } finally {
       setLoading(false);
@@ -103,19 +103,19 @@ export function InlineChapterEditor({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        dir="rtl"
+       
         className="flex w-full max-w-full flex-col gap-0 overflow-hidden border-l p-0 sm:max-w-xl md:max-w-2xl"
       >
-        <SheetHeader className="relative space-y-1 border-b px-4 py-4 pr-14 text-right sm:px-6 sm:pr-16">
+        <SheetHeader className="relative space-y-1 border-b px-4 py-4 pr-14 text-left sm:px-6 sm:pr-16">
           <SheetClose className="absolute left-3 top-3 rounded-md p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
             <X className="h-5 w-5" />
-            <span className="sr-only">إغلاق</span>
+            <span className="sr-only">Close</span>
           </SheetClose>
           <SheetTitle className="text-lg sm:text-xl">
-            {chapter?.title ? `تعديل: ${chapter.title}` : "إعدادات الدرس"}
+            {chapter?.title ? `Edit: ${chapter.title}` : "Lesson settings"}
           </SheetTitle>
           <SheetDescription className="text-sm leading-relaxed">
-            كل التفاصيل في هذه اللوحة — لا حاجة لصفحة أخرى. أغلق اللوحة للعودة لقائمة المحتوى.
+            All details are in this panel — no separate page needed. Close the panel to return to the content list.
           </SheetDescription>
         </SheetHeader>
 
@@ -123,7 +123,7 @@ export function InlineChapterEditor({
           {loading && (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
               <Loader2 className="h-10 w-10 animate-spin text-brand" />
-              <p className="text-sm">جاري تحميل الدرس...</p>
+              <p className="text-sm">Loading lesson…</p>
             </div>
           )}
           {error && !loading && (

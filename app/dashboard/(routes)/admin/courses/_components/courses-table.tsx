@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatPrice } from "@/lib/format";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { mobileColumnLabel } from "@/lib/table-column-meta";
 import type { Course } from "./columns";
@@ -81,7 +81,7 @@ function CourseActions({
             >
                 <Link href={`/dashboard/admin/courses/${courseId}`}>
                     <Pencil className="h-4 w-4 shrink-0" />
-                    تعديل الكورس
+                    Edit course
                 </Link>
             </Button>
             <AlertDialog>
@@ -95,20 +95,20 @@ function CourseActions({
                                 : "h-10 px-3 text-sm whitespace-nowrap"
                         )}
                     >
-                        حذف الكورس
+                        Delete course
                         <Trash2 className="h-4 w-4 shrink-0" aria-hidden />
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            لا يمكن التراجع عن هذا العمل. سيتم حذف الكورس وكل محتواها بشكل دائم.
+                            This cannot be undone. The course and all of its content will be permanently deleted.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => onDelete(courseId)}>حذف</AlertDialogAction>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => onDelete(courseId)}>Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -153,13 +153,13 @@ export function CoursesTable<TData extends Course, TValue>({
             });
 
             if (!response.ok) {
-                throw new Error("فشل حذف الكورس");
+                throw new Error("Failed to delete course");
             }
 
-            toast.success("تم حذف الكورس بنجاح");
+            toast.success("Course deleted");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         }
     };
 
@@ -171,7 +171,7 @@ export function CoursesTable<TData extends Course, TValue>({
                 <div className="relative w-full max-w-sm">
                     <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
                     <Input
-                        placeholder="ابحث عن الكورسات..."
+                        placeholder="Search courses…"
                         value={filterValue}
                         onChange={(e) => handleFilterChange(e.target.value)}
                         className="w-full min-h-11 ps-10"
@@ -201,30 +201,29 @@ export function CoursesTable<TData extends Course, TValue>({
                                     ) : (
                                         <div className="flex h-full min-h-[120px] flex-col items-center justify-center gap-2 text-muted-foreground">
                                             <ImageIcon className="h-10 w-10 opacity-50" aria-hidden />
-                                            <span className="text-xs">لا توجد صورة غلاف</span>
+                                            <span className="text-xs">No cover image</span>
                                         </div>
                                     )}
                                 </div>
                                 <div className="flex items-start justify-between gap-3">
                                     <h3 className="min-w-0 flex-1 text-base font-semibold leading-snug">
-                                        {c.title || "بدون عنوان"}
+                                        {c.title || "Untitled"}
                                     </h3>
                                     <Badge
                                         variant={c.isPublished ? "default" : "secondary"}
                                         className="shrink-0"
                                     >
-                                        {c.isPublished ? "منشور" : "غير منشور"}
+                                        {c.isPublished ? "Published" : "Draft"}
                                     </Badge>
                                 </div>
                                 <dl
                                     className="grid grid-cols-2 gap-3 text-sm"
-                                    dir="rtl"
                                 >
                                     <div className="min-w-0">
-                                        <dt className="block text-right text-xs text-muted-foreground">
-                                            السعر
+                                        <dt className="block text-left text-xs text-muted-foreground">
+                                            Price
                                         </dt>
-                                        <dd className="mt-0.5 block text-right font-medium">
+                                        <dd className="mt-0.5 block text-left font-medium">
                                             <span
                                                 dir="ltr"
                                                 className="inline-block tabular-nums"
@@ -234,12 +233,12 @@ export function CoursesTable<TData extends Course, TValue>({
                                         </dd>
                                     </div>
                                     <div className="min-w-0">
-                                        <dt className="block text-right text-xs text-muted-foreground">
-                                            تاريخ الإنشاء
+                                        <dt className="block text-left text-xs text-muted-foreground">
+                                            Created
                                         </dt>
-                                        <dd className="mt-0.5 block text-right font-medium">
+                                        <dd className="mt-0.5 block text-left font-medium">
                                             {created && !Number.isNaN(created.getTime())
-                                                ? format(created, "dd/MM/yyyy", { locale: ar })
+                                                ? format(created, "MM/dd/yyyy", { locale: enUS })
                                                 : "—"}
                                         </dd>
                                     </div>
@@ -255,7 +254,7 @@ export function CoursesTable<TData extends Course, TValue>({
                     })
                 ) : (
                     <div className="rounded-xl border border-dashed border-muted-foreground/30 py-12 text-center text-sm text-muted-foreground">
-                        لا يوجد نتائج.
+                        No results.
                     </div>
                 )}
             </div>
@@ -267,7 +266,7 @@ export function CoursesTable<TData extends Course, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="text-right">
+                                        <TableHead key={header.id} className="text-left">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -299,7 +298,7 @@ export function CoursesTable<TData extends Course, TValue>({
                                         </TableCell>
                                     ))}
                                     {!hideActions && (
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <CourseActions
                                                 courseId={row.original.id}
                                                 hideActions={hideActions}
@@ -316,7 +315,7 @@ export function CoursesTable<TData extends Course, TValue>({
                                     colSpan={columns.length + (hideActions ? 0 : 1)}
                                     className="h-24 text-center"
                                 >
-                                    لا يوجد نتائج.
+                                    No results.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -331,7 +330,7 @@ export function CoursesTable<TData extends Course, TValue>({
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    السابق
+                    Previous
                 </Button>
                 <Button
                     variant="outline"
@@ -340,7 +339,7 @@ export function CoursesTable<TData extends Course, TValue>({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    التالي
+                    Next
                 </Button>
             </div>
         </div>

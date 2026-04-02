@@ -42,7 +42,7 @@ export const VideoForm = ({
 
     const onSubmitYouTube = async () => {
         if (!youtubeUrl.trim()) {
-            toast.error("يرجى إدخال رابط YouTube");
+            toast.error("Please enter a YouTube URL");
             return;
         }
 
@@ -59,13 +59,13 @@ export const VideoForm = ({
                 throw new Error(error || "Failed to add YouTube video");
             }
 
-            toast.success("تم إضافة فيديو YouTube بنجاح");
+            toast.success("YouTube video added successfully");
             setYoutubeUrl("");
             onSaved?.();
             router.refresh();
         } catch (error) {
             console.error("[CHAPTER_YOUTUBE]", error);
-            toast.error(error instanceof Error ? error.message : "حدث خطأ ما");
+            toast.error(error instanceof Error ? error.message : "Something went wrong");
         } finally {
             setIsSubmitting(false);
         }
@@ -80,9 +80,9 @@ export const VideoForm = ({
             <div className="flex items-center gap-x-2">
                 <IconBadge icon={Video} />
                 <div>
-                    <h3 className="text-base font-semibold">فيديو الدرس</h3>
+                    <h3 className="text-base font-semibold">Lesson video</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                        اربط فيديو YouTube للدرس. يُفضّل نسبة عرض مناسبة للشاشات الصغيرة.
+                        Attach a YouTube video for this lesson. An aspect ratio that works on small screens is recommended.
                     </p>
                 </div>
             </div>
@@ -107,8 +107,8 @@ export const VideoForm = ({
                 ) : (
                     <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 p-6 text-center">
                         <Video className="h-12 w-12 text-muted-foreground/70" aria-hidden />
-                        <p className="text-sm font-medium text-muted-foreground">لا يوجد فيديو بعد</p>
-                        <p className="text-xs text-muted-foreground">أدخل رابط YouTube أدناه</p>
+                        <p className="text-sm font-medium text-muted-foreground">No video yet</p>
+                        <p className="text-xs text-muted-foreground">Enter a YouTube link below</p>
                     </div>
                 )}
             </div>
@@ -116,14 +116,14 @@ export const VideoForm = ({
             <div className="rounded-lg border border-border/60 bg-muted/30 p-3 sm:p-4">
                 <div className="mb-3 flex items-center gap-2">
                     <Youtube className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden />
-                    <p className="text-sm font-medium">رابط فيديو YouTube</p>
+                    <p className="text-sm font-medium">YouTube video URL</p>
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
-                    الصق رابط الفيديو من YouTube. يدعم youtube.com/watch و youtu.be و /embed/
+                    Paste the video URL from YouTube. Supports youtube.com/watch, youtu.be, and /embed/
                 </p>
                 <div className="space-y-2">
                     <Label htmlFor="youtube-url" className="text-base font-medium">
-                        الرابط
+                        URL
                     </Label>
                     <Input
                         id="youtube-url"
@@ -139,10 +139,10 @@ export const VideoForm = ({
                         disabled={isSubmitting || !youtubeUrl.trim()}
                         className="w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto"
                     >
-                        <Link className="h-4 w-4 ml-2" />
+                        <Link className="h-4 w-4 mr-2" />
                         {initialData.videoType === "YOUTUBE" && initialData.youtubeVideoId
-                            ? "تحديث الفيديو"
-                            : "إضافة الفيديو"}
+                            ? "Update video"
+                            : "Add video"}
                     </Button>
                 </div>
             </div>

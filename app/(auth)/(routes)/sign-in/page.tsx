@@ -48,7 +48,7 @@ export default function SignInPage() {
       const statusData = await statusResponse.json();
 
       if (!statusData.isValid) {
-        toast.error("رقم الهاتف أو كلمة المرور غير صحيحة");
+        toast.error("Invalid phone number or password");
         return;
       }
 
@@ -71,14 +71,14 @@ export default function SignInPage() {
           return;
         }
         if (result.error === "CredentialsSignin") {
-          toast.error("رقم الهاتف أو كلمة المرور غير صحيحة");
+          toast.error("Invalid phone number or password");
         } else {
-          toast.error("حدث خطأ أثناء تسجيل الدخول");
+          toast.error("Something went wrong while signing in");
         }
         return;
       }
 
-      toast.success("تم تسجيل الدخول بنجاح");
+      toast.success("Signed in successfully");
       
       // Get user data to determine role and redirect accordingly
       const response = await fetch("/api/auth/session", { cache: "no-store" });
@@ -94,7 +94,7 @@ export default function SignInPage() {
         router.replace(target);
       }
     } catch {
-      toast.error("حدث خطأ أثناء تسجيل الدخول");
+      toast.error("Something went wrong while signing in");
     } finally {
       setIsLoading(false);
     }
@@ -128,10 +128,10 @@ export default function SignInPage() {
             </div>
             <div className="space-y-4">
               <h3 className="text-2xl font-bold text-brand">
-                مرحباً بك مرة أخرى
+                Welcome back
               </h3>
               <p className="text-lg text-muted-foreground max-w-md">
-                سجل دخولك واستكشف الكورسات التعليمية المميزة
+                Sign in and explore your courses
               </p>
             </div>
           </div>
@@ -143,15 +143,15 @@ export default function SignInPage() {
         <div className="w-full max-w-md space-y-6 py-8 mt-8">
           <div className="space-y-2 text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              تسجيل الدخول
+              Log in
             </h2>
             <p className="text-sm text-muted-foreground">
-              أدخل رقم هاتفك وكلمة المرور للدخول إلى حسابك
+              Enter your phone number and password to access your account
             </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">رقم الهاتف</Label>
+              <Label htmlFor="phoneNumber">Phone number</Label>
               <Input
                 id="phoneNumber"
                 name="phoneNumber"
@@ -166,7 +166,7 @@ export default function SignInPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">كلمة المرور</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -198,23 +198,23 @@ export default function SignInPage() {
             <LoadingButton
               type="submit"
               loading={isLoading}
-              loadingText="جاري تسجيل الدخول..."
+              loadingText="Signing in..."
               className="w-full h-10 bg-brand hover:bg-brand/90 text-white"
             >
-              تسجيل الدخول
+              Log in
             </LoadingButton>
           </form>
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">ليس لديك حساب؟ </span>
+            <span className="text-muted-foreground">Don&apos;t have an account? </span>
             <Link 
               href="/sign-up" 
               className="text-primary hover:underline transition-colors"
             >
-              إنشاء حساب جديد
+              Create account
             </Link>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

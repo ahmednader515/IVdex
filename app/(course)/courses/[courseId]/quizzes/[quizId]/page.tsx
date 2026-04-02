@@ -92,16 +92,16 @@ export default function QuizPage({
             } else {
                 const errorText = await response.text();
                 if (errorText.includes("Maximum attempts reached")) {
-                    toast.error("لقد استنفذت جميع المحاولات المسموحة لهذا الاختبار");
+                    toast.error("You have used all allowed attempts for this quiz");
                     // Set flag to redirect to result page when no attempts remaining
                     setRedirectToResult(true);
                 } else {
-                    toast.error("حدث خطأ أثناء تحميل الاختبار");
+                    toast.error("Something went wrong while loading the quiz");
                 }
             }
         } catch (error) {
             console.error("Error fetching quiz:", error);
-            toast.error("حدث خطأ أثناء تحميل الاختبار");
+            toast.error("Something went wrong while loading the quiz");
         } finally {
             setLoading(false);
         }
@@ -145,15 +145,15 @@ export default function QuizPage({
 
             if (response.ok) {
                 const result = await response.json();
-                toast.success("تم إرسال الاختبار بنجاح!");
+                toast.success("Quiz submitted successfully!");
                 router.push(`/courses/${courseId}/quizzes/${quizId}/result`);
             } else {
                 const error = await response.text();
-                toast.error(error || "حدث خطأ أثناء إرسال الاختبار");
+                toast.error(error || "Something went wrong while submitting the quiz");
             }
         } catch (error) {
             console.error("Error submitting quiz:", error);
-            toast.error("حدث خطأ أثناء إرسال الاختبار");
+            toast.error("Something went wrong while submitting the quiz");
         } finally {
             setSubmitting(false);
         }
@@ -200,7 +200,7 @@ export default function QuizPage({
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">جاري تحميل النتيجة...</p>
+                    <p className="text-muted-foreground">Loading result...</p>
                 </div>
             </div>
         );
@@ -210,8 +210,8 @@ export default function QuizPage({
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">الاختبار غير موجود</h1>
-                    <Button onClick={() => router.back()}>العودة</Button>
+                    <h1 className="text-2xl font-bold mb-4">Quiz not found</h1>
+                    <Button onClick={() => router.back()}>Back</Button>
                 </div>
             </div>
         );
@@ -232,7 +232,7 @@ export default function QuizPage({
                             className="flex items-center gap-2"
                         >
                             <ArrowLeft className="h-4 w-4" />
-                            رجوع
+                            Back
                         </Button>
                         <div className="flex items-center gap-4">
                             {quiz.timer && (
@@ -242,11 +242,11 @@ export default function QuizPage({
                                 </div>
                             )}
                             <Badge variant="secondary">
-                                السؤال {currentQuestion + 1} من {quiz.questions.length}
+                                Question {currentQuestion + 1} of {quiz.questions.length}
                             </Badge>
                             {quiz.maxAttempts > 1 && (
                                 <Badge variant="outline">
-                                    المحاولة {quiz.currentAttempt || 1} من {quiz.maxAttempts}
+                                    Attempt {quiz.currentAttempt || 1} of {quiz.maxAttempts}
                                 </Badge>
                             )}
                         </div>
@@ -272,8 +272,8 @@ export default function QuizPage({
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                السؤال {currentQuestion + 1}
-                                <Badge variant="outline">{currentQuestionData.points} درجة</Badge>
+                                Question {currentQuestion + 1}
+                                <Badge variant="outline">{currentQuestionData.points} pts</Badge>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -311,18 +311,18 @@ export default function QuizPage({
                                 >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="true" id="true" />
-                                        <Label htmlFor="true">صح</Label>
+                                        <Label htmlFor="true">True</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="false" id="false" />
-                                        <Label htmlFor="false">خطأ</Label>
+                                        <Label htmlFor="false">False</Label>
                                     </div>
                                 </RadioGroup>
                             )}
 
                             {currentQuestionData.type === "SHORT_ANSWER" && (
                                 <Textarea
-                                    placeholder="اكتب إجابتك هنا..."
+                                    placeholder="Type your answer here..."
                                     value={answers.find(a => a.questionId === currentQuestionData.id)?.answer || ""}
                                     onChange={(e) => handleAnswerChange(currentQuestionData.id, e.target.value)}
                                     rows={4}
@@ -338,7 +338,7 @@ export default function QuizPage({
                             onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
                             disabled={currentQuestion === 0}
                         >
-                            السابق
+                            Previous
                         </Button>
 
                         <div className="flex items-center gap-2">
@@ -348,14 +348,14 @@ export default function QuizPage({
                                     disabled={submitting}
                                     className="bg-primary hover:bg-primary/90"
                                 >
-                                    {submitting ? "جاري الإرسال..." : "إنهاء الاختبار"}
+                                    {submitting ? "Submitting..." : "Finish quiz"}
                                 </Button>
                             ) : (
                                 <Button
                                     onClick={() => setCurrentQuestion(currentQuestion + 1)}
                                     className="bg-primary hover:bg-primary/90"
                                 >
-                                    التالي
+                                    Next
                                 </Button>
                             )}
                         </div>
@@ -366,12 +366,12 @@ export default function QuizPage({
                         <CardContent className="pt-6">
                             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
                                 <AlertCircle className="h-5 w-5" />
-                                <span className="font-medium">تنبيه</span>
+                                <span className="font-medium">Note</span>
                             </div>
                             <p className="text-amber-700 dark:text-amber-200 mt-2">
                                 {quiz.maxAttempts > 1 
-                                    ? `تأكد من إجابة جميع الأسئلة قبل إنهاء الاختبار. يمكنك إعادة الاختبار ${quiz.maxAttempts - (quiz.currentAttempt || 1)} مرات أخرى.`
-                                    : "تأكد من إجابة جميع الأسئلة قبل إنهاء الاختبار. لا يمكنك العودة للاختبار بعد الإرسال."
+                                    ? `Answer all questions before finishing. You can retake this quiz ${quiz.maxAttempts - (quiz.currentAttempt || 1)} more time(s).`
+                                    : "Answer all questions before finishing. You cannot return to the quiz after you submit."
                                 }
                             </p>
                         </CardContent>
@@ -385,7 +385,7 @@ export default function QuizPage({
                             disabled={!navigation?.previousContentId}
                             className="flex items-center gap-2"
                         >
-                            المحتوى السابق
+                            Previous item
                         </Button>
 
                         <Button
@@ -393,7 +393,7 @@ export default function QuizPage({
                             disabled={!navigation?.nextContentId}
                             className="flex items-center gap-2"
                         >
-                            المحتوى التالي
+                            Next item
                         </Button>
                     </div>
                 </div>

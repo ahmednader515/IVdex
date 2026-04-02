@@ -47,13 +47,13 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
 
     const handleBalanceUpdate = async () => {
         if (!selectedUser || !newBalance) {
-            toast.error("يرجى إدخال رصيد جديد");
+            toast.error("Please enter a new balance");
             return;
         }
 
         const balance = parseFloat(newBalance);
         if (isNaN(balance) || balance < 0) {
-            toast.error("يرجى إدخال رصيد صحيح");
+            toast.error("Please enter a valid balance");
             return;
         }
 
@@ -67,17 +67,17 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
             });
 
             if (response.ok) {
-                toast.success("تم تحديث الرصيد بنجاح");
+                toast.success("Balance updated successfully");
                 setNewBalance("");
                 setIsDialogOpen(false);
                 setSelectedUser(null);
                 fetchUsers(); // Refresh the list
             } else {
-                toast.error("حدث خطأ أثناء تحديث الرصيد");
+                toast.error("Something went wrong while updating balance");
             }
         } catch (error) {
             console.error("Error updating balance:", error);
-            toast.error("حدث خطأ أثناء تحديث الرصيد");
+            toast.error("Something went wrong while updating balance");
         }
     };
 
@@ -91,17 +91,17 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className={embedded ? "space-y-4" : "p-6 space-y-6"} dir="rtl">
+        <div className={embedded ? "space-y-4" : "p-6 space-y-6"}>
             {!embedded && (
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    إدارة الأرصدة
+                    Balance management
                 </h1>
             </div>
             )}
@@ -110,14 +110,14 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
             {studentUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>قائمة الطلاب</CardTitle>
-                        <div className="flex items-center gap-2 md:flex-row-reverse md:justify-end">
+                        <CardTitle>Students</CardTitle>
+                        <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
+                                placeholder="Search by name or phone..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm text-right"
+                                className="max-w-sm text-left"
                             />
                         </div>
                     </CardHeader>
@@ -125,36 +125,36 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الرصيد الحالي</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Current balance</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {studentUsers.map((user) => (
                                     <TableRow key={user.id}>
-                                        <TableCell label="الاسم" className="font-medium">
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge variant="secondary">
-                                                طالب
+                                                Student
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الرصيد الحالي">
+                                        <TableCell label="Balance">
                                             <Badge variant="outline" className="flex w-fit items-center gap-1">
                                                 <Wallet className="h-3 w-3" />
-                                                {user.balance} جنيه
+                                                {user.balance} EGP
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
-                                                className="md:flex-row-reverse"
+                                                className="gap-2"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setNewBalance(user.balance.toString());
@@ -162,7 +162,7 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
                                                 }}
                                             >
                                                 <Edit className="h-4 w-4" />
-                                                تعديل الرصيد
+                                                Edit balance
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -177,7 +177,7 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
                 <Card>
                     <CardContent className="p-6">
                         <div className="text-center text-muted-foreground">
-                            لا توجد طلاب متاحين
+                            No students found
                         </div>
                     </CardContent>
                 </Card>
@@ -197,23 +197,23 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            تعديل رصيد {selectedUser?.fullName}
+                            Edit balance — {selectedUser?.fullName}
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="newBalance">الرصيد الجديد (جنيه)</Label>
+                            <Label htmlFor="newBalance">New balance (EGP)</Label>
                             <Input
                                 id="newBalance"
                                 type="number"
                                 value={newBalance}
                                 onChange={(e) => setNewBalance(e.target.value)}
-                                placeholder="أدخل الرصيد الجديد"
+                                placeholder="Enter new balance"
                                 min="0"
                                 step="0.01"
                             />
                         </div>
-                        <div className="flex justify-end gap-2 md:flex-row-reverse md:justify-start">
+                        <div className="flex justify-end gap-2">
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -222,10 +222,10 @@ export function TeacherBalancesPanel({ embedded = false }: { embedded?: boolean 
                                     setSelectedUser(null);
                                 }}
                             >
-                                إلغاء
+                                Cancel
                             </Button>
                             <Button onClick={handleBalanceUpdate}>
-                                تحديث الرصيد
+                                Update balance
                             </Button>
                         </div>
                     </div>

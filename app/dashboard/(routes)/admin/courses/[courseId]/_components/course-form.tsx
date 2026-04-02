@@ -16,10 +16,10 @@ import { Pencil, Globe } from "lucide-react";
 
 const formSchema = z.object({
     title: z.string().min(1, {
-        message: "العنوان مطلوب",
+        message: "Title is required",
     }),
     description: z.string().min(1, {
-        message: "الوصف مطلوب",
+        message: "Description is required",
     }),
 });
 
@@ -50,11 +50,11 @@ export const CourseForm = ({
         try {
             setIsLoading(true);
             await axios.patch(`/api/courses/${courseId}`, values);
-            toast.success("تم تحديث الكورس");
+            toast.success("Course updated");
             toggleEdit();
             router.refresh();
         } catch {
-            toast.error("حدث خطأ ما");
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
@@ -64,10 +64,10 @@ export const CourseForm = ({
         try {
             setIsLoading(true);
             await axios.patch(`/api/courses/${courseId}/publish`);
-            toast.success(initialData.isPublished ? "تم إلغاء النشر" : "تم النشر");
+            toast.success(initialData.isPublished ? "Unpublished" : "Published");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ ما");
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
@@ -76,14 +76,14 @@ export const CourseForm = ({
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                إعدادات الكورس
+                Course settings
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
-                        <>إلغاء</>
+                        <>Cancel</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            تعديل الكورس
+                            Edit Course
                         </>
                     )}
                 </Button>
@@ -91,7 +91,7 @@ export const CourseForm = ({
             {!isEditing && (
                 <div className="mt-4 flex items-center justify-between">
                     <p className="text-sm text-slate-500">
-                        {initialData.isPublished ? "منشور" : "غير منشور"}
+                        {initialData.isPublished ? "Published" : "Draft"}
                     </p>
                     <Button
                         onClick={onPublish}
@@ -99,7 +99,7 @@ export const CourseForm = ({
                         variant={initialData.isPublished ? "destructive" : "default"}
                     >
                         <Globe className="h-4 w-4 mr-2" />
-                        {initialData.isPublished ? "إلغاء النشر" : "نشر"}
+                        {initialData.isPublished ? "Unpublish" : "Publish"}
                     </Button>
                 </div>
             )}
@@ -114,7 +114,7 @@ export const CourseForm = ({
                                     <FormControl>
                                         <Input
                                             disabled={isLoading}
-                                            placeholder="e.g. 'تطوير الويب '"
+                                            placeholder="e.g. Web development basics"
                                             {...field}
                                         />
                                     </FormControl>
@@ -127,11 +127,11 @@ export const CourseForm = ({
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>الوصف</FormLabel>
+                                    <FormLabel>Description</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             disabled={isLoading}
-                                            placeholder="e.g. 'هذه الكورس سوف تعلمك...'"
+                                            placeholder="e.g. In this course you will learn…"
                                             {...field}
                                         />
                                     </FormControl>
@@ -144,7 +144,7 @@ export const CourseForm = ({
                                 disabled={isLoading}
                                 type="submit"
                             >
-                                حفظ
+                                Save
                             </Button>
                         </div>
                     </form>

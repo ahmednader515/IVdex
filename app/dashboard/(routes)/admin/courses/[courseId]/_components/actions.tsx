@@ -39,15 +39,15 @@ export function PublishCourseBar({
 
       if (isPublished) {
         await axios.patch(`/api/courses/${courseId}/unpublish`);
-        toast.success("تم إلغاء النشر");
+        toast.success("Unpublished");
       } else {
         await axios.patch(`/api/courses/${courseId}/publish`);
-        toast.success("تم نشر الكورس");
+        toast.success("Course published");
       }
 
       router.refresh();
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -71,12 +71,12 @@ export function PublishCourseBar({
       {isPublished ? (
         <>
           <EyeOff className={cn("shrink-0", isHero ? "h-6 w-6 ml-2" : "h-4 w-4 mr-2")} />
-          إلغاء النشر
+          Unpublish
         </>
       ) : (
         <>
           <Eye className={cn("shrink-0", isHero ? "h-6 w-6 ml-2" : "h-4 w-4 mr-2")} />
-          نشر الكورس
+          Publish Course
         </>
       )}
     </Button>
@@ -96,13 +96,13 @@ export function PublishCourseBar({
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
                 <div className="text-sm">
-                  <p className="font-semibold mb-2">لا يمكن نشر الكورس حتى:</p>
+                  <p className="font-semibold mb-2">You cannot publish this course until:</p>
                   <ul className="space-y-1 text-xs">
-                    <li>• إضافة عنوان للكورس</li>
-                    <li>• إضافة وصف للكورس</li>
-                    <li>• إضافة صورة للكورس</li>
-                    <li>• تحديد سعر للكورس (يمكن أن يكون مجاني)</li>
-                    <li>• إضافة درس واحد على الأقل ونشره</li>
+                    <li>• A course title is set</li>
+                    <li>• A description is set</li>
+                    <li>• A cover image is set</li>
+                    <li>• A price is set (it can be free)</li>
+                    <li>• At least one lesson exists and is published</li>
                   </ul>
                 </div>
               </TooltipContent>
@@ -127,13 +127,13 @@ export function PublishCourseBar({
           </TooltipTrigger>
           <TooltipContent side="top" className="max-w-xs">
             <div className="text-sm">
-              <p className="font-semibold mb-2">لا يمكن نشر الكورس حتى:</p>
+              <p className="font-semibold mb-2">You cannot publish this course until:</p>
               <ul className="space-y-1 text-xs">
-                <li>• إضافة عنوان للكورس</li>
-                <li>• إضافة وصف للكورس</li>
-                <li>• إضافة صورة للكورس</li>
-                <li>• تحديد سعر للكورس (يمكن أن يكون مجاني)</li>
-                <li>• إضافة درس واحد على الأقل ونشره</li>
+                <li>• A course title is set</li>
+                <li>• A description is set</li>
+                <li>• A cover image is set</li>
+                <li>• A price is set (it can be free)</li>
+                <li>• At least one lesson exists and is published</li>
               </ul>
             </div>
           </TooltipContent>

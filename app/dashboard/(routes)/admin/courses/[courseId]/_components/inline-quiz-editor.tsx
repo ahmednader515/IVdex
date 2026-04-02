@@ -35,23 +35,23 @@ export function InlineQuizEditor({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        dir="rtl"
+       
         className="flex w-full max-w-full flex-col gap-0 overflow-hidden border-l p-0 sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
       >
-        <SheetHeader className="relative space-y-1 border-b px-4 py-4 pr-14 text-right sm:px-6 sm:pr-16">
+        <SheetHeader className="relative space-y-1 border-b px-4 py-4 pr-14 text-left sm:px-6 sm:pr-16">
           <SheetClose className="absolute left-3 top-3 rounded-md p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
             <X className="h-5 w-5" />
-            <span className="sr-only">إغلاق</span>
+            <span className="sr-only">Close</span>
           </SheetClose>
-          <SheetTitle className="text-lg sm:text-xl">تعديل الاختبار</SheetTitle>
+          <SheetTitle className="text-lg sm:text-xl">Edit quiz</SheetTitle>
           <SheetDescription className="text-sm leading-relaxed">
-            كل الأسئلة والإعدادات في هذه اللوحة — لا حاجة لصفحة أخرى. أغلق اللوحة للعودة لقائمة المحتوى.
+            All questions and settings are in this panel — no separate page needed. Close the panel to return to the content list.
           </SheetDescription>
         </SheetHeader>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-6">
           {!quizId && (
-            <p className="text-center text-sm text-muted-foreground">لم يُحدد اختبار.</p>
+            <p className="text-center text-sm text-muted-foreground">No quiz selected.</p>
           )}
           {quizId && open && (
             <div className="pb-8">

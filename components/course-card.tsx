@@ -45,9 +45,9 @@ export const CourseCard = ({
                         {title}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {chaptersLength} {chaptersLength === 1 ? "درس" : "دروس"}
+                        {chaptersLength} {chaptersLength === 1 ? "lesson" : "lessons"}
                         {quizzesLength > 0 && (
-                            <span>، {quizzesLength} {quizzesLength === 1 ? "اختبار" : "اختبارات"}</span>
+                            <span> · {quizzesLength} {quizzesLength === 1 ? "quiz" : "quizzes"}</span>
                         )}
                     </p>
                     {progress !== null ? (

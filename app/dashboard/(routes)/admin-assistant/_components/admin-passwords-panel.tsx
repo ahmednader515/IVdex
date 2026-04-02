@@ -47,7 +47,7 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
 
     const handlePasswordChange = async () => {
         if (!selectedUser || !newPassword) {
-            toast.error("يرجى إدخال كلمة مرور جديدة");
+            toast.error("Please enter a new password");
             return;
         }
 
@@ -61,16 +61,16 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
             });
 
             if (response.ok) {
-                toast.success("تم تغيير كلمة المرور بنجاح");
+                toast.success("Password updated successfully");
                 setNewPassword("");
                 setIsDialogOpen(false);
                 setSelectedUser(null);
             } else {
-                toast.error("حدث خطأ أثناء تغيير كلمة المرور");
+                toast.error("Something went wrong while changing the password");
             }
         } catch (error) {
             console.error("Error changing password:", error);
-            toast.error("حدث خطأ أثناء تغيير كلمة المرور");
+            toast.error("Something went wrong while changing the password");
         }
     };
 
@@ -79,13 +79,15 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
         user.phoneNumber.includes(searchTerm)
     );
 
-    const staffUsers = filteredUsers.filter(user => user.role === "ADMIN" || user.role === "ADMIN_ASSISTANT");
+    const staffUsers = filteredUsers.filter(
+        user => user.role === "ADMIN" || user.role === "ADMIN_ASSISTANT"
+    );
     const studentUsers = filteredUsers.filter(user => user.role === "STUDENT");
 
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
@@ -95,23 +97,23 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
             {!embedded && (
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    إدارة كلمات المرور
+                    Password management
                 </h1>
             </div>
             )}
 
-            {/* Staff Table (Admin + Admin Assistant) */}
+            {/* Staff Table (Admins and Teachers) */}
             {staffUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>الإدارة</CardTitle>
-                        <div className="flex items-center space-x-2">
+                        <CardTitle>Staff</CardTitle>
+                        <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
+                                placeholder="Search by name or phone..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
+                                className="max-w-sm text-left"
                             />
                         </div>
                     </CardHeader>
@@ -119,43 +121,46 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {staffUsers.map((user) => (
                                     <TableRow key={user.id}>
-                                        <TableCell label="الاسم" className="font-medium">
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge 
                                                 variant="secondary"
                                                 className={
-                                                    user.role === "ADMIN_ASSISTANT" ? "bg-orange-600 text-white hover:bg-orange-700" : 
-                                                    user.role === "ADMIN" ? "bg-blue-600 text-white hover:bg-blue-700" : 
+                                                    user.role === "ADMIN" ? "bg-orange-600 text-white hover:bg-orange-700" : 
                                                     ""
                                                 }
                                             >
-                                                {user.role === "ADMIN" ? "ادمن" : 
-                                                 user.role === "ADMIN_ASSISTANT" ? "مساعد ادمن" : user.role}
+                                                {user.role === "ADMIN_ASSISTANT"
+                                                    ? "Admin assistant"
+                                                    : user.role === "ADMIN"
+                                                      ? "Admin"
+                                                      : user.role}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
+                                                className="gap-2"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setIsDialogOpen(true);
                                                 }}
                                             >
                                                 <Edit className="h-4 w-4" />
-                                                تغيير كلمة المرور
+                                                Change password
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -170,14 +175,14 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
             {studentUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>قائمة الطلاب</CardTitle>
-                        <div className="flex items-center space-x-2">
+                        <CardTitle>Students</CardTitle>
+                        <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
+                                placeholder="Search by name or phone..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
+                                className="max-w-sm text-left"
                             />
                         </div>
                     </CardHeader>
@@ -185,35 +190,36 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {studentUsers.map((user) => (
                                     <TableRow key={user.id}>
-                                        <TableCell label="الاسم" className="font-medium">
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge variant="secondary">
-                                                طالب
+                                                Student
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
+                                                className="gap-2"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setIsDialogOpen(true);
                                                 }}
                                             >
                                                 <Edit className="h-4 w-4" />
-                                                تغيير كلمة المرور
+                                                Change password
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -223,6 +229,17 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                     </CardContent>
                 </Card>
             )}
+
+            {filteredUsers.length === 0 && !loading && (
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-center text-muted-foreground">
+                            No users found
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Single lightweight dialog rendered once */}
             <Dialog
                 open={isDialogOpen}
@@ -238,25 +255,26 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            تغيير كلمة مرور {selectedUser?.fullName}
+                            Change password — {selectedUser?.fullName}
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="newPassword">كلمة المرور الجديدة</Label>
+                            <Label htmlFor="newPassword">New password</Label>
                             <div className="relative">
                                 <Input
                                     id="newPassword"
                                     type={showPassword ? "text" : "password"}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="أدخل كلمة المرور الجديدة"
+                                    placeholder="Enter new password"
+                                    className="pr-10 text-left"
                                 />
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? (
@@ -267,7 +285,7 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                 </Button>
                             </div>
                         </div>
-                        <div className="flex justify-end space-x-2">
+                        <div className="flex justify-end gap-2">
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -276,10 +294,10 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                     setSelectedUser(null);
                                 }}
                             >
-                                إلغاء
+                                Cancel
                             </Button>
                             <Button onClick={handlePasswordChange}>
-                                تغيير كلمة المرور
+                                Update password
                             </Button>
                         </div>
                     </div>
@@ -287,4 +305,4 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
             </Dialog>
         </div>
     );
-} 
+}

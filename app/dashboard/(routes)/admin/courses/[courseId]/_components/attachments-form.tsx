@@ -31,10 +31,10 @@ export const AttachmentsForm = ({
         try {
             setIsDeleting(id);
             await axios.delete(`/api/courses/${courseId}/attachments/${id}`);
-            toast.success("تم حذف الملف");
+            toast.success("File removed");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsDeleting(null);
         }
@@ -46,7 +46,7 @@ export const AttachmentsForm = ({
                 <div className="flex items-center gap-x-2">
                     <File className="h-5 w-5" />
                     <h2 className="text-lg font-medium">
-                        الملفات والمرفقات
+                        Files and attachments
                     </h2>
                 </div>
                 <UploadButton
@@ -58,22 +58,22 @@ export const AttachmentsForm = ({
                                     url: res[0].url,
                                     name: res[0].name
                                 });
-                                toast.success("تم رفع الملف");
+                                toast.success("File uploaded");
                                 router.refresh();
                             } catch {
-                                toast.error("حدث خطأ");
+                                toast.error("Something went wrong");
                             }
                         }
                     }}
                     onUploadError={(error: Error) => {
-                        toast.error(`حدث خطأ: ${error.message}`);
+                        toast.error(`Something went wrong: ${error.message}`);
                     }}
                 />
             </div>
             {initialData.attachments.length === 0 && (
                 <div className="flex items-center justify-center h-60 bg-muted rounded-md mt-4">
                     <p className="text-sm text-muted-foreground">
-                        لا يوجد ملفات حاليا
+                        No files yet
                     </p>
                 </div>
             )}

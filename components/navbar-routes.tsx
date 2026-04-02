@@ -27,7 +27,7 @@ export const NavbarRoutes = () => {
     };
 
     return (
-        <div className="flex items-center gap-x-2 rtl:mr-auto ltr:ml-auto">
+        <div className="flex items-center gap-x-2 ml-auto">
             {/* Logout button for all user types */}
             {session?.user && (
                 <LoadingButton 
@@ -35,11 +35,11 @@ export const NavbarRoutes = () => {
                     variant="ghost" 
                     onClick={handleLogout}
                     loading={isLoggingOut}
-                    loadingText="جاري تسجيل الخروج..."
+                    loadingText="Signing out..."
                     className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200 ease-in-out"
                 >
-                    <LogOut className="h-4 w-4 rtl:ml-2 ltr:mr-2"/>
-                    تسجيل الخروج
+                    <LogOut className="h-4 w-4 mr-2"/>
+                    Log out
                 </LoadingButton>
             )}
             

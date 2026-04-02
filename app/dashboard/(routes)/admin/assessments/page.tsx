@@ -30,15 +30,15 @@ function AdminAssessmentsContent() {
   );
 
   return (
-    <div className="space-y-4 p-4 text-right md:space-y-6 md:p-6" dir="rtl">
-      <h1 className="text-2xl font-bold md:text-3xl">الاختبارات والتقدم</h1>
+    <div className="space-y-4 p-4 text-left md:space-y-6 md:p-6">
+      <h1 className="text-2xl font-bold md:text-3xl">Quizzes and progress</h1>
       <Tabs value={activeTab} onValueChange={setTab} className="w-full">
-        <TabsList className="ms-auto flex h-auto w-full max-w-lg flex-row-reverse gap-1">
+        <TabsList className="ml-auto flex h-auto w-full max-w-lg flex-row gap-1">
           <TabsTrigger value="quizzes" className="min-h-12 flex-1 px-4 text-sm sm:min-h-11 sm:text-sm">
-            الاختبارات
+            Quizzes
           </TabsTrigger>
           <TabsTrigger value="progress" className="min-h-12 flex-1 px-4 text-sm sm:min-h-11 sm:text-sm">
-            تقدم الطلاب
+            Student progress
           </TabsTrigger>
         </TabsList>
         <TabsContent value="quizzes" className="mt-4 focus-visible:outline-none">
@@ -57,8 +57,8 @@ export default function AdminAssessmentsPage() {
     <Suspense
       fallback={
         <div className="p-6">
-          <div className="text-right text-muted-foreground" dir="rtl">
-            جاري التحميل...
+          <div className="text-left text-muted-foreground">
+            Loading…
           </div>
         </div>
       }

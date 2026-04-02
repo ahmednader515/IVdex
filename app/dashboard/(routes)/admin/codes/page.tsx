@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Search, Plus, Copy, Check, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,7 +69,7 @@ const AdminCodesPage = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState("");
   const [confirmDescription, setConfirmDescription] = useState("");
-  const [confirmActionLabel, setConfirmActionLabel] = useState("تأكيد");
+  const [confirmActionLabel, setConfirmActionLabel] = useState("Confirm");
   const [confirmPending, setConfirmPending] = useState(false);
   const [onConfirm, setOnConfirm] = useState<null | (() => Promise<void>)>(null);
 
@@ -85,11 +85,11 @@ const AdminCodesPage = () => {
         const data = await response.json();
         setCodes(data);
       } else {
-        toast.error("حدث خطأ في تحميل الأكواد");
+        toast.error("Something went wrong while loading codes");
       }
     } catch (error) {
       console.error("Error fetching codes:", error);
-      toast.error("حدث خطأ في تحميل الأكواد");
+      toast.error("Something went wrong while loading codes");
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ const AdminCodesPage = () => {
 
   const handleGenerateCodes = async () => {
     if (!selectedCourse || !codeCount || parseInt(codeCount) < 1 || parseInt(codeCount) > 100) {
-      toast.error("يرجى اختيار الكورس وعدد الأكواد (1-100)");
+      toast.error("Please select a course and enter a code count between 1 and 100");
       return;
     }
 
@@ -130,18 +130,18 @@ const AdminCodesPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success(`تم إنشاء ${data.count} كود بنجاح`);
+        toast.success(`Successfully created ${data.count} code(s)`);
         setIsDialogOpen(false);
         setSelectedCourse("");
         setCodeCount("1");
         fetchCodes(); // Refresh the list
       } else {
         const error = await response.text();
-        toast.error(error || "حدث خطأ أثناء إنشاء الأكواد");
+        toast.error(error || "Something went wrong while creating codes");
       }
     } catch (error) {
       console.error("Error generating codes:", error);
-      toast.error("حدث خطأ أثناء إنشاء الأكواد");
+      toast.error("Something went wrong while creating codes");
     } finally {
       setIsGenerating(false);
     }
@@ -151,28 +151,28 @@ const AdminCodesPage = () => {
     try {
       await navigator.clipboard.writeText(code);
       setCopiedCode(code);
-      toast.success("تم نسخ الكود");
+      toast.success("Code copied");
       setTimeout(() => setCopiedCode(null), 2000);
     } catch (error) {
-      toast.error("فشل نسخ الكود");
+      toast.error("Failed to copy code");
     }
   };
 
   const handleCopyCourseCodes = async () => {
     if (courseFilter === "all") {
-      toast.error("اختر كورس أولاً");
+      toast.error("Select a course first");
       return;
     }
     const courseCodes = filteredCodes.filter((c) => c.courseId === courseFilter).map((c) => c.code);
     if (courseCodes.length === 0) {
-      toast.error("لا توجد أكواد لهذا الكورس");
+      toast.error("No codes for this course");
       return;
     }
     try {
       await navigator.clipboard.writeText(courseCodes.join("\n"));
-      toast.success(`تم نسخ ${courseCodes.length} كود`);
+      toast.success(`Copied ${courseCodes.length} code(s)`);
     } catch {
-      toast.error("فشل نسخ الأكواد");
+      toast.error("Failed to copy codes");
     }
   };
 
@@ -184,16 +184,16 @@ const AdminCodesPage = () => {
   }) => {
     setConfirmTitle(opts.title);
     setConfirmDescription(opts.description ?? "");
-    setConfirmActionLabel(opts.actionLabel ?? "تأكيد");
+    setConfirmActionLabel(opts.actionLabel ?? "Confirm");
     setOnConfirm(() => opts.action);
     setConfirmOpen(true);
   };
 
   const handleDeleteCode = async (codeId: string) => {
     openConfirm({
-      title: "حذف الكود",
-      description: "هل أنت متأكد من حذف هذا الكود؟ لا يمكن التراجع عن هذا الإجراء.",
-      actionLabel: "حذف",
+      title: "Delete code",
+      description: "Are you sure you want to delete this code? This cannot be undone.",
+      actionLabel: "Delete",
       action: async () => {
         setDeletingId(codeId);
         try {
@@ -203,11 +203,11 @@ const AdminCodesPage = () => {
             body: JSON.stringify({ codeId }),
           });
           if (res.ok) {
-            toast.success("تم حذف الكود");
+            toast.success("Code deleted");
             fetchCodes();
           } else {
             const msg = await res.text();
-            toast.error(msg || "حدث خطأ أثناء الحذف");
+            toast.error(msg || "Something went wrong while deleting");
           }
         } finally {
           setDeletingId(null);
@@ -218,18 +218,18 @@ const AdminCodesPage = () => {
 
   const handleDeleteCourseCodes = async () => {
     if (courseFilter === "all") {
-      toast.error("اختر كورس أولاً");
+      toast.error("Select a course first");
       return;
     }
     const countForCourse = filteredCodes.filter((c) => c.courseId === courseFilter).length;
     if (countForCourse === 0) {
-      toast.error("لا توجد أكواد لهذا الكورس");
+      toast.error("No codes for this course");
       return;
     }
     openConfirm({
-      title: "حذف أكواد الكورس",
-      description: `سيتم حذف ${countForCourse} كود لهذا الكورس. لا يمكن التراجع عن هذا الإجراء.`,
-      actionLabel: "حذف الكل",
+      title: "Delete course codes",
+      description: `This will delete ${countForCourse} code(s) for this course. This cannot be undone.`,
+      actionLabel: "Delete all",
       action: async () => {
         setBulkDeleting(true);
         try {
@@ -240,11 +240,11 @@ const AdminCodesPage = () => {
           });
           if (res.ok) {
             const data = await res.json().catch(() => ({} as any));
-            toast.success(`تم حذف ${data.deleted ?? countForCourse} كود`);
+            toast.success(`Deleted ${data.deleted ?? countForCourse} code(s)`);
             fetchCodes();
           } else {
             const msg = await res.text();
-            toast.error(msg || "حدث خطأ أثناء الحذف");
+            toast.error(msg || "Something went wrong while deleting");
           }
         } finally {
           setBulkDeleting(false);
@@ -268,7 +268,7 @@ const AdminCodesPage = () => {
   if (loading) {
     return (
       <div className="p-6">
-        <div className="text-center">جاري التحميل...</div>
+        <div className="text-center">Loading...</div>
       </div>
     );
   }
@@ -276,10 +276,10 @@ const AdminCodesPage = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">إدارة الأكواد</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Code management</h1>
         <Button onClick={() => setIsDialogOpen(true)} className="bg-brand text-white hover:bg-brand/90">
-          <Plus className="h-4 w-4 ml-2" />
-          إنشاء أكواد جديدة
+          <Plus className="h-4 w-4 mr-2" />
+          Create new codes
         </Button>
       </div>
 
@@ -290,20 +290,20 @@ const AdminCodesPage = () => {
             <div className="flex items-center space-x-2 flex-1">
               <Search className="h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="البحث بالكود أو اسم الكورس أو المنشئ..."
+                placeholder="Search by code, course name, or creator..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="max-w-sm"
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Label htmlFor="course-filter" className="whitespace-nowrap">تصفية حسب الكورس:</Label>
+              <Label htmlFor="course-filter" className="whitespace-nowrap">Filter by course:</Label>
               <Select value={courseFilter} onValueChange={setCourseFilter}>
                 <SelectTrigger id="course-filter" className="w-[250px]">
-                  <SelectValue placeholder="جميع الكورسات" />
+                  <SelectValue placeholder="All courses" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">جميع الكورسات</SelectItem>
+                  <SelectItem value="all">All courses</SelectItem>
                   {courses.map((course) => (
                     <SelectItem key={course.id} value={course.id}>
                       {course.title}
@@ -322,7 +322,7 @@ const AdminCodesPage = () => {
                 className="gap-2"
               >
                 <Copy className="h-4 w-4" />
-                نسخ أكواد الكورس
+                Copy course codes
               </Button>
               <Button
                 type="button"
@@ -333,7 +333,7 @@ const AdminCodesPage = () => {
                 className="gap-2"
               >
                 <Trash2 className="h-4 w-4" />
-                {bulkDeleting ? "جاري الحذف..." : "حذف أكواد الكورس"}
+                {bulkDeleting ? "Deleting..." : "Delete course codes"}
               </Button>
             </div>
           </div>
@@ -344,7 +344,7 @@ const AdminCodesPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">إجمالي الأكواد</CardTitle>
+            <CardTitle className="text-sm font-medium">Total codes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filteredCodes.length}</div>
@@ -352,7 +352,7 @@ const AdminCodesPage = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">أكواد غير مستخدمة</CardTitle>
+            <CardTitle className="text-sm font-medium">Unused codes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{unusedCodes.length}</div>
@@ -360,7 +360,7 @@ const AdminCodesPage = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">أكواد مستخدمة</CardTitle>
+            <CardTitle className="text-sm font-medium">Used codes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-600">{usedCodes.length}</div>
@@ -371,31 +371,31 @@ const AdminCodesPage = () => {
       {/* Codes Table */}
       <Card>
         <CardHeader>
-          <CardTitle>قائمة الأكواد</CardTitle>
+          <CardTitle>Codes</CardTitle>
         </CardHeader>
         <CardContent>
           {filteredCodes.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              لا توجد أكواد
+              No codes found
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right">الكود</TableHead>
-                  <TableHead className="text-right">الكورس</TableHead>
-                  <TableHead className="text-right">المنشئ</TableHead>
-                  <TableHead className="text-right">الحالة</TableHead>
-                  <TableHead className="text-right">المستخدم</TableHead>
-                  <TableHead className="text-right">تاريخ الاستخدام</TableHead>
-                  <TableHead className="text-right">تاريخ الإنشاء</TableHead>
-                  <TableHead className="text-right">الإجراءات</TableHead>
+                  <TableHead className="text-left">Code</TableHead>
+                  <TableHead className="text-left">Course</TableHead>
+                  <TableHead className="text-left">Creator</TableHead>
+                  <TableHead className="text-left">Status</TableHead>
+                  <TableHead className="text-left">User</TableHead>
+                  <TableHead className="text-left">Used at</TableHead>
+                  <TableHead className="text-left">Created</TableHead>
+                  <TableHead className="text-left">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredCodes.map((code) => (
                   <TableRow key={code.id}>
-                    <TableCell label="الكود">
+                    <TableCell label="Code">
                       <div className="flex flex-wrap items-center gap-2">
                         <code className="font-mono text-sm bg-muted px-2 py-1 rounded">
                           {code.code}
@@ -414,19 +414,19 @@ const AdminCodesPage = () => {
                         </Button>
                       </div>
                     </TableCell>
-                    <TableCell label="الكورس">{code.course.title}</TableCell>
-                    <TableCell label="المنشئ">
+                    <TableCell label="Course">{code.course.title}</TableCell>
+                    <TableCell label="Creator">
                       <div>
                         <div className="font-medium">{code.creator.fullName}</div>
                         <div className="text-sm text-muted-foreground">{code.creator.phoneNumber}</div>
                       </div>
                     </TableCell>
-                    <TableCell label="الحالة">
+                    <TableCell label="Status">
                       <Badge variant={code.isUsed ? "secondary" : "default"}>
-                        {code.isUsed ? "مستخدم" : "غير مستخدم"}
+                        {code.isUsed ? "Used" : "Unused"}
                       </Badge>
                     </TableCell>
-                    <TableCell label="المستخدم">
+                    <TableCell label="User">
                       {code.user ? (
                         <div>
                           <div className="font-medium">{code.user.fullName}</div>
@@ -436,15 +436,15 @@ const AdminCodesPage = () => {
                         <span className="text-muted-foreground">-</span>
                       )}
                     </TableCell>
-                    <TableCell label="تاريخ الاستخدام">
+                    <TableCell label="Used at">
                       {code.usedAt
-                        ? format(new Date(code.usedAt), "yyyy-MM-dd HH:mm", { locale: ar })
+                        ? format(new Date(code.usedAt), "yyyy-MM-dd HH:mm", { locale: enUS })
                         : "-"}
                     </TableCell>
-                    <TableCell label="تاريخ الإنشاء">
-                      {format(new Date(code.createdAt), "yyyy-MM-dd HH:mm", { locale: ar })}
+                    <TableCell label="Created">
+                      {format(new Date(code.createdAt), "yyyy-MM-dd HH:mm", { locale: enUS })}
                     </TableCell>
-                    <TableCell label="الإجراءات">
+                    <TableCell label="Actions">
                       <div className="flex flex-wrap items-center justify-end gap-2">
                         <Button
                           variant="outline"
@@ -455,12 +455,12 @@ const AdminCodesPage = () => {
                           {copiedCode === code.code ? (
                             <>
                               <Check className="h-4 w-4 text-green-600" />
-                              تم النسخ
+                              Copied
                             </>
                           ) : (
                             <>
                               <Copy className="h-4 w-4" />
-                              نسخ
+                              Copy
                             </>
                           )}
                         </Button>
@@ -472,7 +472,7 @@ const AdminCodesPage = () => {
                           className="gap-2"
                         >
                           <Trash2 className="h-4 w-4" />
-                          {deletingId === code.id ? "..." : "حذف"}
+                          {deletingId === code.id ? "..." : "Delete"}
                         </Button>
                       </div>
                     </TableCell>
@@ -488,14 +488,14 @@ const AdminCodesPage = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>إنشاء أكواد جديدة</DialogTitle>
+            <DialogTitle>Create new codes</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="course" className="mb-2 block">الكورس</Label>
+              <Label htmlFor="course" className="mb-2 block">Course</Label>
               <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                 <SelectTrigger>
-                  <SelectValue placeholder="اختر الكورس" />
+                  <SelectValue placeholder="Select a course" />
                 </SelectTrigger>
                 <SelectContent>
                   {courses.map((course) => (
@@ -507,7 +507,7 @@ const AdminCodesPage = () => {
               </Select>
             </div>
             <div>
-              <Label htmlFor="count" className="mb-2 block">عدد الأكواد</Label>
+              <Label htmlFor="count" className="mb-2 block">Number of codes</Label>
               <Input
                 id="count"
                 type="number"
@@ -521,31 +521,31 @@ const AdminCodesPage = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              إلغاء
+              Cancel
             </Button>
             <Button
               onClick={handleGenerateCodes}
               disabled={isGenerating || !selectedCourse || !codeCount}
               className="bg-brand text-white hover:bg-brand/90"
             >
-              {isGenerating ? "جاري الإنشاء..." : "إنشاء"}
+              {isGenerating ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent dir="rtl">
-          <AlertDialogHeader className="text-right">
-            <AlertDialogTitle className="text-right">{confirmTitle}</AlertDialogTitle>
+        <AlertDialogContent>
+          <AlertDialogHeader className="text-left">
+            <AlertDialogTitle className="text-left">{confirmTitle}</AlertDialogTitle>
             {confirmDescription ? (
-              <AlertDialogDescription className="text-right">
+              <AlertDialogDescription className="text-left">
                 {confirmDescription}
               </AlertDialogDescription>
             ) : null}
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0 sm:space-x-2">
-            <AlertDialogCancel disabled={confirmPending}>إلغاء</AlertDialogCancel>
+            <AlertDialogCancel disabled={confirmPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={confirmPending || !onConfirm}
@@ -561,7 +561,7 @@ const AdminCodesPage = () => {
                 }
               }}
             >
-              {confirmPending ? "جارٍ التنفيذ..." : confirmActionLabel}
+              {confirmPending ? "Working..." : confirmActionLabel}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -571,4 +571,3 @@ const AdminCodesPage = () => {
 };
 
 export default AdminCodesPage;
-

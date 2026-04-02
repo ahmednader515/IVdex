@@ -30,12 +30,12 @@ export const ChaptersForm = ({
         try {
             setIsUpdating(true);
             await axios.post(`/api/courses/${courseId}/chapters`, { title });
-            toast.success("تم انشاء الدرس");
+            toast.success("Lesson created");
             setTitle("");
             setIsCreating(false);
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -45,10 +45,10 @@ export const ChaptersForm = ({
         try {
             setIsUpdating(true);
             await axios.delete(`/api/courses/${courseId}/chapters/${id}`);
-            toast.success("تم حذف الدرس");
+            toast.success("Lesson deleted");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -60,10 +60,10 @@ export const ChaptersForm = ({
             await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
                 list: updateData
             });
-            toast.success("تم ترتيب الدروس");
+            toast.success("Lessons reordered");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -81,14 +81,14 @@ export const ChaptersForm = ({
                 </div>
             )}
             <div className="font-medium flex items-center justify-between">
-                الدروس
+                Lessons
                 <Button onClick={() => setIsCreating((current) => !current)} variant="ghost">
                     {isCreating ? (
-                        <>إلغاء</>
+                        <>Cancel</>
                     ) : (
                         <>
                             <PlusCircle className="h-4 w-4 mr-2" />
-                            إضافة درس
+                            Add lesson
                         </>
                     )}
                 </Button>
@@ -97,7 +97,7 @@ export const ChaptersForm = ({
                 <div className="mt-4 space-y-4">
                     <Input
                         disabled={isUpdating}
-                        placeholder="e.g. 'المقدمة في الكورس'"
+                        placeholder="e.g. Course introduction"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
@@ -106,7 +106,7 @@ export const ChaptersForm = ({
                         disabled={!title || isUpdating}
                         type="button"
                     >
-                        انشاء
+                        Create
                     </Button>
                 </div>
             )}
@@ -115,7 +115,7 @@ export const ChaptersForm = ({
                     "text-sm mt-2",
                     !initialData.chapters.length && "text-muted-foreground italic"
                 )}>
-                    {!initialData.chapters.length && "لا يوجد دروس"}
+                    {!initialData.chapters.length && "No lessons yet"}
                     <ChaptersList
                         onEdit={onEdit}
                         onDelete={onDelete}
@@ -126,7 +126,7 @@ export const ChaptersForm = ({
             )}
             {!isCreating && initialData.chapters.length > 0 && (
                 <p className="text-xs text-muted-foreground mt-4">
-                    قم بالسحب والإفلات لترتيب الدروس
+                    Drag and drop to reorder lessons
                 </p>
             )}
         </div>

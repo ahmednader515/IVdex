@@ -22,25 +22,25 @@ import { isDashboardSectionActive } from "@/lib/dashboard-nav";
 type NavItem = { href: string; label: string; icon: LucideIcon };
 
 const guestNav: NavItem[] = [
-  { href: "/dashboard", label: "الرئيسية", icon: Layout },
-  { href: "/dashboard/search", label: "الكورسات", icon: Compass },
-  { href: "/dashboard/balance", label: "الرصيد", icon: Wallet },
+  { href: "/dashboard", label: "Home", icon: Layout },
+  { href: "/dashboard/search", label: "Courses", icon: Compass },
+  { href: "/dashboard/balance", label: "Balance", icon: Wallet },
 ];
 
 const adminNav: NavItem[] = [
-  { href: "/dashboard/admin/courses", label: "كورساتي", icon: List },
-  { href: "/dashboard/admin/assessments", label: "اختبارات ودرجات", icon: FileText },
-  { href: "/dashboard/admin/management", label: "إدارة الطلاب", icon: Users },
-  { href: "/dashboard/admin/analytics", label: "إحصائيات", icon: BarChart },
-  { href: "/dashboard/admin/codes", label: "الأكواد", icon: Ticket },
+  { href: "/dashboard/admin/courses", label: "My courses", icon: List },
+  { href: "/dashboard/admin/assessments", label: "Quizzes & grades", icon: FileText },
+  { href: "/dashboard/admin/management", label: "Students", icon: Users },
+  { href: "/dashboard/admin/analytics", label: "Analytics", icon: BarChart },
+  { href: "/dashboard/admin/codes", label: "Codes", icon: Ticket },
 ];
 
 const adminAssistantNav: NavItem[] = [
-  { href: "/dashboard/admin-assistant/management", label: "ادارة الحسابات", icon: Users },
-  { href: "/dashboard/admin-assistant/assessments", label: "اختبارات وتقدم", icon: FileText },
-  { href: "/dashboard/admin-assistant/balances", label: "الأرصدة", icon: Wallet },
-  { href: "/dashboard/admin-assistant/create-account", label: "حساب طالب", icon: Shield },
-  { href: "/dashboard/admin-assistant/codes", label: "الأكواد", icon: Ticket },
+  { href: "/dashboard/admin-assistant/management", label: "Accounts", icon: Users },
+  { href: "/dashboard/admin-assistant/assessments", label: "Quizzes & progress", icon: FileText },
+  { href: "/dashboard/admin-assistant/balances", label: "Balances", icon: Wallet },
+  { href: "/dashboard/admin-assistant/create-account", label: "New student", icon: Shield },
+  { href: "/dashboard/admin-assistant/codes", label: "Codes", icon: Ticket },
 ];
 
 function navForRole(role: string | undefined): NavItem[] {
@@ -80,7 +80,7 @@ function MobileBottomNavContent() {
     <nav
       className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-card/95 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden"
       style={{ paddingBottom: "max(0.35rem, env(safe-area-inset-bottom))" }}
-      aria-label="التنقل السريع"
+      aria-label="Quick navigation"
     >
       <div
         className={cn("mx-auto grid max-w-lg gap-1 px-1 pt-1", gridColsClass(items.length))}

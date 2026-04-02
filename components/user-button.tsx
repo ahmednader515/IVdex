@@ -43,7 +43,7 @@ export const UserButton = () => {
           className="text-red-600 cursor-pointer"
         >
           <LogOut className="h-4 w-4 mr-2" />
-          تسجيل الخروج
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

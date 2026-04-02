@@ -38,11 +38,11 @@ export const Footer = () => {
               rel="noopener noreferrer"
               className="inline-block rounded-lg border-2 border-brand/20 bg-brand/10 px-4 py-2 transition-colors hover:bg-brand/20"
             >
-              <p className="font-semibold text-brand">خدمة العملاء (واتساب) : 01148492847</p>
+              <p className="font-semibold text-brand">Customer support (WhatsApp): 01148492847</p>
             </a>
           </div>
 
-          <p>© {new Date().getFullYear()} Mordesu Studio. جميع الحقوق محفوظة</p>
+          <p>© {new Date().getFullYear()} Mordesu Studio. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -169,7 +169,7 @@ export default function QuizResultPage({
 
     const formatAnswer = (answer: string, questionType: string) => {
         if (questionType === "TRUE_FALSE") {
-            return answer === "true" ? "صح" : "خطأ";
+            return answer === "true" ? "True" : "False";
         }
         return answer;
     };
@@ -186,8 +186,8 @@ export default function QuizResultPage({
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">لم يتم العثور على النتيجة</h1>
-                    <Button onClick={() => router.back()}>العودة</Button>
+                    <h1 className="text-2xl font-bold mb-4">Result not found</h1>
+                    <Button onClick={() => router.back()}>Back</Button>
                 </div>
             </div>
         );
@@ -202,7 +202,7 @@ export default function QuizResultPage({
                 <div className="max-w-4xl mx-auto space-y-6">
                     {/* Header */}
                     <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold">نتيجة الاختبار</h1>
+                        <h1 className="text-2xl font-bold">Quiz result</h1>
                     </div>
 
                     {/* Summary Card */}
@@ -210,7 +210,7 @@ export default function QuizResultPage({
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Award className="h-5 w-5" />
-                                ملخص النتيجة
+                                Score summary
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -219,30 +219,30 @@ export default function QuizResultPage({
                                     <div className="text-2xl font-bold text-primary">
                                         {result.score}/{result.totalPoints}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">الدرجة</div>
+                                    <div className="text-sm text-muted-foreground">Score</div>
                                 </div>
                                 <div className="text-center">
                                     <div className={`text-2xl font-bold ${getGradeColor(result.percentage)}`}>
                                         {result.percentage.toFixed(1)}%
                                     </div>
-                                    <div className="text-sm text-muted-foreground">النسبة المئوية</div>
+                                    <div className="text-sm text-muted-foreground">Percentage</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="text-2xl font-bold text-primary">
                                         {correctAnswers}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">إجابات صحيحة</div>
+                                    <div className="text-sm text-muted-foreground">Correct</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="text-2xl font-bold text-destructive">
                                         {incorrectAnswers}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">إجابات خاطئة</div>
+                                    <div className="text-sm text-muted-foreground">Incorrect</div>
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">التقدم العام</span>
+                                    <span className="text-sm font-medium">Overall progress</span>
                                     <span className="text-sm font-medium">{result.percentage.toFixed(1)}%</span>
                                 </div>
                                 <Progress value={result.percentage} className="w-full" />
@@ -253,9 +253,9 @@ export default function QuizResultPage({
                     {/* Detailed Answers */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>تفاصيل الإجابات</CardTitle>
+                            <CardTitle>Answer details</CardTitle>
                             <CardDescription>
-                                مراجعة إجاباتك والتحقق من الإجابات الصحيحة
+                                Review your answers and the correct solutions
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -263,7 +263,7 @@ export default function QuizResultPage({
                                 {result.answers.map((answer, index) => (
                                     <div key={answer.questionId} className="border rounded-lg p-4">
                                         <div className="flex items-center justify-between mb-2">
-                                            <h4 className="font-medium">السؤال {index + 1}</h4>
+                                            <h4 className="font-medium">Question {index + 1}</h4>
                                             <div className="flex items-center gap-2">
                                                 {answer.isCorrect ? (
                                                     <CheckCircle className="h-4 w-4 text-primary" />
@@ -271,30 +271,30 @@ export default function QuizResultPage({
                                                     <XCircle className="h-4 w-4 text-destructive" />
                                                 )}
                                                 <Badge variant={answer.isCorrect ? "secondary" : "destructive"}>
-                                                    {answer.isCorrect ? "صحيح" : "خاطئ"}
+                                                    {answer.isCorrect ? "Correct" : "Incorrect"}
                                                 </Badge>
                                             </div>
                                         </div>
                                         <p className="text-sm text-muted-foreground mb-2">{answer.question.text}</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div>
-                                                <span className="font-medium">إجابتك:</span>
+                                                <span className="font-medium">Your answer:</span>
                                                 <p className="text-muted-foreground">
-                                                    {answer.studentAnswer 
+                                                    {answer.studentAnswer
                                                         ? formatAnswer(answer.studentAnswer, answer.question.type)
-                                                        : "لم تجب"
+                                                        : "No answer"
                                                     }
                                                 </p>
                                             </div>
                                             <div>
-                                                <span className="font-medium">الإجابة الصحيحة:</span>
+                                                <span className="font-medium">Correct answer:</span>
                                                 <p className="text-primary">
                                                     {formatAnswer(answer.correctAnswer, answer.question.type)}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="mt-2 text-sm">
-                                            <span className="font-medium">الدرجات:</span>
+                                            <span className="font-medium">Points:</span>
                                             <span className="text-muted-foreground">
                                                 {" "}{answer.pointsEarned}/{answer.question.points}
                                             </span>
@@ -312,14 +312,14 @@ export default function QuizResultPage({
                                 onClick={handleTryAgain}
                                 className="bg-primary hover:bg-primary/90"
                             >
-                                إعادة الاختبار
+                                Retake quiz
                             </Button>
                         ) : (
                             <Button
                                 onClick={handleNextChapter}
                                 className="bg-primary hover:bg-primary/90"
                             >
-                                {willRedirectToDashboard ? "لوحة التحكم" : "الدرس التالي"}
+                                {willRedirectToDashboard ? "Dashboard" : "Next lesson"}
                             </Button>
                         )}
                     </div>

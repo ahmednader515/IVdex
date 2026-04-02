@@ -49,7 +49,7 @@ export async function POST(
         // Create new attachment
         const attachment = await db.chapterAttachment.create({
             data: {
-                name: name || 'مستند جديد',
+                name: name || 'New document',
                 url: url,
                 position: newPosition,
                 chapterId: resolvedParams.chapterId,

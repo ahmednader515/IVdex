@@ -32,7 +32,7 @@ import {
   Circle,
 } from "lucide-react";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 type QuizWithCount = Quiz & { _count?: { quizResults: number } };
@@ -129,14 +129,14 @@ export function TeacherCourseHub({
         return {
           kind: "next",
           tab: "details",
-          label: "أكمل الحقول واحفظها · الصعود لأعلى الصفحة",
+          label: "Complete the fields and save · scroll to top",
           switchTab: false,
         };
       }
       return {
         kind: "next",
         tab: "details",
-        label: "الخطوة ١: تفاصيل الكورس",
+        label: "Step 1: Course details",
         switchTab: true,
       };
     }
@@ -145,14 +145,14 @@ export function TeacherCourseHub({
         return {
           kind: "next",
           tab: "content",
-          label: "أضف درساً وانشره على الأقل · الصعود لأعلى",
+          label: "Add and publish at least one lesson · scroll to top",
           switchTab: false,
         };
       }
       return {
         kind: "next",
         tab: "content",
-        label: "الخطوة ٢: الدروس والاختبارات",
+        label: "Step 2: Lessons and quizzes",
         switchTab: true,
       };
     }
@@ -162,7 +162,7 @@ export function TeacherCourseHub({
     return {
       kind: "next",
       tab: "overview",
-      label: "الخطوة ٣: النشر — انتقل لنظرة عامة للنشر",
+      label: "Step 3: Publish — go to the overview tab",
       switchTab: true,
     };
   })();
@@ -193,30 +193,30 @@ export function TeacherCourseHub({
   }> = [
     {
       key: "details",
-      label: "تفاصيل الكورس",
-      description: "عنوان، وصف، سعر، وصورة الغلاف",
+      label: "Course details",
+      description: "Title, description, price, and cover image",
       done: detailsDone,
       tab: "details",
     },
     {
       key: "content",
-      label: "الدروس والاختبارات",
-      description: "أضف دروساً واختبارات ورتّبها قبل أن يظهر الكورس للطلاب",
+      label: "Lessons and quizzes",
+      description: "Add lessons and quizzes and order them before the course is visible to students",
       done: contentDone,
       tab: "content",
     },
     {
       key: "publish",
-      label: "النشر",
-      description: "انشر الكورس ليصبح ظاهراً للطلاب ويستطيعوا التسجيل والشراء",
+      label: "Publish",
+      description: "Publish so students can find, enroll, and purchase the course",
       done: isPublished,
       tab: "overview",
     },
     {
       key: "observe",
-      label: "المتابعة والمراقبة",
+      label: "Follow-up",
       description:
-        "بعد النشر: تابع المسجلين ومحاولات الاختبارات من تبويب الطلاب والإحصائيات أعلاه",
+        "After publishing: track enrollees and quiz attempts from the Students tab and analytics above",
       done: false,
       tab: "students",
       hintIfUnpublished: true,
@@ -237,22 +237,22 @@ export function TeacherCourseHub({
             <Button variant="ghost" size="sm" className="h-8 px-2 -mr-2 text-muted-foreground" asChild>
               <Link href="/dashboard/admin/courses">
                 <ArrowLeft className="h-4 w-4 ml-1" />
-                كل الكورسات
+                All courses
               </Link>
             </Button>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight truncate">
-            {course.title || "كورس بدون عنوان"}
+            {course.title || "Untitled course"}
           </h1>
           <p className="text-sm text-muted-foreground">
-            مركز تعديل الكورس: كل التفاصيل والمحتوى والطلاب والاختبارات من مكان واحد.
+            Course editor: details, content, students, and quizzes in one place.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Badge variant={isPublished ? "default" : "secondary"}>
-              {isPublished ? "منشور" : "غير منشور"}
+              {isPublished ? "Published" : "Draft"}
             </Badge>
             <span className="text-xs text-muted-foreground">
-              اكتمال الإعداد: {completedFields}/{totalFields}
+              Setup: {completedFields}/{totalFields}
             </span>
             {isPublished && (
               <PublishCourseBar
@@ -270,25 +270,24 @@ export function TeacherCourseHub({
       <Tabs
         value={tab}
         onValueChange={(v) => setTab(v as HubTab)}
-        dir="rtl"
         className="w-full"
       >
         <TabsList className="grid w-full h-auto grid-cols-2 lg:grid-cols-4 gap-2 p-2 bg-muted/80">
           <TabsTrigger value="overview" className={tabTriggerClass}>
             <ListChecks className="shrink-0" />
-            نظرة عامة
+            Overview
           </TabsTrigger>
           <TabsTrigger value="details" className={tabTriggerClass}>
             <LayoutDashboard className="shrink-0" />
-            تفاصيل الكورس
+            Course details
           </TabsTrigger>
           <TabsTrigger value="content" className={tabTriggerClass}>
             <BookOpen className="shrink-0" />
-            الدروس والاختبارات
+            Lessons & quizzes
           </TabsTrigger>
           <TabsTrigger value="students" className={tabTriggerClass}>
             <Users className="shrink-0" />
-            الطلاب ({purchases.length})
+            Students ({purchases.length})
           </TabsTrigger>
         </TabsList>
 
@@ -296,7 +295,7 @@ export function TeacherCourseHub({
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">طلاب مسجلون</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Enrolled students</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold text-brand">{purchases.length}</p>
@@ -304,18 +303,18 @@ export function TeacherCourseHub({
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">دروس</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Lessons</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold">
                   {publishedChapters}/{course.chapters.length}{" "}
-                  <span className="text-sm font-normal text-muted-foreground">منشور</span>
+                  <span className="text-sm font-normal text-muted-foreground">published</span>
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">اختبارات</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Quizzes</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold">{course.quizzes.length}</p>
@@ -323,7 +322,7 @@ export function TeacherCourseHub({
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">محاولات اختبار</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Quiz attempts</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold">{totalQuizAttempts}</p>
@@ -333,10 +332,9 @@ export function TeacherCourseHub({
 
           <Card>
             <CardHeader>
-              <CardTitle>مسار العمل المقترح</CardTitle>
+              <CardTitle>Suggested workflow</CardTitle>
               <CardDescription>
-                ثلاث خطوات لإطلاق الكورس (تفاصيل → محتوى → نشر)، ثم خطوة متابعة بعد أن يصبح
-                الكورس مرئياً للطلاب.
+                Three steps to launch (details → content → publish), then follow up once the course is visible to students.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -344,7 +342,7 @@ export function TeacherCourseHub({
                 const isObserveBeforePublish =
                   step.hintIfUnpublished && !isPublished;
                 const rowClass = cn(
-                  "flex w-full items-start gap-3 rounded-lg border p-4 text-right",
+                  "flex w-full items-start gap-3 rounded-lg border p-4 text-left",
                   !step.informationalOnly &&
                     "transition hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30",
                   step.informationalOnly &&
@@ -374,16 +372,16 @@ export function TeacherCourseHub({
                           ))}
                         <span className="font-medium">
                           {step.informationalOnly
-                            ? `بعد الإطلاق — ${step.label}`
+                            ? `After launch — ${step.label}`
                             : step.label}
                         </span>
                       </div>
-                      <p className="pr-6 text-sm text-muted-foreground leading-relaxed">
+                      <p className="pl-6 text-sm text-muted-foreground leading-relaxed">
                         {step.description}
                       </p>
                       {isObserveBeforePublish && (
-                        <p className="pr-6 text-xs text-muted-foreground italic">
-                          تُفعَّل عملياً بعد نشر الكورس؛ لا يظهر الطلاب في المنصة قبل ذلك.
+                        <p className="pl-6 text-xs text-muted-foreground italic">
+                          This becomes useful after you publish; students are not visible on the platform before then.
                         </p>
                       )}
                     </div>
@@ -418,9 +416,9 @@ export function TeacherCourseHub({
           {course.quizzes.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">نتائج الاختبارات بأختصار</CardTitle>
+                <CardTitle className="text-base">Quiz results at a glance</CardTitle>
                 <CardDescription>
-                  افتح نتائج كل اختبار مباشرة، أو استخدم زر «النتائج» بجانب الاختبار في تبويب المحتوى.
+                  Open results for each quiz directly, or use the Results button next to a quiz on the Content tab.
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
@@ -432,7 +430,7 @@ export function TeacherCourseHub({
                     >
                       <span className="truncate max-w-[200px]">{quiz.title}</span>
                       <Badge variant="secondary" className="shrink-0">
-                        {quiz._count?.quizResults ?? 0} محاولة
+                        {quiz._count?.quizResults ?? 0} attempt{(quiz._count?.quizResults ?? 0) !== 1 ? "s" : ""}
                       </Badge>
                     </Link>
                   </Button>
@@ -444,13 +442,13 @@ export function TeacherCourseHub({
 
         <TabsContent value="details" className="mt-6">
           <p className="mb-6 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            عبّئ الحقول مباشرة واضغط «حفظ» تحت كل قسم. على الجوال تظهر معلومات الكورس أولاً ثم صورة الغلاف.
+            Fill in each section and press Save below it. On mobile, course info appears first, then the cover image.
           </p>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
             <div className="order-1 space-y-5 lg:order-1">
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={LayoutDashboard} />
-                <h2 className="text-xl font-semibold tracking-tight">معلومات الكورس</h2>
+                <h2 className="text-xl font-semibold tracking-tight">Course information</h2>
               </div>
               <TitleForm initialData={course} courseId={course.id} />
               <DescriptionForm initialData={course} courseId={course.id} />
@@ -459,7 +457,7 @@ export function TeacherCourseHub({
             <div className="order-2 lg:order-2">
               <div className="mb-4 flex items-center gap-x-2 lg:mb-5">
                 <IconBadge icon={LayoutDashboard} />
-                <h2 className="text-xl font-semibold tracking-tight">الغلاف البصري</h2>
+                <h2 className="text-xl font-semibold tracking-tight">Visual cover</h2>
               </div>
               <ImageForm initialData={course} courseId={course.id} />
             </div>
@@ -469,9 +467,9 @@ export function TeacherCourseHub({
         <TabsContent value="content" className="mt-6">
           <Card className="border-brand/15">
             <CardHeader className="pb-2">
-              <CardTitle>محتوى الكورس</CardTitle>
+              <CardTitle>Course content</CardTitle>
               <CardDescription className="text-sm leading-relaxed">
-                أدر الدروس والاختبارات من الصندوق أدناه — التفاصيل والأزرار مُحسَّنة للجوال.
+                Manage lessons and quizzes below — layout and actions are optimized for mobile.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-2">
@@ -488,36 +486,36 @@ export function TeacherCourseHub({
         <TabsContent value="students" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>الطلاب المسجلون في هذا الكورس</CardTitle>
+              <CardTitle>Students enrolled in this course</CardTitle>
               <CardDescription>
-                الطلاب الذين اشتروا أو فعّلوا الكورس. لإدارة الحسابات العامة، استخدم «إدارة الطلاب» من القائمة.
+                Students who purchased or activated this course. Use Student management in the menu for all accounts.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {purchases.length === 0 ? (
                 <p className="text-sm text-muted-foreground py-8 text-center">
-                  لا يوجد طلاب مسجلون بعد في هذا الكورس.
+                  No students enrolled in this course yet.
                 </p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-right">الاسم</TableHead>
-                      <TableHead className="text-right">الهاتف</TableHead>
-                      <TableHead className="text-right">تاريخ التسجيل</TableHead>
+                      <TableHead className="text-left">Name</TableHead>
+                      <TableHead className="text-left">Phone</TableHead>
+                      <TableHead className="text-left">Enrolled</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {purchases.map((p) => (
                       <TableRow key={p.id}>
-                        <TableCell label="الاسم" className="font-medium">
+                        <TableCell label="Name" className="font-medium">
                           {p.user.fullName}
                         </TableCell>
-                        <TableCell label="الهاتف" dir="ltr" className="text-right">
+                        <TableCell label="Phone" dir="ltr" className="text-left">
                           {p.user.phoneNumber}
                         </TableCell>
-                        <TableCell label="تاريخ التسجيل">
-                          {format(new Date(p.createdAt), "dd MMM yyyy", { locale: ar })}
+                        <TableCell label="Enrolled">
+                          {format(new Date(p.createdAt), "MMM d, yyyy", { locale: enUS })}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -526,7 +524,7 @@ export function TeacherCourseHub({
               )}
               <div className="mt-4">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href="/dashboard/admin/management">إدارة جميع الطلاب</Link>
+                  <Link href="/dashboard/admin/management">Manage all students</Link>
                 </Button>
               </div>
             </CardContent>

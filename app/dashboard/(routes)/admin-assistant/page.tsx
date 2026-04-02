@@ -13,7 +13,7 @@ export default function AdminRedirect() {
     return (
         <div className="h-full flex items-center justify-center">
             <div className="text-center">
-                <div className="text-lg">جاري التوجيه...</div>
+                <div className="text-lg">Redirecting…</div>
             </div>
         </div>
     );

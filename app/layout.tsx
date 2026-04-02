@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import localFont from 'next/font/local';
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Footer } from "@/components/footer";
@@ -18,16 +17,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const playpenSansArabic = localFont({
-  src: '../public/fonts/PlaypenSansArabic-VariableFont_wght.ttf',
-  variable: '--font-playpen-sans-arabic',
-  display: 'swap',
-  preload: true,
-});
-
 export const metadata: Metadata = {
-  title: "منصة IVDex",
-  description: "منصة تعليمية متكاملة",
+  title: "IVDex",
+  description: "Educational biotechnology platform — molecular biology & laboratory training.",
   icons: {
     icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
     shortcut: ["/favicon.ico"],
@@ -40,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="ar" dir="rtl" className={`${geistSans.variable} ${geistMono.variable} ${playpenSansArabic.variable} dark`}>
-      <body suppressHydrationWarning className="font-playpen-sans-arabic">
+    <html suppressHydrationWarning lang="en" dir="ltr" className={`${geistSans.variable} ${geistMono.variable} dark`}>
+      <body suppressHydrationWarning className={`${geistSans.className} antialiased`}>
         <script
           dangerouslySetInnerHTML={{
             __html: `

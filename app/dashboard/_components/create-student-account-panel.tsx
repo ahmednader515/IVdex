@@ -47,7 +47,7 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
   const managementUsersHref = "/dashboard/admin/management?tab=users";
   const backHref = managementUsersHref;
   const successSecondaryHref = managementUsersHref;
-  const successSecondaryLabel = embedded ? "عرض المستخدمين" : "عرض جميع المستخدمين";
+  const successSecondaryLabel = embedded ? "View users" : "View all users";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -71,7 +71,7 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
     setIsLoading(true);
 
     if (!passwordChecks.isValid) {
-      toast.error("كلمات المرور غير متطابقة");
+      toast.error("Passwords do not match");
       setIsLoading(false);
       return;
     }
@@ -81,7 +81,7 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
 
       if (response.data.success) {
         setCreatedUser(response.data.user);
-        toast.success("تم إنشاء حساب الطالب بنجاح");
+        toast.success("Student account created successfully");
         setFormData({
           fullName: "",
           phoneNumber: "",
@@ -95,18 +95,18 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
       if (axiosError.response?.status === 400) {
         const errorMessage = axiosError.response.data as string;
         if (errorMessage.includes("Phone number already exists")) {
-          toast.error("رقم الهاتف مسجل مسبقاً");
+          toast.error("This phone number is already registered");
         } else if (errorMessage.includes("Parent phone number already exists")) {
-          toast.error("رقم هاتف ولي الأمر مسجل مسبقاً");
+          toast.error("This parent phone number is already registered");
         } else if (errorMessage.includes("Phone number cannot be the same as parent phone number")) {
-          toast.error("رقم الهاتف لا يمكن أن يكون نفس رقم هاتف ولي الأمر");
+          toast.error("Student phone cannot be the same as parent phone");
         } else if (errorMessage.includes("Passwords do not match")) {
-          toast.error("كلمات المرور غير متطابقة");
+          toast.error("Passwords do not match");
         } else {
-          toast.error("حدث خطأ أثناء إنشاء الحساب");
+          toast.error("Something went wrong while creating the account");
         }
       } else {
-        toast.error("حدث خطأ أثناء إنشاء الحساب");
+        toast.error("Something went wrong while creating the account");
       }
     } finally {
       setIsLoading(false);
@@ -133,23 +133,23 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
               <CheckCircle className="h-5 w-5" />
-              تم إنشاء الحساب بنجاح
+              Account created successfully
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <Label className="text-sm font-medium text-green-700 dark:text-green-300">الاسم الكامل</Label>
+                <Label className="text-sm font-medium text-green-700 dark:text-green-300">Full name</Label>
                 <p className="font-semibold text-green-800 dark:text-green-200">{createdUser.fullName}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium text-green-700 dark:text-green-300">رقم الهاتف</Label>
+                <Label className="text-sm font-medium text-green-700 dark:text-green-300">Phone</Label>
                 <p className="font-semibold text-green-800 dark:text-green-200">{createdUser.phoneNumber}</p>
               </div>
             </div>
-            <div className="flex flex-row-reverse flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4">
               <Button onClick={resetForm} className="bg-green-600 text-white hover:bg-green-700">
-                إنشاء حساب آخر
+                Create another account
               </Button>
               <Button variant="outline" asChild>
                 <Link href={successSecondaryHref}>{successSecondaryLabel}</Link>
@@ -162,58 +162,58 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserPlus className="h-5 w-5" />
-              معلومات الطالب
+              Student details
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6 text-right" dir="rtl">
+            <form onSubmit={handleSubmit} className="space-y-6 text-left">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`fullName${suffix}`}>الاسم الكامل *</Label>
+                  <Label htmlFor={`fullName${suffix}`}>Full name *</Label>
                   <Input
                     id={`fullName${suffix}`}
                     name="fullName"
                     type="text"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    placeholder="أدخل الاسم الكامل"
+                    placeholder="Enter full name"
                     required
-                    className="text-right"
+                    className="text-left"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`phoneNumber${suffix}`}>رقم الهاتف *</Label>
+                  <Label htmlFor={`phoneNumber${suffix}`}>Phone *</Label>
                   <Input
                     id={`phoneNumber${suffix}`}
                     name="phoneNumber"
                     type="tel"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    placeholder="أدخل رقم الهاتف"
+                    placeholder="Enter phone number"
                     required
-                    className="text-right"
+                    className="text-left"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`parentPhoneNumber${suffix}`}>رقم هاتف ولي الأمر *</Label>
+                <Label htmlFor={`parentPhoneNumber${suffix}`}>Parent phone *</Label>
                 <Input
                   id={`parentPhoneNumber${suffix}`}
                   name="parentPhoneNumber"
                   type="tel"
                   value={formData.parentPhoneNumber}
                   onChange={handleInputChange}
-                  placeholder="أدخل رقم هاتف ولي الأمر"
+                  placeholder="Enter parent phone number"
                   required
-                  className="text-right"
+                  className="text-left"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`password${suffix}`}>كلمة المرور *</Label>
+                  <Label htmlFor={`password${suffix}`}>Password *</Label>
                   <div className="relative">
                     <Input
                       id={`password${suffix}`}
@@ -221,15 +221,15 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={handleInputChange}
-                      placeholder="أدخل كلمة المرور"
+                      placeholder="Enter password"
                       required
-                      className="text-right pl-10"
+                      className="pr-10 text-left"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -238,7 +238,7 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`confirmPassword${suffix}`}>تأكيد كلمة المرور *</Label>
+                  <Label htmlFor={`confirmPassword${suffix}`}>Confirm password *</Label>
                   <div className="relative">
                     <Input
                       id={`confirmPassword${suffix}`}
@@ -246,15 +246,15 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                       type={showConfirmPassword ? "text" : "password"}
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      placeholder="أكد كلمة المرور"
+                      placeholder="Confirm password"
                       required
-                      className="text-right pl-10"
+                      className="pr-10 text-left"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -268,27 +268,27 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                   {passwordChecks.match ? (
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-green-600" />
-                      كلمات المرور متطابقة
+                      Passwords match
                     </span>
                   ) : (
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-red-600" />
-                      كلمات المرور غير متطابقة
+                      Passwords do not match
                     </span>
                   )}
                 </div>
               )}
 
-              <div className="flex flex-row-reverse flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4">
                 <Button
                   type="submit"
                   disabled={isLoading || !passwordChecks.isValid}
                   className="flex-1 bg-brand text-white hover:bg-brand/90 sm:flex-none"
                 >
-                  {isLoading ? "جاري الإنشاء..." : "إنشاء الحساب"}
+                  {isLoading ? "Creating..." : "Create account"}
                 </Button>
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  إعادة تعيين
+                  Reset
                 </Button>
               </div>
             </form>
@@ -309,10 +309,10 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
           <Button variant="ghost" size="sm" asChild>
             <Link href={backHref}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              العودة
+              Back
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">إنشاء حساب طالب جديد</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create student account</h1>
         </div>
       </div>
 

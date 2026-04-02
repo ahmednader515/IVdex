@@ -98,7 +98,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
 
     const handleAddCourse = async () => {
         if (!selectedUser || !selectedCourse) {
-            toast.error("يرجى اختيار الطالب والكورس");
+            toast.error("Please select a student and a course");
             return;
         }
 
@@ -113,18 +113,18 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
             });
 
             if (response.ok) {
-                toast.success("تم إضافة الكورس للطالب بنجاح");
+                toast.success("Course added to student");
                 setIsDialogOpen(false);
                 setSelectedUser(null);
                 setSelectedCourse("");
                 fetchUsers(); // Refresh the list
             } else {
                 const error = await response.json();
-                toast.error(error.message || "حدث خطأ أثناء إضافة الكورس");
+                toast.error(error.message || "Something went wrong while adding the course");
             }
         } catch (error) {
             console.error("Error adding course:", error);
-            toast.error("حدث خطأ أثناء إضافة الكورس");
+            toast.error("Something went wrong while adding the course");
         } finally {
             setIsAddingCourse(false);
         }
@@ -132,7 +132,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
 
     const handleDeleteCourse = async () => {
         if (!selectedUser || !selectedCourse) {
-            toast.error("يرجى اختيار الطالب والكورس");
+            toast.error("Please select a student and a course");
             return;
         }
 
@@ -144,18 +144,18 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                 body: JSON.stringify({ courseId: selectedCourse })
             });
             if (res.ok) {
-                toast.success("تم حذف الكورس من الطالب بنجاح");
+                toast.success("Course removed from student");
                 setIsDialogOpen(false);
                 setSelectedCourse("");
                 setSelectedUser(null);
                 fetchUsers();
             } else {
                 const data = await res.json().catch(() => ({} as any));
-                toast.error((data as any).error || "حدث خطأ أثناء حذف الكورس");
+                toast.error((data as any).error || "Something went wrong while removing the course");
             }
         } catch (error) {
             console.error("Error deleting course:", error);
-            toast.error("حدث خطأ أثناء حذف الكورس");
+            toast.error("Something went wrong while removing the course");
         } finally {
             setIsDeletingCourse(false);
         }
@@ -169,31 +169,31 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center text-muted-foreground">Loading…</div>
             </div>
         );
     }
 
     return (
-        <div className={embedded ? "space-y-4" : "p-6 space-y-6"} dir="rtl">
+        <div className={embedded ? "space-y-4" : "p-6 space-y-6"}>
             {!embedded && (
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    اضافة و حذف الكورسات للطلاب
+                <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+                    Add or remove courses for students
                 </h1>
             </div>
             )}
 
             <Card>
                 <CardHeader>
-                    <CardTitle>قائمة الطلاب</CardTitle>
-                    <div className="flex items-center gap-2 md:flex-row-reverse md:justify-end">
+                    <CardTitle>Students</CardTitle>
+                    <div className="flex items-center gap-2">
                         <Search className="h-4 w-4 text-muted-foreground" />
                         <Input
-                            placeholder="البحث بالاسم أو رقم الهاتف..."
+                            placeholder="Search by name or phone…"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="max-w-sm text-right"
+                            className="max-w-sm text-left"
                         />
                     </div>
                 </CardHeader>
@@ -201,34 +201,34 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="text-right">الاسم</TableHead>
-                                <TableHead className="text-right">رقم الهاتف</TableHead>
-                                <TableHead className="text-right">الدور</TableHead>
-                                <TableHead className="text-right">الكورسات المشتراة</TableHead>
-                                <TableHead className="text-right">الإجراءات</TableHead>
+                                <TableHead className="text-left">Name</TableHead>
+                                <TableHead className="text-left">Phone</TableHead>
+                                <TableHead className="text-left">Role</TableHead>
+                                <TableHead className="text-left">Purchased courses</TableHead>
+                                <TableHead className="text-left">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filteredUsers.map((user) => (
                                 <TableRow key={user.id}>
-                                    <TableCell label="الاسم" className="font-medium">
+                                    <TableCell label="Name" className="font-medium">
                                         {user.fullName}
                                     </TableCell>
-                                    <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                    <TableCell label="الدور">
+                                    <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                    <TableCell label="Role">
                                         <Badge variant="secondary">
-                                            طالب
+                                            Student
                                         </Badge>
                                     </TableCell>
-                                    <TableCell label="الكورسات المشتراة">
+                                    <TableCell label="Purchased courses">
                                         <Badge variant="outline">{user._count?.purchases ?? 0}</Badge>
                                     </TableCell>
-                                    <TableCell label="الإجراءات">
+                                    <TableCell label="Actions">
                                         <div className="flex flex-wrap items-center gap-2">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
-                                                className="md:flex-row-reverse"
+                                                className="gap-1"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setDialogMode("add");
@@ -237,12 +237,12 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                                 }}
                                             >
                                                 <Plus className="h-4 w-4" />
-                                                إضافة كورس
+                                                Add course
                                             </Button>
                                             <Button 
                                                 size="sm" 
                                                 variant="destructive"
-                                                className="md:flex-row-reverse"
+                                                className="gap-1"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setDialogMode("delete");
@@ -250,7 +250,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                                     setIsDialogOpen(true);
                                                 }}
                                             >
-                                                حذف الكورس
+                                                Remove course
                                             </Button>
                                         </div>
                                     </TableCell>
@@ -265,7 +265,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                 <Card>
                     <CardContent className="p-6">
                         <div className="text-center text-muted-foreground">
-                            لا توجد طلاب متاحين
+                            No students found
                         </div>
                     </CardContent>
                 </Card>
@@ -287,18 +287,18 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                     <DialogHeader>
                         <DialogTitle>
                             {dialogMode === "add" ? (
-                                <>إضافة كورس لـ {selectedUser?.fullName}</>
+                                <>Add course for {selectedUser?.fullName}</>
                             ) : (
-                                <>حذف كورس من {selectedUser?.fullName}</>
+                                <>Remove course from {selectedUser?.fullName}</>
                             )}
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">اختر الكورس</label>
+                            <label className="text-sm font-medium">Choose a course</label>
                             <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="اختر كورس..." />
+                                    <SelectValue placeholder="Select a course…" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {(dialogMode === "delete" ? ownedCourses : courses).map((course) => (
@@ -307,7 +307,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                                 <span>{course.title}</span>
                                                 {typeof course.price === "number" && (
                                                     <Badge variant="outline" className="mr-2">
-                                                        {course.price} جنيه
+                                                        {course.price} EGP
                                                     </Badge>
                                                 )}
                                             </div>
@@ -316,7 +316,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex justify-end gap-2 md:flex-row-reverse md:justify-start">
+                        <div className="flex justify-end gap-2">
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -326,14 +326,14 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                     setDialogMode("add");
                                 }}
                             >
-                                إلغاء
+                                Cancel
                             </Button>
                             {dialogMode === "add" ? (
                                 <Button 
                                     onClick={handleAddCourse}
                                     disabled={!selectedCourse || isAddingCourse}
                                 >
-                                    {isAddingCourse ? "جاري الإضافة..." : "إضافة الكورس"}
+                                    {isAddingCourse ? "Adding…" : "Add course"}
                                 </Button>
                             ) : (
                                 <Button 
@@ -341,7 +341,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                                     onClick={handleDeleteCourse}
                                     disabled={!selectedCourse || isDeletingCourse}
                                 >
-                                    {isDeletingCourse ? "جاري الحذف..." : "حذف الكورس"}
+                                    {isDeletingCourse ? "Removing…" : "Remove course"}
                                 </Button>
                             )}
                         </div>

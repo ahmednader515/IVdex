@@ -51,11 +51,11 @@ export const AttachmentsForm = ({
             if (filename) {
                 const decodedFilename = decodeURIComponent(filename);
                 const cleanFilename = decodedFilename.split('?')[0];
-                return cleanFilename || 'مستند الدرس';
+                return cleanFilename || 'Lesson document';
             }
-            return 'مستند الدرس';
+            return 'Lesson document';
         } catch {
-            return 'مستند الدرس';
+            return 'Lesson document';
         }
     };
 
@@ -81,7 +81,7 @@ export const AttachmentsForm = ({
                 document.body.removeChild(link);
                 
                 window.URL.revokeObjectURL(downloadUrl);
-                toast.success("تم بدء تحميل الملف");
+                toast.success("Download started");
             } else {
                 throw new Error('Failed to fetch file');
             }
@@ -100,7 +100,7 @@ export const AttachmentsForm = ({
             link.click();
             document.body.removeChild(link);
             
-            toast.success("تم فتح الملف في تبويب جديد للتحميل");
+            toast.success("Opened in a new tab to download");
         }
     };
 
@@ -121,11 +121,11 @@ export const AttachmentsForm = ({
 
             const newAttachment = await response.json();
             setAttachments(prev => [...prev, newAttachment]);
-            toast.success("تم رفع المستند بنجاح");
+            toast.success("Document uploaded");
             onSaved?.();
         } catch (error) {
             console.error("[CHAPTER_ATTACHMENT]", error);
-            toast.error("حدث خطأ ما");
+            toast.error("Something went wrong");
         } finally {
             setIsSubmitting(false);
         }
@@ -143,11 +143,11 @@ export const AttachmentsForm = ({
             }
 
             setAttachments(prev => prev.filter(att => att.id !== attachmentId));
-            toast.success("تم حذف المستند بنجاح");
+            toast.success("Document removed");
             onSaved?.();
         } catch (error) {
             console.error("[CHAPTER_ATTACHMENT_DELETE]", error);
-            toast.error("حدث خطأ ما");
+            toast.error("Something went wrong");
         } finally {
             setIsSubmitting(false);
         }
@@ -166,9 +166,9 @@ export const AttachmentsForm = ({
         >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p className="text-base font-semibold">مرفقات الدرس</p>
+                    <p className="text-base font-semibold">Lesson attachments</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                        ملفات مساعدة للطلاب (PDF وغيرها).
+                        Supplemental files for students (PDF and more).
                     </p>
                 </div>
                 <Button
@@ -178,11 +178,11 @@ export const AttachmentsForm = ({
                     onClick={() => setIsEditing(!isEditing)}
                 >
                     {isEditing ? (
-                        "إنهاء الإدارة"
+                        "Done"
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 ml-2" />
-                            إدارة المستندات
+                            Manage documents
                         </>
                     )}
                 </Button>
@@ -199,7 +199,7 @@ export const AttachmentsForm = ({
                                         <p className="text-sm font-medium truncate">
                                             {attachment.name || getFilenameFromUrl(attachment.url)}
                                         </p>
-                                        <p className="text-xs text-muted-foreground">مستند الدرس</p>
+                                        <p className="text-xs text-muted-foreground">Lesson document</p>
                                     </div>
                                     <div className="ml-auto flex items-center gap-2 flex-shrink-0">
                                         <Button
@@ -207,7 +207,7 @@ export const AttachmentsForm = ({
                                             size="sm"
                                             onClick={() => window.open(attachment.url, '_blank')}
                                         >
-                                            عرض
+                                            View
                                         </Button>
                                         <Button
                                             variant="ghost"
@@ -216,7 +216,7 @@ export const AttachmentsForm = ({
                                             className="flex items-center gap-1"
                                         >
                                             <Download className="h-3 w-3" />
-                                            تحميل
+                                            Download
                                         </Button>
                                     </div>
                                 </div>
@@ -224,7 +224,7 @@ export const AttachmentsForm = ({
                         </div>
                     ) : (
                         <p className="text-sm mt-2 text-muted-foreground italic">
-                            لا توجد مستندات مرفوعة
+                            No documents uploaded yet
                         </p>
                     )}
                 </div>
@@ -240,7 +240,7 @@ export const AttachmentsForm = ({
                                     <p className="text-sm font-medium truncate">
                                         {attachment.name || getFilenameFromUrl(attachment.url)}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">مستند الدرس</p>
+                                    <p className="text-xs text-muted-foreground">Lesson document</p>
                                 </div>
                                 <div className="ml-auto flex items-center gap-2 flex-shrink-0">
                                     <Button
@@ -248,7 +248,7 @@ export const AttachmentsForm = ({
                                         size="sm"
                                         onClick={() => window.open(attachment.url, '_blank')}
                                     >
-                                        عرض
+                                        View
                                     </Button>
                                     <Button
                                         variant="ghost"
@@ -257,7 +257,7 @@ export const AttachmentsForm = ({
                                         className="flex items-center gap-1"
                                     >
                                         <Download className="h-3 w-3" />
-                                        تحميل
+                                        Download
                                     </Button>
                                     <Button
                                         variant="ghost"
@@ -286,7 +286,7 @@ export const AttachmentsForm = ({
                             }}
                         />
                         <div className="text-xs text-muted-foreground mt-2 text-center">
-                            أضف مستندات إضافية قد يحتاجها الطلاب لفهم الدرس بشكل أفضل.
+                            Upload optional documents to help students understand the lesson.
                         </div>
                     </div>
                 </div>

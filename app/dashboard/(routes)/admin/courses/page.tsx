@@ -50,16 +50,16 @@ const CoursesPage = async () => {
         <div className="p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">كورساتي</h1>
+                    <h1 className="text-2xl font-bold">My courses</h1>
                     <p className="text-sm text-muted-foreground mt-1 max-w-xl">
-                        أنشئ كورسًا جديدًا ثم أدِر كل شيء من صفحة واحدة: التفاصيل، الدروس، الاختبارات، نتائج الطلاب، والمسجّلين.
-                        استخدم زر «تعديل الكورس» بجانب أي كورس.
+                        Create a new course, then manage everything from one place: details, lessons, quizzes, student results, and enrollments.
+                        Use the Edit course button next to any course.
                     </p>
                 </div>
                 <Link href="/dashboard/admin/courses/create" className="shrink-0">
                     <Button className="bg-brand hover:bg-brand/90 text-white w-full sm:w-auto">
                         <PlusCircle className="h-4 w-4 mr-2" />
-                        إنشاء كورس جديد
+                        Create new course
                     </Button>
                 </Link>
             </div>
@@ -69,14 +69,14 @@ const CoursesPage = async () => {
                     <AlertCircle className="h-4 w-4 text-orange-600" />
                     <AlertDescription className="text-orange-800">
                         <div className="mb-2">
-                            <strong>لنشر الكورسات على الصفحة الرئيسية، تحتاج إلى:</strong>
+                            <strong>To publish courses on the home page, you need to:</strong>
                         </div>
                         <ul className="list-disc list-inside space-y-1 text-sm">
-                            <li>إضافة عنوان للكورس</li>
-                            <li>إضافة وصف للكورس</li>
-                            <li>إضافة صورة للكورس</li>
-                            <li>إضافة درس واحد على الأقل ونشره</li>
-                            <li>النقر على زر "نشر" في صفحة إعدادات الكورس</li>
+                            <li>Add a course title</li>
+                            <li>Add a course description</li>
+                            <li>Add a course image</li>
+                            <li>Add at least one lesson and publish it</li>
+                            <li>Click Publish on the course settings page</li>
                         </ul>
                     </AlertDescription>
                 </Alert>

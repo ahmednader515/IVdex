@@ -163,7 +163,7 @@ const CreateQuizContent = () => {
                 ...items,
                 {
                     id: "new-quiz",
-                    title: quizTitle || "اختبار جديد",
+                    title: quizTitle || "New quiz",
                     type: "quiz" as const,
                     position: items.length + 1,
                     isPublished: false
@@ -211,7 +211,7 @@ const CreateQuizContent = () => {
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            toast.error("المتصفح لا يدعم الإملاء الصوتي");
+            toast.error("This browser does not support speech recognition");
             return;
         }
 
@@ -226,7 +226,7 @@ const CreateQuizContent = () => {
 
         try {
             const recognition = new SpeechRecognition();
-            recognition.lang = "ar-SA";
+            recognition.lang = "en-US";
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
 
@@ -252,7 +252,7 @@ const CreateQuizContent = () => {
 
             recognition.onerror = (event: any) => {
                 console.error("[SPEECH_RECOGNITION_ERROR]", event.error);
-                toast.error("تعذر التعرف على الصوت");
+                toast.error("Could not recognize speech");
             };
 
             recognition.onend = () => {
@@ -264,7 +264,7 @@ const CreateQuizContent = () => {
             recognition.start();
         } catch (error) {
             console.error("[SPEECH_RECOGNITION]", error);
-            toast.error("تعذر بدء التسجيل الصوتي");
+            toast.error("Could not start voice input");
             stopListening();
         }
     };
@@ -272,7 +272,7 @@ const CreateQuizContent = () => {
     const handleCreateQuiz = async () => {
         stopListening();
         if (!selectedCourse || !quizTitle.trim()) {
-            toast.error("يرجى إدخال جميع البيانات المطلوبة");
+            toast.error("Please fill in all required fields");
             return;
         }
 
@@ -284,7 +284,7 @@ const CreateQuizContent = () => {
             
             // Validate question text
             if (!question.text || question.text.trim() === "") {
-                validationErrors.push(`السؤال ${i + 1}: نص السؤال مطلوب`);
+                validationErrors.push(`Question ${i + 1}: question text is required`);
                 continue;
             }
 
@@ -292,30 +292,30 @@ const CreateQuizContent = () => {
             if (question.type === "MULTIPLE_CHOICE") {
                 const validOptions = question.options?.filter(option => option.trim() !== "") || [];
                 if (validOptions.length === 0) {
-                    validationErrors.push(`السؤال ${i + 1}: يجب إضافة خيار واحد على الأقل`);
+                    validationErrors.push(`Question ${i + 1}: add at least one option`);
                     continue;
                 }
                 
                 // Check if correct answer index is valid
                 if (typeof question.correctAnswer !== 'number' || question.correctAnswer < 0 || question.correctAnswer >= validOptions.length) {
-                    validationErrors.push(`السؤال ${i + 1}: يجب اختيار إجابة صحيحة`);
+                    validationErrors.push(`Question ${i + 1}: select a correct answer`);
                     continue;
                 }
             } else if (question.type === "TRUE_FALSE") {
                 if (!question.correctAnswer || (question.correctAnswer !== "true" && question.correctAnswer !== "false")) {
-                    validationErrors.push(`السؤال ${i + 1}: يجب اختيار إجابة صحيحة`);
+                    validationErrors.push(`Question ${i + 1}: select a correct answer`);
                     continue;
                 }
             } else if (question.type === "SHORT_ANSWER") {
                 if (!question.correctAnswer || question.correctAnswer.toString().trim() === "") {
-                    validationErrors.push(`السؤال ${i + 1}: الإجابة الصحيحة مطلوبة`);
+                    validationErrors.push(`Question ${i + 1}: correct answer is required`);
                     continue;
                 }
             }
 
             // Check if points are valid
             if (question.points <= 0) {
-                validationErrors.push(`السؤال ${i + 1}: الدرجات يجب أن تكون أكبر من صفر`);
+                validationErrors.push(`Question ${i + 1}: points must be greater than zero`);
                 continue;
             }
         }
@@ -327,7 +327,7 @@ const CreateQuizContent = () => {
 
         // Additional validation: ensure no questions are empty
         if (questions.length === 0) {
-            toast.error("يجب إضافة سؤال واحد على الأقل");
+            toast.error("Add at least one question");
             return;
         }
 
@@ -363,8 +363,8 @@ const CreateQuizContent = () => {
             });
 
             if (response.ok) {
-                toast.success("تم إنشاء الاختبار بنجاح");
-                // After creating a quiz, return to the course editor on "الدروس والاختبارات"
+                toast.success("Quiz created");
+                // After creating a quiz, return to the course editor (content tab)
                 // (content tab). If courseId is missing, fall back to quizzes dashboard.
                 if (selectedCourse) {
                     router.push(`/dashboard/admin/courses/${selectedCourse}?tab=content`);
@@ -373,11 +373,11 @@ const CreateQuizContent = () => {
                 }
             } else {
                 const error = await response.json();
-                toast.error(error.message || "حدث خطأ أثناء إنشاء الاختبار");
+                toast.error(error.message || "Something went wrong while creating the quiz");
             }
         } catch (error) {
             console.error("Error creating quiz:", error);
-            toast.error("حدث خطأ أثناء إنشاء الاختبار");
+            toast.error("Something went wrong while creating the quiz");
         } finally {
             setIsCreatingQuiz(false);
         }
@@ -433,19 +433,19 @@ const CreateQuizContent = () => {
         <div className="p-6 space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    إنشاء اختبار جديد
+                    Create quiz
                 </h1>
                 <Button variant="outline" onClick={goBackAfterQuizFlow}>
                     {selectedCourse
-                        ? "العودة إلى محتوى الكورس"
-                        : "العودة إلى الاختبارات"}
+                        ? "Back to course content"
+                        : "Back to quizzes"}
                 </Button>
             </div>
 
             <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <Label>اختر الكورس</Label>
+                        <Label>Course</Label>
                         <Select value={selectedCourse} onValueChange={(value) => {
                             setSelectedCourse(value);
                             // Clear previous data immediately
@@ -456,7 +456,7 @@ const CreateQuizContent = () => {
                             }
                         }}>
                             <SelectTrigger>
-                                <SelectValue placeholder="اختر كورس..." />
+                                <SelectValue placeholder="Select a course…" />
                             </SelectTrigger>
                             <SelectContent>
                                 {courses.map((course) => (
@@ -468,7 +468,7 @@ const CreateQuizContent = () => {
                         </Select>
                     </div>
                     <div className="space-y-2">
-                        <Label>عنوان الاختبار</Label>
+                        <Label>Quiz title</Label>
                         <Input
                             value={quizTitle}
                             onChange={(e) => {
@@ -477,12 +477,12 @@ const CreateQuizContent = () => {
                                 setCourseItems(prev => 
                                     prev.map(item => 
                                         item.id === "new-quiz" 
-                                            ? { ...item, title: e.target.value || "اختبار جديد" }
+                                            ? { ...item, title: e.target.value || "New quiz" }
                                             : item
                                     )
                                 );
                             }}
-                            placeholder="أدخل عنوان الاختبار"
+                            placeholder="Enter quiz title"
                         />
                     </div>
                 </div>
@@ -490,18 +490,18 @@ const CreateQuizContent = () => {
                 {selectedCourse && (
                     <Card>
                         <CardHeader>
-                            <CardTitle>ترتيب الاختبار في الكورس</CardTitle>
+                            <CardTitle>Quiz position in course</CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                اسحب الاختبار الجديد إلى الموقع المطلوب بين الدروس والاختبارات الموجودة
+                                Drag the new quiz to the desired spot among existing lessons and quizzes.
                             </p>
                             <p className="text-sm text-blue-600">
-                                الموقع المحدد: {selectedPosition}
+                                Selected position: {selectedPosition}
                             </p>
                         </CardHeader>
                         <CardContent>
                             {isLoadingCourseItems ? (
                                 <div className="text-center py-8">
-                                    <div className="text-muted-foreground">جاري تحميل محتوى الكورس...</div>
+                                    <div className="text-muted-foreground">Loading course content…</div>
                                 </div>
                             ) : courseItems.length > 0 ? (
                                 <DragDropContext onDragEnd={handleDragEnd}>
@@ -531,12 +531,12 @@ const CreateQuizContent = () => {
                                                                             {item.title}
                                                                         </div>
                                                                         <div className={`text-sm ${item.id === "new-quiz" ? "text-blue-600" : "text-muted-foreground"}`}>
-                                                                            {item.type === "chapter" ? "درس" : "اختبار"}
+                                                                            {item.type === "chapter" ? "Lesson" : "Quiz"}
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <Badge variant={item.id === "new-quiz" ? "outline" : (item.isPublished ? "default" : "secondary")} className={item.id === "new-quiz" ? "border-blue-300 text-blue-700" : ""}>
-                                                                    {item.id === "new-quiz" ? "جديد" : (item.isPublished ? "منشور" : "غير منشور")}
+                                                                    {item.id === "new-quiz" ? "New" : (item.isPublished ? "Published" : "Draft")}
                                                                 </Badge>
                                                             </div>
                                                         )}
@@ -551,18 +551,18 @@ const CreateQuizContent = () => {
                             ) : (
                                 <div className="text-center py-8">
                                     <p className="text-muted-foreground mb-4">
-                                        لا توجد دروس أو اختبارات في هذه الكورس. سيتم إضافة الاختبار في الموقع الأول.
+                                        This course has no lessons or quizzes yet. The quiz will be added in the first position.
                                     </p>
                                     <div className="p-3 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50">
                                         <div className="flex items-center justify-center space-x-3">
                                             <div>
                                                 <div className="font-medium text-blue-800">
-                                                    {quizTitle || "اختبار جديد"}
+                                                    {quizTitle || "New quiz"}
                                                 </div>
-                                                <div className="text-sm text-blue-600">اختبار</div>
+                                                <div className="text-sm text-blue-600">Quiz</div>
                                             </div>
                                             <Badge variant="outline" className="border-blue-300 text-blue-700">
-                                                جديد
+                                                New
                                             </Badge>
                                         </div>
                                     </div>
@@ -573,31 +573,31 @@ const CreateQuizContent = () => {
                 )}
 
                 <div className="space-y-2">
-                    <Label>وصف الاختبار</Label>
+                    <Label>Description</Label>
                     <Textarea
                         value={quizDescription}
                         onChange={(e) => setQuizDescription(e.target.value)}
-                        placeholder="أدخل وصف الاختبار"
+                        placeholder="Enter quiz description"
                         rows={3}
                     />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <Label>مدة الاختبار (بالدقائق)</Label>
+                        <Label>Time limit (minutes)</Label>
                         <Input
                             type="number"
                             value={quizTimer || ""}
                             onChange={(e) => setQuizTimer(e.target.value ? parseInt(e.target.value) : null)}
-                            placeholder="اترك فارغاً لعدم تحديد مدة"
+                            placeholder="Leave empty for no time limit"
                             min="1"
                         />
                         <p className="text-sm text-muted-foreground">
-                            اترك الحقل فارغاً إذا كنت لا تريد تحديد مدة للاختبار
+                            Leave blank if you do not want a time limit.
                         </p>
                     </div>
                     <div className="space-y-2">
-                        <Label>عدد المحاولات المسموحة</Label>
+                        <Label>Allowed attempts</Label>
                         <Input
                             type="number"
                             value={quizMaxAttempts}
@@ -606,17 +606,17 @@ const CreateQuizContent = () => {
                             max="10"
                         />
                         <p className="text-sm text-muted-foreground">
-                            عدد المرات التي يمكن للطالب إعادة الاختبار
+                            How many times a student may retake the quiz
                         </p>
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <Label>الأسئلة</Label>
+                        <Label>Questions</Label>
                         <Button type="button" variant="outline" onClick={addQuestion}>
                             <Plus className="h-4 w-4 mr-2" />
-                            إضافة سؤال
+                            Add question
                         </Button>
                     </div>
 
@@ -625,12 +625,12 @@ const CreateQuizContent = () => {
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <CardTitle className="text-lg">السؤال {index + 1}</CardTitle>
+                                        <CardTitle className="text-lg">Question {index + 1}</CardTitle>
                                         {(!question.text.trim() || !question.correctAnswer.toString().trim() || 
                                           (question.type === "MULTIPLE_CHOICE" && 
                                            (!question.options || question.options.filter(opt => opt.trim() !== "").length < 2))) && (
                                             <Badge variant="destructive" className="text-xs text-white">
-                                                غير مكتمل
+                                                Incomplete
                                             </Badge>
                                         )}
                                     </div>
@@ -647,11 +647,11 @@ const CreateQuizContent = () => {
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <Label>نص السؤال</Label>
+                                        <Label>Question text</Label>
                                         <div className="flex items-center gap-2">
                                             {listeningQuestionId === question.id && (
                                                 <span className="text-xs text-blue-600">
-                                                    جاري الاستماع...
+                                                    Listening…
                                                 </span>
                                             )}
                                             <Button
@@ -664,7 +664,7 @@ const CreateQuizContent = () => {
                                             >
                                                 <Mic className="h-4 w-4" />
                                                 <span className="sr-only">
-                                                    {listeningQuestionId === question.id ? "إيقاف التسجيل الصوتي" : "بدء التسجيل الصوتي"}
+                                                    {listeningQuestionId === question.id ? "Stop voice input" : "Start voice input"}
                                                 </span>
                                             </Button>
                                         </div>
@@ -672,12 +672,12 @@ const CreateQuizContent = () => {
                                     <Textarea
                                         value={question.text}
                                         onChange={(e) => updateQuestion(index, "text", e.target.value)}
-                                        placeholder="أدخل نص السؤال"
+                                        placeholder="Enter the question"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>صورة السؤال (اختياري)</Label>
+                                    <Label>Question image (optional)</Label>
                                     <div className="space-y-2">
                                         {question.imageUrl ? (
                                             <div className="relative">
@@ -703,12 +703,12 @@ const CreateQuizContent = () => {
                                                     onClientUploadComplete={(res) => {
                                                         if (res && res[0]) {
                                                             updateQuestion(index, "imageUrl", res[0].url);
-                                                            toast.success("تم رفع الصورة بنجاح");
+                                                            toast.success("Image uploaded");
                                                         }
                                                         setUploadingImages(prev => ({ ...prev, [index]: false }));
                                                     }}
                                                     onUploadError={(error: Error) => {
-                                                        toast.error(`حدث خطأ أثناء رفع الصورة: ${error.message}`);
+                                                        toast.error(`Something went wrong while uploading the image: ${error.message}`);
                                                         setUploadingImages(prev => ({ ...prev, [index]: false }));
                                                     }}
                                                     onUploadBegin={() => {
@@ -722,7 +722,7 @@ const CreateQuizContent = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label>نوع السؤال</Label>
+                                        <Label>Question type</Label>
                                         <Select
                                             value={question.type}
                                             onValueChange={(value: "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SHORT_ANSWER") =>
@@ -733,14 +733,14 @@ const CreateQuizContent = () => {
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="MULTIPLE_CHOICE">اختيار من متعدد</SelectItem>
-                                                <SelectItem value="TRUE_FALSE">صح أو خطأ</SelectItem>
-                                                <SelectItem value="SHORT_ANSWER">إجابة قصيرة</SelectItem>
+                                                <SelectItem value="MULTIPLE_CHOICE">Multiple choice</SelectItem>
+                                                <SelectItem value="TRUE_FALSE">True / false</SelectItem>
+                                                <SelectItem value="SHORT_ANSWER">Short answer</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>الدرجات</Label>
+                                        <Label>Points</Label>
                                         <Input
                                             type="number"
                                             value={question.points}
@@ -752,7 +752,7 @@ const CreateQuizContent = () => {
 
                                 {question.type === "MULTIPLE_CHOICE" && (
                                     <div className="space-y-2">
-                                        <Label>الخيارات</Label>
+                                        <Label>Options</Label>
                                         {(question.options || ["", "", "", ""]).map((option, optionIndex) => (
                                             <div key={`${question.id}-option-${optionIndex}`} className="flex items-center space-x-2">
                                                 <Input
@@ -762,7 +762,7 @@ const CreateQuizContent = () => {
                                                         newOptions[optionIndex] = e.target.value;
                                                         updateQuestion(index, "options", newOptions);
                                                     }}
-                                                    placeholder={`الخيار ${optionIndex + 1}`}
+                                                    placeholder={`Option ${optionIndex + 1}`}
                                                 />
                                                 <input
                                                     type="radio"
@@ -777,17 +777,17 @@ const CreateQuizContent = () => {
 
                                 {question.type === "TRUE_FALSE" && (
                                     <div className="space-y-2">
-                                        <Label>الإجابة الصحيحة</Label>
+                                        <Label>Correct answer</Label>
                                         <Select
                                             value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                                             onValueChange={(value) => updateQuestion(index, "correctAnswer", value)}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="اختر الإجابة الصحيحة" />
+                                                <SelectValue placeholder="Select the correct answer" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="true">صح</SelectItem>
-                                                <SelectItem value="false">خطأ</SelectItem>
+                                                <SelectItem value="true">True</SelectItem>
+                                                <SelectItem value="false">False</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -795,11 +795,11 @@ const CreateQuizContent = () => {
 
                                 {question.type === "SHORT_ANSWER" && (
                                     <div className="space-y-2">
-                                        <Label>الإجابة الصحيحة</Label>
+                                        <Label>Correct answer</Label>
                                         <Input
                                             value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                                             onChange={(e) => updateQuestion(index, "correctAnswer", e.target.value)}
-                                            placeholder="أدخل الإجابة الصحيحة"
+                                            placeholder="Enter the correct answer"
                                         />
                                     </div>
                                 )}
@@ -810,13 +810,13 @@ const CreateQuizContent = () => {
 
                 <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={goBackAfterQuizFlow}>
-                        إلغاء
+                        Cancel
                     </Button>
                     <Button
                         onClick={handleCreateQuiz}
                         disabled={isCreatingQuiz || questions.length === 0}
                     >
-                        {isCreatingQuiz ? "جاري الحفظ..." : "إنشاء الاختبار"}
+                        {isCreatingQuiz ? "Saving…" : "Create quiz"}
                     </Button>
                 </div>
             </div>
@@ -826,7 +826,7 @@ const CreateQuizContent = () => {
 
 export default function CreateQuizPage() {
     return (
-        <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]">جاري التحميل...</div>}>
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[400px] text-muted-foreground">Loading…</div>}>
             <CreateQuizContent />
         </Suspense>
     );

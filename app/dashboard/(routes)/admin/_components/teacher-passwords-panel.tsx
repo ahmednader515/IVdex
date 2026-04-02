@@ -47,7 +47,7 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
 
     const handlePasswordChange = async () => {
         if (!selectedUser || !newPassword) {
-            toast.error("يرجى إدخال كلمة مرور جديدة");
+            toast.error("Please enter a new password");
             return;
         }
 
@@ -61,16 +61,16 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
             });
 
             if (response.ok) {
-                toast.success("تم تغيير كلمة المرور بنجاح");
+                toast.success("Password updated successfully");
                 setNewPassword("");
                 setIsDialogOpen(false);
                 setSelectedUser(null);
             } else {
-                toast.error("حدث خطأ أثناء تغيير كلمة المرور");
+                toast.error("Something went wrong while changing the password");
             }
         } catch (error) {
             console.error("Error changing password:", error);
-            toast.error("حدث خطأ أثناء تغيير كلمة المرور");
+            toast.error("Something went wrong while changing the password");
         }
     };
 
@@ -87,17 +87,17 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className={embedded ? "space-y-4" : "p-6 space-y-6"} dir="rtl">
+        <div className={embedded ? "space-y-4" : "p-6 space-y-6"}>
             {!embedded && (
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    إدارة كلمات المرور
+                    Password management
                 </h1>
             </div>
             )}
@@ -106,14 +106,14 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
             {staffUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>المشرفين والمعلمين</CardTitle>
-                        <div className="flex items-center gap-2 md:flex-row-reverse md:justify-end">
+                        <CardTitle>Staff</CardTitle>
+                        <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
+                                placeholder="Search by name or phone..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm text-right"
+                                className="max-w-sm text-left"
                             />
                         </div>
                     </CardHeader>
@@ -121,20 +121,20 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {staffUsers.map((user) => (
                                     <TableRow key={user.id}>
-                                        <TableCell label="الاسم" className="font-medium">
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge 
                                                 variant="secondary"
                                                 className={
@@ -143,24 +143,24 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                                                 }
                                             >
                                                 {user.role === "ADMIN_ASSISTANT"
-                                                    ? "مساعد ادمن"
+                                                    ? "Admin assistant"
                                                     : user.role === "ADMIN"
-                                                      ? "ادمن"
+                                                      ? "Admin"
                                                       : user.role}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
-                                                className="md:flex-row-reverse"
+                                                className="gap-2"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setIsDialogOpen(true);
                                                 }}
                                             >
                                                 <Edit className="h-4 w-4" />
-                                                تغيير كلمة المرور
+                                                Change password
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -175,14 +175,14 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
             {studentUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>قائمة الطلاب</CardTitle>
-                        <div className="flex items-center gap-2 md:flex-row-reverse md:justify-end">
+                        <CardTitle>Students</CardTitle>
+                        <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
+                                placeholder="Search by name or phone..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm text-right"
+                                className="max-w-sm text-left"
                             />
                         </div>
                     </CardHeader>
@@ -190,36 +190,36 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {studentUsers.map((user) => (
                                     <TableRow key={user.id}>
-                                        <TableCell label="الاسم" className="font-medium">
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge variant="secondary">
-                                                طالب
+                                                Student
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button 
                                                 size="sm" 
                                                 variant="outline"
-                                                className="md:flex-row-reverse"
+                                                className="gap-2"
                                                 onClick={() => {
                                                     setSelectedUser(user);
                                                     setIsDialogOpen(true);
                                                 }}
                                             >
                                                 <Edit className="h-4 w-4" />
-                                                تغيير كلمة المرور
+                                                Change password
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -234,7 +234,7 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                 <Card>
                     <CardContent className="p-6">
                         <div className="text-center text-muted-foreground">
-                            لا توجد مستخدمين متاحين
+                            No users found
                         </div>
                     </CardContent>
                 </Card>
@@ -255,26 +255,26 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            تغيير كلمة مرور {selectedUser?.fullName}
+                            Change password — {selectedUser?.fullName}
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="newPassword">كلمة المرور الجديدة</Label>
+                            <Label htmlFor="newPassword">New password</Label>
                             <div className="relative">
                                 <Input
                                     id="newPassword"
                                     type={showPassword ? "text" : "password"}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="أدخل كلمة المرور الجديدة"
-                                    className="text-right"
+                                    placeholder="Enter new password"
+                                    className="pr-10 text-left"
                                 />
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? (
@@ -285,7 +285,7 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                                 </Button>
                             </div>
                         </div>
-                        <div className="flex justify-end gap-2 md:flex-row-reverse md:justify-start">
+                        <div className="flex justify-end gap-2">
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -294,10 +294,10 @@ export function TeacherPasswordsPanel({ embedded = false }: { embedded?: boolean
                                     setSelectedUser(null);
                                 }}
                             >
-                                إلغاء
+                                Cancel
                             </Button>
                             <Button onClick={handlePasswordChange}>
-                                تغيير كلمة المرور
+                                Update password
                             </Button>
                         </div>
                     </div>

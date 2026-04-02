@@ -224,8 +224,8 @@ const NavigationLoadingContent = () => {
       >
         <SpinningDna size="lg" />
         <div className="space-y-1 text-center">
-          <p className="text-base font-bold text-white md:text-lg">جاري التحميل...</p>
-          <p className="text-xs text-white/55 md:text-sm">IVdex — منصة التكنولوجيا الحيوية</p>
+          <p className="text-base font-bold text-white md:text-lg">Loading…</p>
+          <p className="text-xs text-white/55 md:text-sm">Educational Biotechnology platform</p>
         </div>
       </div>
     </div>

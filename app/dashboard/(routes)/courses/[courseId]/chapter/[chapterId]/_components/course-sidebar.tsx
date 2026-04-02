@@ -28,7 +28,7 @@ export const CourseSidebar = ({
         <div className="mt-4">
           <div className="flex items-center gap-x-2">
             <div className="text-sm font-medium">
-              التقدم: {progress}%
+              Progress: {progress}%
             </div>
           </div>
         </div>

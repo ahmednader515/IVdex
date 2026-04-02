@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { Search, Eye, Award, TrendingUp, Users, FileText } from "lucide-react";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface Course {
   id: string;
@@ -155,8 +155,8 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
   if (loading) {
     return (
       <div className={embedded ? "py-4" : "p-6"}>
-        <div className="text-right" dir="rtl">
-          جاري التحميل...
+        <div className="text-left text-muted-foreground">
+          Loading…
         </div>
       </div>
     );
@@ -165,20 +165,20 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
   const wrapClass = embedded ? "space-y-4" : "p-6 space-y-6";
 
   return (
-    <div className={wrapClass} dir="rtl">
+    <div className={wrapClass}>
       {!embedded && (
         <div className="flex items-center justify-between">
-          <h1 className="text-right text-3xl font-bold text-gray-900 dark:text-white">درجات الطلاب</h1>
+          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">Student grades</h1>
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="p-6">
-            <div className="flex flex-row-reverse items-center gap-2">
+            <div className="flex items-center gap-2">
               <Users className="h-8 w-8 text-blue-600" />
-              <div className="flex-1 text-right">
-                <p className="text-sm font-medium text-muted-foreground">إجمالي الطلاب</p>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-medium text-muted-foreground">Total students</p>
                 <p className="text-2xl font-bold">{new Set(quizResults.map((r) => r.studentId)).size}</p>
               </div>
             </div>
@@ -186,10 +186,10 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="flex flex-row-reverse items-center gap-2">
+            <div className="flex items-center gap-2">
               <Award className="h-8 w-8 text-green-600" />
-              <div className="flex-1 text-right">
-                <p className="text-sm font-medium text-muted-foreground">متوسط الدرجات</p>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-medium text-muted-foreground">Average score</p>
                 <p className="text-2xl font-bold">
                   {quizResults.length > 0
                     ? Math.round(quizResults.reduce((sum, r) => sum + r.percentage, 0) / quizResults.length)
@@ -202,10 +202,10 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="flex flex-row-reverse items-center gap-2">
+            <div className="flex items-center gap-2">
               <TrendingUp className="h-8 w-8 text-purple-600" />
-              <div className="flex-1 text-right">
-                <p className="text-sm font-medium text-muted-foreground">أعلى درجة</p>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-medium text-muted-foreground">Highest score</p>
                 <p className="text-2xl font-bold">
                   {quizResults.length > 0 ? Math.max(...quizResults.map((r) => r.percentage)) : 0}%
                 </p>
@@ -215,10 +215,10 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="flex flex-row-reverse items-center gap-2">
+            <div className="flex items-center gap-2">
               <FileText className="h-8 w-8 text-orange-600" />
-              <div className="flex-1 text-right">
-                <p className="text-sm font-medium text-muted-foreground">إجمالي الاختبارات</p>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-medium text-muted-foreground">Total attempts</p>
                 <p className="text-2xl font-bold">{quizResults.length}</p>
               </div>
             </div>
@@ -228,16 +228,16 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-right">فلاتر البحث</CardTitle>
+          <CardTitle className="text-left">Search filters</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <label className="block text-right text-sm font-medium">البحث</label>
+              <label className="block text-left text-sm font-medium">Search</label>
               <div className="relative">
                 <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
                 <Input
-                  placeholder="البحث بالطالب أو الاختبار..."
+                  placeholder="Search by student or quiz…"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="min-h-11 ps-10"
@@ -245,13 +245,13 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
               </div>
             </div>
             <div className="space-y-2">
-              <label className="block text-right text-sm font-medium">الكورس</label>
+              <label className="block text-left text-sm font-medium">Course</label>
               <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                 <SelectTrigger className="min-h-11">
-                  <SelectValue placeholder="جميع الكورسات" />
+                  <SelectValue placeholder="All courses" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">جميع الكورسات</SelectItem>
+                  <SelectItem value="all">All courses</SelectItem>
                   {courses.map((course) => (
                     <SelectItem key={course.id} value={course.id}>
                       {course.title}
@@ -261,13 +261,13 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="block text-right text-sm font-medium">الاختبار</label>
+              <label className="block text-left text-sm font-medium">Quiz</label>
               <Select value={selectedQuiz} onValueChange={setSelectedQuiz}>
                 <SelectTrigger className="min-h-11">
-                  <SelectValue placeholder="جميع الاختبارات" />
+                  <SelectValue placeholder="All quizzes" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">جميع الاختبارات</SelectItem>
+                  <SelectItem value="all">All quizzes</SelectItem>
                   {quizzes.map((quiz) => (
                     <SelectItem key={quiz.id} value={quiz.id}>
                       {quiz.title}
@@ -282,19 +282,19 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-right">نتائج الاختبارات</CardTitle>
+          <CardTitle className="text-left">Quiz results</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-right">الطالب</TableHead>
-                <TableHead className="text-right">الاختبار</TableHead>
-                <TableHead className="text-right">الكورس</TableHead>
-                <TableHead className="text-right">الدرجة</TableHead>
-                <TableHead className="text-right">النسبة المئوية</TableHead>
-                <TableHead className="text-right">تاريخ التقديم</TableHead>
-                <TableHead className="text-right">الإجراءات</TableHead>
+                <TableHead className="text-left">Student</TableHead>
+                <TableHead className="text-left">Quiz</TableHead>
+                <TableHead className="text-left">Course</TableHead>
+                <TableHead className="text-left">Score</TableHead>
+                <TableHead className="text-left">Percent</TableHead>
+                <TableHead className="text-left">Submitted</TableHead>
+                <TableHead className="text-left">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -302,25 +302,25 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
                 const gradeBadge = getGradeBadge(result.percentage);
                 return (
                   <TableRow key={result.id}>
-                    <TableCell label="الطالب" className="font-medium">
+                    <TableCell label="Student" className="font-medium">
                       {result.user.fullName}
                     </TableCell>
-                    <TableCell label="الاختبار">{result.quiz.title}</TableCell>
-                    <TableCell label="الكورس">
+                    <TableCell label="Quiz">{result.quiz.title}</TableCell>
+                    <TableCell label="Course">
                       <Badge variant="outline">{result.quiz.course.title}</Badge>
                     </TableCell>
-                    <TableCell label="الدرجة">
+                    <TableCell label="Score">
                       <span className="font-bold">
                         {result.score}/{result.totalPoints}
                       </span>
                     </TableCell>
-                    <TableCell label="النسبة المئوية">
+                    <TableCell label="Percent">
                       <Badge {...gradeBadge}>{result.percentage}%</Badge>
                     </TableCell>
-                    <TableCell label="تاريخ التقديم">
-                      {format(new Date(result.submittedAt), "dd/MM/yyyy", { locale: ar })}
+                    <TableCell label="Submitted">
+                      {format(new Date(result.submittedAt), "MM/dd/yyyy", { locale: enUS })}
                     </TableCell>
-                    <TableCell label="الإجراءات">
+                    <TableCell label="Actions">
                       <Button
                         size="sm"
                         variant="outline"
@@ -328,7 +328,7 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
                         onClick={() => handleViewResult(result)}
                       >
                         <Eye className="h-4 w-4 shrink-0" />
-                        عرض التفاصيل
+                        View details
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -342,13 +342,13 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-right">تفاصيل نتيجة {selectedResult?.user.fullName}</DialogTitle>
+            <DialogTitle className="text-left">Result details — {selectedResult?.user.fullName}</DialogTitle>
           </DialogHeader>
           {selectedResult && (
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>ملخص النتيجة</CardTitle>
+                  <CardTitle>Summary</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 gap-4 text-center md:grid-cols-2 lg:grid-cols-4">
@@ -356,30 +356,30 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
                       <div className="text-2xl font-bold text-blue-600">
                         {selectedResult.score}/{selectedResult.totalPoints}
                       </div>
-                      <div className="text-sm text-muted-foreground">الدرجة</div>
+                      <div className="text-sm text-muted-foreground">Score</div>
                     </div>
                     <div>
                       <div className={`text-2xl font-bold ${getGradeColor(selectedResult.percentage)}`}>
                         {selectedResult.percentage}%
                       </div>
-                      <div className="text-sm text-muted-foreground">النسبة المئوية</div>
+                      <div className="text-sm text-muted-foreground">Percent</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-green-600">
                         {selectedResult.answers.filter((a) => a.isCorrect).length}
                       </div>
-                      <div className="text-sm text-muted-foreground">إجابات صحيحة</div>
+                      <div className="text-sm text-muted-foreground">Correct</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-red-600">
                         {selectedResult.answers.filter((a) => !a.isCorrect).length}
                       </div>
-                      <div className="text-sm text-muted-foreground">إجابات خاطئة</div>
+                      <div className="text-sm text-muted-foreground">Incorrect</div>
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-sm font-medium">التقدم العام</span>
+                      <span className="text-sm font-medium">Overall progress</span>
                       <span className="text-sm font-medium">{selectedResult.percentage}%</span>
                     </div>
                     <Progress value={selectedResult.percentage} className="w-full" />
@@ -389,31 +389,31 @@ export function TeacherGradesPanel({ embedded = false }: { embedded?: boolean })
 
               <Card>
                 <CardHeader>
-                  <CardTitle>تفاصيل الإجابات</CardTitle>
+                  <CardTitle>Answer details</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {selectedResult.answers.map((answer, index) => (
                       <div key={answer.questionId} className="rounded-lg border p-4">
                         <div className="mb-2 flex items-center justify-between">
-                          <h4 className="font-medium">السؤال {index + 1}</h4>
+                          <h4 className="font-medium">Question {index + 1}</h4>
                           <Badge variant={answer.isCorrect ? "default" : "destructive"}>
-                            {answer.isCorrect ? "صحيح" : "خاطئ"}
+                            {answer.isCorrect ? "Correct" : "Wrong"}
                           </Badge>
                         </div>
                         <p className="mb-2 text-sm text-muted-foreground">{answer.question.text}</p>
                         <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                           <div>
-                            <span className="font-medium">إجابة الطالب:</span>
+                            <span className="font-medium">Student answer:</span>
                             <p className="text-muted-foreground">{answer.studentAnswer}</p>
                           </div>
                           <div>
-                            <span className="font-medium">الإجابة الصحيحة:</span>
+                            <span className="font-medium">Correct answer:</span>
                             <p className="text-green-600">{answer.correctAnswer}</p>
                           </div>
                         </div>
                         <div className="mt-2 text-sm">
-                          <span className="font-medium">الدرجات:</span>
+                          <span className="font-medium">Points:</span>
                           <span className="text-muted-foreground">
                             {" "}
                             {answer.pointsEarned}/{answer.question.points}

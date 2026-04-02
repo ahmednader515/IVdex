@@ -42,25 +42,25 @@ export const CourseNavbar = () => {
           variant="ghost"
           size="sm"
           loading={isBackLoading}
-          loadingText="جاري الرجوع..."
-          className="flex items-center gap-x-2 hover:bg-slate-100 rtl:mr-2 ltr:ml-2"
+          loadingText="Going back..."
+          className="flex items-center gap-x-2 hover:bg-slate-100 ml-2"
         >
-          <span className="rtl:text-right ltr:text-left">الرجوع إلى الكورسات</span>
-          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
+          <span className="text-left">Back to courses</span>
+          <ChevronRight className="h-4 w-4" />
         </LoadingButton>
       </div>
-      <div className="flex items-center gap-x-4 rtl:mr-auto ltr:ml-auto">
+      <div className="flex items-center gap-x-4 ml-auto">
         {session?.user && (
           <LoadingButton 
             size="sm" 
             variant="ghost" 
             onClick={handleLogout}
             loading={isLoggingOut}
-            loadingText="جاري تسجيل الخروج..."
+            loadingText="Signing out..."
             className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200 ease-in-out"
           >
-            <LogOut className="h-4 w-4 rtl:ml-2 ltr:mr-2"/>
-            تسجيل الخروج
+            <LogOut className="h-4 w-4 mr-2"/>
+            Log out
           </LoadingButton>
         )}
         <UserButton />

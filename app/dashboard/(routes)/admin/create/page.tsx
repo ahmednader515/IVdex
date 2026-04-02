@@ -54,9 +54,9 @@ const CreatePage = () => {
           });
       
           router.push(`/dashboard/admin/courses/${response.data.id}`);
-          toast.success("تم إنشاء الكورس");
+          toast.success("Course created");
         } catch {
-          toast.error("حدث خطأ");
+          toast.error("Something went wrong");
         }
       };
 
@@ -64,10 +64,10 @@ const CreatePage = () => {
         <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
             <div>
                 <h1 className="text-2xl">
-                    اسم الكورس
+                    Course name
                 </h1>
                 <p className="text-sm text-slate-600">
-                    ماذا تريد أن تسمي دورتك؟ لا تقلق، يمكنك تغيير هذا لاحقاً.
+                    What do you want to call your course? You can change this later.
                 </p>
                 <Form {...form}>
                     <form
@@ -82,17 +82,17 @@ const CreatePage = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        عنوان الكورس
+                                        Course title
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'تطوير الويب المتقدم'"
+                                            placeholder="e.g. Advanced web development"
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        ماذا ستعلم في هذه الكورس؟
+                                        What will students learn in this course?
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -106,14 +106,14 @@ const CreatePage = () => {
                                     variant="ghost"
                                     type="button"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </Button>
                             </Link>
                             <Button
                                 type="submit"
                                 disabled={!isValid || isSubmitting}
                             >
-                                استمر
+                                Continue
                             </Button>
                         </div>
 

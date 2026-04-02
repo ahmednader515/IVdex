@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/format";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 export type Course = {
     id: string;
@@ -20,8 +20,8 @@ export type Course = {
 export const columns: ColumnDef<Course>[] = [
     {
         id: "image",
-        header: "الغلاف",
-        meta: { mobileLabel: "الغلاف" },
+        header: "Cover",
+        meta: { mobileLabel: "Cover" },
         enableSorting: false,
         cell: ({ row }) => {
             const url = row.original.imageUrl;
@@ -44,14 +44,14 @@ export const columns: ColumnDef<Course>[] = [
     },
     {
         accessorKey: "title",
-        meta: { mobileLabel: "العنوان" },
+        meta: { mobileLabel: "Title" },
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    العنوان
+                    Title
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
@@ -59,14 +59,14 @@ export const columns: ColumnDef<Course>[] = [
     },
     {
         accessorKey: "price",
-        meta: { mobileLabel: "السعر" },
+        meta: { mobileLabel: "Price" },
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    السعر
+                    Price
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
@@ -78,14 +78,14 @@ export const columns: ColumnDef<Course>[] = [
     },
     {
         accessorKey: "isPublished",
-        meta: { mobileLabel: "الحالة" },
+        meta: { mobileLabel: "Status" },
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    الحالة
+                    Status
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
@@ -94,28 +94,28 @@ export const columns: ColumnDef<Course>[] = [
             const isPublished = row.getValue("isPublished") || false;
             return (
                 <Badge variant={isPublished ? "default" : "secondary"}>
-                    {isPublished ? "منشور" : "غير منشور"}
+                    {isPublished ? "Published" : "Draft"}
                 </Badge>
             );
         },
     },
     {
         accessorKey: "createdAt",
-        meta: { mobileLabel: "تاريخ الإنشاء" },
+        meta: { mobileLabel: "Created" },
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    انشئ في
+                    Created
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
         cell: ({ row }) => {
             const date = new Date(row.getValue("createdAt"));
-            return <div>{format(date, "dd/MM/yyyy", { locale: ar })}</div>;
+            return <div>{format(date, "MM/dd/yyyy", { locale: enUS })}</div>;
         },
     }
 ]; 

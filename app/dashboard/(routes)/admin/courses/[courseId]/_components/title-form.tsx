@@ -30,7 +30,7 @@ interface TitleFormProps {
 
 const formSchema = z.object({
   title: z.string().min(1, {
-    message: "عنوان الكورس مطلوب",
+    message: "Course title is required",
   }),
 });
 
@@ -51,10 +51,10 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("تم حفظ عنوان الكورس");
+      toast.success("Course title saved");
       router.refresh();
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("Something went wrong");
     }
   };
 
@@ -72,14 +72,14 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
             name="title"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel className="text-base font-semibold">عنوان الكورس</FormLabel>
+                <FormLabel className="text-base font-semibold">Course title</FormLabel>
                 <FormDescription className="text-sm leading-relaxed">
-                  يظهر للطلاب في القائمة وفي صفحة الكورس. اختر عنواناً واضحاً.
+                  Shown to students in the catalog and on the course page. Choose a clear title.
                 </FormDescription>
                 <FormControl>
                   <Input
                     disabled={isSubmitting}
-                    placeholder="مثال: الرياضيات للصف الثالث الثانوي"
+                    placeholder="e.g. Math — third year secondary"
                     className="min-h-12 text-base md:min-h-11"
                     {...field}
                   />
@@ -93,7 +93,7 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
             type="submit"
             className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
           >
-            {isSubmitting ? "جاري الحفظ..." : "حفظ العنوان"}
+            {isSubmitting ? "Saving..." : "Save title"}
           </Button>
         </form>
       </Form>

@@ -145,9 +145,9 @@ const PaymentStatusPage = () => {
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <h1 className="text-2xl font-bold mb-2">يتم تأكيد عملية الدفع</h1>
-          <p className="text-muted-foreground">الرجاء الأنتظار حتي نتأكد من عملية الدفع</p>
-          <p className="text-xs text-muted-foreground mt-2">محاولة التأكد: {checkCount}/{MAX_CHECKS}</p>
+          <h1 className="text-2xl font-bold mb-2">Confirming your payment</h1>
+          <p className="text-muted-foreground">Please wait while we verify your payment.</p>
+          <p className="text-xs text-muted-foreground mt-2">Verification attempt: {checkCount}/{MAX_CHECKS}</p>
         </div>
       </div>
     );
@@ -158,13 +158,13 @@ const PaymentStatusPage = () => {
       <div className="h-full flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6">
           <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">تم الدفع بنجاح!</h1>
+          <h1 className="text-2xl font-bold mb-2">Payment successful!</h1>
           <p className="text-muted-foreground mb-6">
-              تمت معالجة دفعتك بنجاح. لديك الآن وصول كامل إلى الكورس.
+              Your payment was processed successfully. You now have full access to the course.
           </p>
           <Button asChild size="lg" className="w-full">
             <Link href="/dashboard">
-              لوحة التحكم
+              Dashboard
             </Link>
           </Button>
         </div>
@@ -176,12 +176,12 @@ const PaymentStatusPage = () => {
     <div className="h-full flex items-center justify-center">
       <div className="text-center max-w-md mx-auto p-6">
         <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold mb-2">فشل الدفع</h1>
+        <h1 className="text-2xl font-bold mb-2">Payment failed</h1>
         <p className="text-muted-foreground mb-6">
-          تم إلغاء عملية الدفع أو فشلت. يمكنك المحاولة مرة أخرى.
+          The payment was cancelled or could not be completed. You can try again.
         </p>
         <Button onClick={handleTryAgain} size="lg" className="w-full">
-          حاول مرة اخري
+          Try again
         </Button>
       </div>
     </div>

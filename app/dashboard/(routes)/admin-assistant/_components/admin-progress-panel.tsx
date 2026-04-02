@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Progress } from "@/components/ui/progress";
 import { Search, Eye, BookOpen, CheckCircle, Clock } from "lucide-react";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface User {
     id: string;
@@ -126,26 +126,26 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
     if (loading) {
         return (
             <div className="p-6">
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center text-muted-foreground">Loading…</div>
             </div>
         );
     }
 
     return (
-        <div className="p-6 space-y-6 text-right" dir="rtl">
+        <div className="p-6 space-y-6 text-left">
             <div className="flex items-center justify-between">
-                <h1 className="text-right text-3xl font-bold text-gray-900 dark:text-white">
-                    تقدم الطلاب
+                <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+                    Student progress
                 </h1>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>قائمة الطلاب</CardTitle>
+                    <CardTitle>Students</CardTitle>
                     <div className="flex items-center space-x-2">
                         <Search className="h-4 w-4 text-muted-foreground" />
                         <Input
-                            placeholder="البحث بالاسم أو رقم الهاتف..."
+                            placeholder="Search by name or phone…"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-sm"
@@ -156,38 +156,38 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
                     <Table>
                                                  <TableHeader>
                              <TableRow>
-                                 <TableHead className="text-right">الاسم</TableHead>
-                                 <TableHead className="text-right">رقم الهاتف</TableHead>
-                                 <TableHead className="text-right">الكورسات المشتراة</TableHead>
-                                 <TableHead className="text-right">التقدم</TableHead>
-                                 <TableHead className="text-right">الإجراءات</TableHead>
+                                 <TableHead className="text-left">Name</TableHead>
+                                 <TableHead className="text-left">Phone</TableHead>
+                                 <TableHead className="text-left">Purchased courses</TableHead>
+                                 <TableHead className="text-left">Progress</TableHead>
+                                 <TableHead className="text-left">Actions</TableHead>
                              </TableRow>
                          </TableHeader>
                         <TableBody>
                             {studentUsers.map((user) => (
                                 <TableRow key={user.id}>
-                                    <TableCell label="الاسم" className="font-medium">
+                                    <TableCell label="Name" className="font-medium">
                                         {user.fullName}
                                     </TableCell>
-                                    <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                    <TableCell label="الكورسات المشتراة">
+                                    <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                    <TableCell label="Purchased courses">
                                         <Badge variant="outline">
-                                            {user._count.purchases} كورس
+                                            {user._count.purchases} course{user._count.purchases !== 1 ? "s" : ""}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell label="التقدم">
+                                    <TableCell label="Progress">
                                         <Badge variant="secondary">
-                                            {user._count.userProgress} درس
+                                            {user._count.userProgress} lesson{user._count.userProgress !== 1 ? "s" : ""}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell label="الإجراءات">
+                                    <TableCell label="Actions">
                                         <Button 
                                             size="sm" 
                                             variant="outline"
                                             onClick={() => handleViewProgress(user)}
                                         >
                                             <Eye className="h-4 w-4" />
-                                            عرض التقدم
+                                            View progress
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -201,34 +201,34 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
                 <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
-                            تقدم {selectedUser?.fullName}
+                            Progress — {selectedUser?.fullName}
                         </DialogTitle>
                     </DialogHeader>
                     
                     {loadingProgress ? (
-                        <div className="text-center py-8">جاري التحميل...</div>
+                        <div className="text-center py-8 text-muted-foreground">Loading…</div>
                     ) : (
                         <div className="space-y-6">
                             {/* Progress Summary */}
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>ملخص التقدم</CardTitle>
+                                    <CardTitle>Progress summary</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <span>نسبة الإنجاز</span>
+                                            <span>Completion rate</span>
                                             <span className="font-bold">{progressPercentage.toFixed(1)}%</span>
                                         </div>
                                         <Progress value={progressPercentage} className="w-full" />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
                                             <div>
                                                 <div className="text-2xl font-bold text-green-600">{completedProgress}</div>
-                                                <div className="text-sm text-muted-foreground">مكتمل</div>
+                                                <div className="text-sm text-muted-foreground">Completed</div>
                                             </div>
                                             <div>
                                                 <div className="text-2xl font-bold text-gray-600">{notStartedChapters}</div>
-                                                <div className="text-sm text-muted-foreground">لم يبدأ</div>
+                                                <div className="text-sm text-muted-foreground">Not started</div>
                                             </div>
                                         </div>
                                     </div>
@@ -238,34 +238,34 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
                             {/* Purchased Courses */}
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>الكورسات المشتراة</CardTitle>
+                                    <CardTitle>Purchased courses</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <Table>
                                                                                  <TableHeader>
                                              <TableRow>
-                                                 <TableHead className="text-right">اسم الكورس</TableHead>
-                                                 <TableHead className="text-right">السعر</TableHead>
-                                                 <TableHead className="text-right">الحالة</TableHead>
-                                                 <TableHead className="text-right">تاريخ الشراء</TableHead>
+                                                 <TableHead className="text-left">Course</TableHead>
+                                                 <TableHead className="text-left">Price</TableHead>
+                                                 <TableHead className="text-left">Status</TableHead>
+                                                 <TableHead className="text-left">Purchase date</TableHead>
                                              </TableRow>
                                          </TableHeader>
                                         <TableBody>
                                             {userPurchases.map((purchase) => (
                                                 <TableRow key={purchase.id}>
-                                                    <TableCell label="اسم الكورس" className="font-medium">
+                                                    <TableCell label="Course" className="font-medium">
                                                         {purchase.course.title}
                                                     </TableCell>
-                                                    <TableCell label="السعر">
-                                                        {purchase.course.price} جنيه
+                                                    <TableCell label="Price">
+                                                        {purchase.course.price} EGP
                                                     </TableCell>
-                                                    <TableCell label="الحالة">
+                                                    <TableCell label="Status">
                                                         <Badge variant={purchase.status === "ACTIVE" ? "default" : "secondary"}>
-                                                            {purchase.status === "ACTIVE" ? "نشط" : "غير نشط"}
+                                                            {purchase.status === "ACTIVE" ? "Active" : "Inactive"}
                                                         </Badge>
                                                     </TableCell>
-                                                    <TableCell label="تاريخ الشراء">
-                                                        {format(new Date(purchase.createdAt), "dd/MM/yyyy", { locale: ar })}
+                                                    <TableCell label="Purchase date">
+                                                        {format(new Date(purchase.createdAt), "MM/dd/yyyy", { locale: enUS })}
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
@@ -277,16 +277,16 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
                             {/* Progress Details */}
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>تفاصيل التقدم</CardTitle>
+                                    <CardTitle>Lesson progress</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <Table>
                                                                                  <TableHeader>
                                              <TableRow>
-                                                 <TableHead className="text-right">الكورس</TableHead>
-                                                 <TableHead className="text-right">الدرس</TableHead>
-                                                 <TableHead className="text-right">الحالة</TableHead>
-                                                 <TableHead className="text-right">آخر تحديث</TableHead>
+                                                 <TableHead className="text-left">Course</TableHead>
+                                                 <TableHead className="text-left">Lesson</TableHead>
+                                                 <TableHead className="text-left">Status</TableHead>
+                                                 <TableHead className="text-left">Last updated</TableHead>
                                              </TableRow>
                                          </TableHeader>
                                         <TableBody>
@@ -294,35 +294,35 @@ export function AdminProgressPanel({ embedded = false }: { embedded?: boolean })
                                                 const progress = userProgress.find(p => p.chapter.id === chapter.id);
                                                 return (
                                                     <TableRow key={chapter.id}>
-                                                        <TableCell label="الكورس" className="font-medium">
+                                                        <TableCell label="Course" className="font-medium">
                                                             {chapter.course.title}
                                                         </TableCell>
-                                                        <TableCell label="الدرس">
+                                                        <TableCell label="Lesson">
                                                             {chapter.title}
                                                         </TableCell>
-                                                        <TableCell label="الحالة">
+                                                        <TableCell label="Status">
                                                             {progress ? (
                                                                 progress.isCompleted ? (
                                                                     <Badge variant="default" className="flex items-center gap-1">
                                                                         <CheckCircle className="h-3 w-3" />
-                                                                        مكتمل
+                                                                        Completed
                                                                     </Badge>
                                                                 ) : (
                                                                     <Badge variant="secondary" className="flex items-center gap-1">
                                                                         <Clock className="h-3 w-3" />
-                                                                        قيد التقدم
+                                                                        In progress
                                                                     </Badge>
                                                                 )
                                                             ) : (
                                                                 <Badge variant="outline" className="flex items-center gap-1">
                                                                     <BookOpen className="h-3 w-3" />
-                                                                    لم يبدأ
+                                                                    Not started
                                                                 </Badge>
                                                             )}
                                                         </TableCell>
-                                                        <TableCell label="آخر تحديث">
+                                                        <TableCell label="Last updated">
                                                             {progress ? (
-                                                                format(new Date(progress.updatedAt), "dd/MM/yyyy", { locale: ar })
+                                                                format(new Date(progress.updatedAt), "MM/dd/yyyy", { locale: enUS })
                                                             ) : (
                                                                 "-"
                                                             )}

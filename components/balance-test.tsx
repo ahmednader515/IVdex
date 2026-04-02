@@ -14,7 +14,7 @@ export const BalanceTest = () => {
 
   const handleAddBalance = async () => {
     if (!amount || parseFloat(amount) <= 0) {
-      toast.error("يرجى إدخال مبلغ صحيح");
+      toast.error("Please enter a valid amount");
       return;
     }
 
@@ -30,15 +30,15 @@ export const BalanceTest = () => {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success("تم إضافة الرصيد بنجاح");
+        toast.success("Balance added successfully");
         setAmount("");
       } else {
         const error = await response.text();
-        toast.error(error || "حدث خطأ أثناء إضافة الرصيد");
+        toast.error(error || "Something went wrong while adding balance");
       }
     } catch (error) {
       console.error("Error adding balance:", error);
-      toast.error("حدث خطأ أثناء إضافة الرصيد");
+      toast.error("Something went wrong while adding balance");
     } finally {
       setIsLoading(false);
     }

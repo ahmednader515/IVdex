@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, Edit, Trash2 } from "lucide-react";
 import { format } from "date-fns";
-import { ar } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { toast } from "sonner";
 import {
     Dialog,
@@ -62,6 +62,19 @@ interface EditUserData {
     role: string;
 }
 
+function getRoleLabel(role: string) {
+    switch (role) {
+        case "ADMIN":
+            return "Admin";
+        case "ADMIN_ASSISTANT":
+            return "Admin assistant";
+        case "STUDENT":
+            return "Student";
+        default:
+            return role;
+    }
+}
+
 export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
@@ -86,10 +99,17 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
             if (response.ok) {
                 const data = await response.json();
                 setUsers(data);
+            } else {
+                console.error("Error fetching users:", response.status, response.statusText);
+                if (response.status === 403) {
+                    toast.error("You do not have permission to access this page");
+                } else {
+                    toast.error("Something went wrong while loading users");
+                }
             }
         } catch (error) {
             console.error("Error fetching users:", error);
-            toast.error("حدث خطأ في تحميل المستخدمين");
+            toast.error("Something went wrong while loading users");
         } finally {
             setLoading(false);
         }
@@ -119,17 +139,27 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
             });
 
             if (response.ok) {
-                toast.success("تم تحديث المستخدم بنجاح");
+                const userType = getRoleLabel(editingUser.role);
+                toast.success(`${userType} updated successfully`);
                 setIsEditDialogOpen(false);
                 setEditingUser(null);
                 fetchUsers(); // Refresh the list
             } else {
                 const error = await response.text();
-                toast.error(error || "حدث خطأ في تحديث المستخدم");
+                console.error("Error updating user:", response.status, error);
+                if (response.status === 403) {
+                    toast.error("You do not have permission to edit this data");
+                } else if (response.status === 404) {
+                    toast.error("User not found");
+                } else if (response.status === 400) {
+                    toast.error(error || "Invalid data");
+                } else {
+                    toast.error("Something went wrong while updating");
+                }
             }
         } catch (error) {
             console.error("Error updating user:", error);
-            toast.error("حدث خطأ في تحديث المستخدم");
+            toast.error("Something went wrong while updating the user");
         }
     };
 
@@ -141,15 +171,22 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
             });
 
             if (response.ok) {
-                toast.success("تم حذف المستخدم بنجاح");
+                toast.success("User deleted successfully");
                 fetchUsers(); // Refresh the list
             } else {
                 const error = await response.text();
-                toast.error(error || "حدث خطأ في حذف المستخدم");
+                console.error("Error deleting user:", response.status, error);
+                if (response.status === 403) {
+                    toast.error("You do not have permission to delete this user");
+                } else if (response.status === 404) {
+                    toast.error("User not found");
+                } else {
+                    toast.error(error || "Something went wrong while deleting");
+                }
             }
         } catch (error) {
             console.error("Error deleting user:", error);
-            toast.error("حدث خطأ في حذف المستخدم");
+            toast.error("Something went wrong while deleting the user");
         } finally {
             setIsDeleting(false);
         }
@@ -160,13 +197,14 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
         user.phoneNumber.includes(searchTerm)
     );
 
-    const staffUsers = filteredUsers.filter(user => user.role === "ADMIN" || user.role === "ADMIN_ASSISTANT");
+    // Separate users by role
     const studentUsers = filteredUsers.filter(user => user.role === "STUDENT");
+    const staffUsers = filteredUsers.filter(user => user.role === "ADMIN" || user.role === "ADMIN_ASSISTANT");
 
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
@@ -176,69 +214,65 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
             {!embedded && (
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    إدارة المستخدمين
+                    User management
                 </h1>
             </div>
             )}
 
-            {/* Staff Table (Admin + Admin Assistant) */}
+            {/* Staff Table (Admins and Teachers) */}
             {staffUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>الإدارة</CardTitle>
-                        <div className="flex items-center space-x-2">
-                            <Search className="h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
-                            />
+                        <CardTitle className="text-left">Staff</CardTitle>
+                        <div className="flex items-center gap-2">
+                            <div className="relative w-full max-w-sm">
+                                <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
+                                <Input
+                                    placeholder="Search by name or phone..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full min-h-11 ps-10"
+                                />
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <Table
-                          className="[&_tbody>tr]:max-md:border-border/60 [&_tbody>tr]:max-md:shadow-none [&_tbody>tr]:max-md:relative [&_tbody>tr:not(:last-child)]:max-md:after:content-[''] [&_tbody>tr:not(:last-child)]:max-md:after:absolute [&_tbody>tr:not(:last-child)]:max-md:after:left-3 [&_tbody>tr:not(:last-child)]:max-md:after:right-3 [&_tbody>tr:not(:last-child)]:max-md:after:-bottom-2 [&_tbody>tr:not(:last-child)]:max-md:after:h-px [&_tbody>tr:not(:last-child)]:max-md:after:bg-border/60 [&_tbody>tr:not(:last-child)]:max-md:after:rounded-full [&_tbody>tr]:max-md:mb-4"
-                        >
+                        <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">رقم هاتف ولي الأمر</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">تاريخ التسجيل</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Parent phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Registered</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {staffUsers.map((user) => (
-                                    <TableRow
-                                      key={user.id}
-                                      className="max-md:rounded-xl max-md:bg-card max-md:ring-1 max-md:ring-border/70"
-                                    >
-                                        <TableCell label="الاسم" className="font-medium">
+                                    <TableRow key={user.id}>
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="رقم هاتف ولي الأمر">{user.parentPhoneNumber}</TableCell>
-                                        <TableCell label="الدور">
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Parent phone">{user.parentPhoneNumber}</TableCell>
+                                        <TableCell label="Role">
                                             <Badge 
                                                 variant="secondary"
                                                 className={
-                                                    user.role === "ADMIN_ASSISTANT" ? "bg-orange-600 text-white hover:bg-orange-700" : 
-                                                    user.role === "ADMIN" ? "bg-blue-600 text-white hover:bg-blue-700" : 
+                                                    user.role === "ADMIN" ? "bg-blue-600 text-white hover:bg-blue-700" :
+                                                    user.role === "ADMIN_ASSISTANT" ? "bg-orange-600 text-white hover:bg-orange-700" :
                                                     ""
                                                 }
                                             >
-                                                {user.role === "ADMIN" ? "ادمن" : 
-                                                 user.role === "ADMIN_ASSISTANT" ? "مساعد ادمن" : user.role}
+                                                {getRoleLabel(user.role)}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="تاريخ التسجيل">
-                                            {format(new Date(user.createdAt), "dd/MM/yyyy", { locale: ar })}
+                                        <TableCell label="Registered">
+                                            {format(new Date(user.createdAt), "dd/MM/yyyy", { locale: enUS })}
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
-                                            <div className="flex flex-wrap items-center gap-2">
+                                        <TableCell label="Actions">
+                                            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
                                                 <Dialog open={isEditDialogOpen && editingUser?.id === user.id} onOpenChange={(open) => {
                                                     if (!open) {
                                                         setIsEditDialogOpen(false);
@@ -247,24 +281,24 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                 }}>
                                                     <DialogTrigger asChild>
                                                         <Button
-                                                            variant="outline"
-                                                            size="sm"
+                                                            className="min-h-11 w-full justify-center gap-2 bg-brand text-white hover:bg-brand/90 sm:w-auto"
                                                             onClick={() => handleEditUser(user)}
                                                         >
-                                                            <Edit className="h-4 w-4" />
+                                                            <Edit className="h-4 w-4 shrink-0" />
+                                                            Edit
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent>
                                                         <DialogHeader>
-                                                            <DialogTitle>تعديل المستخدم</DialogTitle>
+                                                            <DialogTitle>Edit {getRoleLabel(user.role)}</DialogTitle>
                                                             <DialogDescription>
-                                                                قم بتعديل معلومات المستخدم
+                                                                Update {getRoleLabel(user.role)} information
                                                             </DialogDescription>
                                                         </DialogHeader>
                                                         <div className="grid gap-4 py-4">
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="fullName" className="text-right">
-                                                                    الاسم
+                                                                <Label htmlFor="fullName" className="text-left">
+                                                                    Name
                                                                 </Label>
                                                                 <Input
                                                                     id="fullName"
@@ -274,8 +308,8 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="phoneNumber" className="text-right">
-                                                                    رقم الهاتف
+                                                                <Label htmlFor="phoneNumber" className="text-left">
+                                                                    Phone
                                                                 </Label>
                                                                 <Input
                                                                     id="phoneNumber"
@@ -285,8 +319,8 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="parentPhoneNumber" className="text-right">
-                                                                    رقم هاتف ولي الأمر
+                                                                <Label htmlFor="parentPhoneNumber" className="text-left">
+                                                                    Parent phone
                                                                 </Label>
                                                                 <Input
                                                                     id="parentPhoneNumber"
@@ -296,20 +330,20 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="role" className="text-right">
-                                                                    الدور
+                                                                <Label htmlFor="role" className="text-left">
+                                                                    Role
                                                                 </Label>
                                                                 <Select
                                                                     value={editData.role}
                                                                     onValueChange={(value) => setEditData({...editData, role: value})}
                                                                 >
                                                                     <SelectTrigger className="col-span-3">
-                                                                        <SelectValue placeholder="اختر الدور" />
+                                                                        <SelectValue placeholder="Select role" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value="STUDENT">طالب</SelectItem>
-                                                                        <SelectItem value="ADMIN">ادمن</SelectItem>
-                                                                        <SelectItem value="ADMIN_ASSISTANT">مساعد ادمن</SelectItem>
+                                                                        <SelectItem value="STUDENT">Student</SelectItem>
+                                                                        <SelectItem value="ADMIN">Admin</SelectItem>
+                                                                        <SelectItem value="ADMIN_ASSISTANT">Admin assistant</SelectItem>
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
@@ -319,10 +353,10 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 setIsEditDialogOpen(false);
                                                                 setEditingUser(null);
                                                             }}>
-                                                                إلغاء
+                                                                Cancel
                                                             </Button>
                                                             <Button onClick={handleSaveUser}>
-                                                                حفظ التغييرات
+                                                                Save changes
                                                             </Button>
                                                         </DialogFooter>
                                                     </DialogContent>
@@ -332,26 +366,27 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                     <AlertDialogTrigger asChild>
                                                         <Button
                                                             variant="destructive"
-                                                            size="sm"
+                                                            className="min-h-11 w-full justify-center gap-2 sm:w-auto"
                                                             disabled={isDeleting}
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className="h-4 w-4 shrink-0" />
+                                                            Delete
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
-                                                            <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                هذا الإجراء لا يمكن التراجع عنه. سيتم حذف المستخدم وجميع البيانات المرتبطة به نهائياً.
+                                                                This cannot be undone. This will permanently delete the {getRoleLabel(user.role).toLowerCase()} and related data.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                             <AlertDialogAction
                                                                 onClick={() => handleDeleteUser(user.id)}
                                                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                                             >
-                                                                حذف
+                                                                Delete
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
@@ -370,64 +405,64 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
             {studentUsers.length > 0 && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>قائمة الطلاب</CardTitle>
-                        <div className="flex items-center space-x-2">
-                            <Search className="h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="البحث بالاسم أو رقم الهاتف..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
-                            />
+                        <CardTitle className="text-left">Students</CardTitle>
+                        <div className="flex items-center gap-2">
+                            <div className="relative w-full max-w-sm">
+                                <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
+                                <Input
+                                    placeholder="Search by name or phone..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full min-h-11 ps-10"
+                                />
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <Table
-                          className="[&_tbody>tr]:max-md:border-border/60 [&_tbody>tr]:max-md:shadow-none [&_tbody>tr]:max-md:relative [&_tbody>tr:not(:last-child)]:max-md:after:content-[''] [&_tbody>tr:not(:last-child)]:max-md:after:absolute [&_tbody>tr:not(:last-child)]:max-md:after:left-3 [&_tbody>tr:not(:last-child)]:max-md:after:right-3 [&_tbody>tr:not(:last-child)]:max-md:after:-bottom-2 [&_tbody>tr:not(:last-child)]:max-md:after:h-px [&_tbody>tr:not(:last-child)]:max-md:after:bg-border/60 [&_tbody>tr:not(:last-child)]:max-md:after:rounded-full [&_tbody>tr]:max-md:mb-4"
-                        >
+                        <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-right">الاسم</TableHead>
-                                    <TableHead className="text-right">رقم الهاتف</TableHead>
-                                    <TableHead className="text-right">رقم هاتف ولي الأمر</TableHead>
-                                    <TableHead className="text-right">الدور</TableHead>
-                                    <TableHead className="text-right">الرصيد</TableHead>
-                                    <TableHead className="text-right">الكورسات المشتراة</TableHead>
-                                    <TableHead className="text-right">تاريخ التسجيل</TableHead>
-                                    <TableHead className="text-right">الإجراءات</TableHead>
+                                    <TableHead className="text-left">Name</TableHead>
+                                    <TableHead className="text-left">Phone</TableHead>
+                                    <TableHead className="text-left">Parent phone</TableHead>
+                                    <TableHead className="text-left">Role</TableHead>
+                                    <TableHead className="text-left">Balance</TableHead>
+                                    <TableHead className="text-left">Purchased courses</TableHead>
+                                    <TableHead className="text-left">Registered</TableHead>
+                                    <TableHead className="text-left">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {studentUsers.map((user) => (
-                                    <TableRow
-                                      key={user.id}
-                                      className="max-md:rounded-xl max-md:bg-card max-md:ring-1 max-md:ring-border/70"
-                                    >
-                                        <TableCell label="الاسم" className="font-medium">
+                                    <TableRow key={user.id}>
+                                        <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
-                                        <TableCell label="رقم الهاتف">{user.phoneNumber}</TableCell>
-                                        <TableCell label="رقم هاتف ولي الأمر">{user.parentPhoneNumber}</TableCell>
-                                        <TableCell label="الدور">
-                                            <Badge variant="secondary">
-                                                طالب
+                                        <TableCell label="Phone">{user.phoneNumber}</TableCell>
+                                        <TableCell label="Parent phone">{user.parentPhoneNumber}</TableCell>
+                                        <TableCell label="Role">
+                                            <Badge 
+                                                variant="secondary"
+                                                className="bg-green-600 text-white hover:bg-green-700"
+                                            >
+                                                Student
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الرصيد">
+                                        <TableCell label="Balance">
                                             <Badge variant="secondary">
-                                                {user.balance} جنيه
+                                                {user.balance} EGP
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="الكورسات المشتراة">
+                                        <TableCell label="Purchases">
                                             <Badge variant="outline">
                                                 {user._count.purchases}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="تاريخ التسجيل">
-                                            {format(new Date(user.createdAt), "dd/MM/yyyy", { locale: ar })}
+                                        <TableCell label="Registered">
+                                            {format(new Date(user.createdAt), "dd/MM/yyyy", { locale: enUS })}
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
-                                            <div className="flex flex-wrap items-center gap-2">
+                                        <TableCell label="Actions">
+                                            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
                                                 <Dialog open={isEditDialogOpen && editingUser?.id === user.id} onOpenChange={(open) => {
                                                     if (!open) {
                                                         setIsEditDialogOpen(false);
@@ -436,24 +471,24 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                 }}>
                                                     <DialogTrigger asChild>
                                                         <Button
-                                                            variant="outline"
-                                                            size="sm"
+                                                            className="min-h-11 w-full justify-center gap-2 bg-brand text-white hover:bg-brand/90 sm:w-auto"
                                                             onClick={() => handleEditUser(user)}
                                                         >
-                                                            <Edit className="h-4 w-4" />
+                                                            <Edit className="h-4 w-4 shrink-0" />
+                                                            Edit
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent>
                                                         <DialogHeader>
-                                                            <DialogTitle>تعديل المستخدم</DialogTitle>
+                                                            <DialogTitle>Edit student</DialogTitle>
                                                             <DialogDescription>
-                                                                قم بتعديل معلومات المستخدم
+                                                                Update student information
                                                             </DialogDescription>
                                                         </DialogHeader>
                                                         <div className="grid gap-4 py-4">
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="fullName" className="text-right">
-                                                                    الاسم
+                                                                <Label htmlFor="fullName" className="text-left">
+                                                                    Name
                                                                 </Label>
                                                                 <Input
                                                                     id="fullName"
@@ -463,8 +498,8 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="phoneNumber" className="text-right">
-                                                                    رقم الهاتف
+                                                                <Label htmlFor="phoneNumber" className="text-left">
+                                                                    Phone
                                                                 </Label>
                                                                 <Input
                                                                     id="phoneNumber"
@@ -474,8 +509,8 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="parentPhoneNumber" className="text-right">
-                                                                    رقم هاتف ولي الأمر
+                                                                <Label htmlFor="parentPhoneNumber" className="text-left">
+                                                                    Parent phone
                                                                 </Label>
                                                                 <Input
                                                                     id="parentPhoneNumber"
@@ -485,20 +520,20 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 />
                                                             </div>
                                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                                <Label htmlFor="role" className="text-right">
-                                                                    الدور
+                                                                <Label htmlFor="role" className="text-left">
+                                                                    Role
                                                                 </Label>
                                                                 <Select
                                                                     value={editData.role}
                                                                     onValueChange={(value) => setEditData({...editData, role: value})}
                                                                 >
                                                                     <SelectTrigger className="col-span-3">
-                                                                        <SelectValue placeholder="اختر الدور" />
+                                                                        <SelectValue placeholder="Select role" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value="STUDENT">طالب</SelectItem>
-                                                                        <SelectItem value="ADMIN">ادمن</SelectItem>
-                                                                        <SelectItem value="ADMIN_ASSISTANT">مساعد ادمن</SelectItem>
+                                                                        <SelectItem value="STUDENT">Student</SelectItem>
+                                                                        <SelectItem value="ADMIN">Admin</SelectItem>
+                                                                        <SelectItem value="ADMIN_ASSISTANT">Admin assistant</SelectItem>
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
@@ -508,10 +543,10 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                                 setIsEditDialogOpen(false);
                                                                 setEditingUser(null);
                                                             }}>
-                                                                إلغاء
+                                                                Cancel
                                                             </Button>
                                                             <Button onClick={handleSaveUser}>
-                                                                حفظ التغييرات
+                                                                Save changes
                                                             </Button>
                                                         </DialogFooter>
                                                     </DialogContent>
@@ -521,26 +556,27 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                                     <AlertDialogTrigger asChild>
                                                         <Button
                                                             variant="destructive"
-                                                            size="sm"
+                                                            className="min-h-11 w-full justify-center gap-2 sm:w-auto"
                                                             disabled={isDeleting}
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className="h-4 w-4 shrink-0" />
+                                                            Delete
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
-                                                            <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                هذا الإجراء لا يمكن التراجع عنه. سيتم حذف المستخدم وجميع البيانات المرتبطة به نهائياً.
+                                                                This cannot be undone. This will permanently delete the student and related data.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                             <AlertDialogAction
                                                                 onClick={() => handleDeleteUser(user.id)}
                                                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                                             >
-                                                                حذف
+                                                                Delete
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
@@ -551,6 +587,16 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                 ))}
                             </TableBody>
                         </Table>
+                    </CardContent>
+                </Card>
+            )}
+
+            {staffUsers.length === 0 && studentUsers.length === 0 && !loading && (
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-center text-muted-foreground">
+                            No registered users yet
+                        </div>
                     </CardContent>
                 </Card>
             )}

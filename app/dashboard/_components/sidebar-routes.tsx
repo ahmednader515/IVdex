@@ -8,17 +8,17 @@ import { usePathname, useSearchParams } from "next/navigation";
 const guestRoutes = [
     {
         icon: Layout,
-        label: "لوحة التحكم",
+        label: "Dashboard",
         href: "/dashboard",
     },
     {
         icon: Compass,
-        label: "الكورسات",
+        label: "Courses",
         href: "/dashboard/search",
     },
     {
         icon: Wallet,
-        label: "الرصيد",
+        label: "Balance",
         href: "/dashboard/balance",
     },
 ];
@@ -26,27 +26,27 @@ const guestRoutes = [
 const adminRoutes = [
     {
         icon: List,
-        label: "كورساتي",
+        label: "My courses",
         href: "/dashboard/admin/courses",
     },
     {
         icon: FileText,
-        label: "الاختبارات والدرجات",
+        label: "Quizzes & grades",
         href: "/dashboard/admin/assessments",
     },
     {
         icon: BarChart,
-        label: "الاحصائيات",
+        label: "Analytics",
         href: "/dashboard/admin/analytics",
     },
     {
         icon: Users,
-        label: "إدارة الطلاب والحسابات",
+        label: "Students & accounts",
         href: "/dashboard/admin/management",
     },
     {
         icon: Ticket,
-        label: "الاكواد",
+        label: "Access codes",
         href: "/dashboard/admin/codes",
     },
 ];
@@ -54,27 +54,27 @@ const adminRoutes = [
 const adminAssistantRoutes = [
     {
         icon: Users,
-        label: "ادارة الحسابات",
+        label: "Account management",
         href: "/dashboard/admin-assistant/management",
     },
     {
         icon: FileText,
-        label: "الاختبارات والتقدم",
+        label: "Quizzes & progress",
         href: "/dashboard/admin-assistant/assessments",
     },
     {
         icon: Wallet,
-        label: "الأرصدة",
+        label: "Balances",
         href: "/dashboard/admin-assistant/balances",
     },
     {
         icon: Shield,
-        label: "إنشاء حساب طالب",
+        label: "Create student account",
         href: "/dashboard/admin-assistant/create-account",
     },
     {
         icon: Ticket,
-        label: "الاكواد",
+        label: "Access codes",
         href: "/dashboard/admin-assistant/codes",
     },
 ];

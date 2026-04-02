@@ -28,12 +28,10 @@ export default function BalancePage() {
     "VODAFONE_CASH"
   );
 
-  // Check if user is a student (STUDENT role)
   const isStudent = session?.user?.role === "STUDENT";
   
   const vodafoneCashNumber = "01028462194";
   const instaPayNumber = "01148492847";
-  /** خدمة العملاء (واتساب) — نفس رقم إنستا باي */
   const customerServicePhone = "01148492847";
   const whatsappLink = `https://wa.me/20${customerServicePhone.replace(/^0/, "")}`;
   const depositWalletNumber =
@@ -72,7 +70,7 @@ export default function BalancePage() {
 
   const handleAddBalance = async () => {
     if (!amount || parseFloat(amount) <= 0) {
-      toast.error("يرجى إدخال مبلغ صحيح");
+      toast.error("Please enter a valid amount");
       return;
     }
 
@@ -90,22 +88,22 @@ export default function BalancePage() {
         const data = await response.json();
         setBalance(data.newBalance);
         setAmount("");
-        toast.success("تم إضافة الرصيد بنجاح");
-        fetchTransactions(); // Refresh transactions
+        toast.success("Balance updated successfully");
+        fetchTransactions();
       } else {
         const error = await response.text();
-        toast.error(error || "حدث خطأ أثناء إضافة الرصيد");
+        toast.error(error || "Something went wrong while adding balance");
       }
     } catch (error) {
       console.error("Error adding balance:", error);
-      toast.error("حدث خطأ أثناء إضافة الرصيد");
+      toast.error("Something went wrong while adding balance");
     } finally {
       setIsLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("ar-EG", {
+    return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -117,59 +115,70 @@ export default function BalancePage() {
   const copyToClipboard = (text: string, setCopiedState: (value: boolean) => void) => {
     navigator.clipboard.writeText(text);
     setCopiedState(true);
-    toast.success("تم نسخ الرقم");
+    toast.success("Copied to clipboard");
     setTimeout(() => setCopiedState(false), 2000);
+  };
+
+  const formatTransactionDescription = (t: BalanceTransaction) => {
+    if (t.description.includes("Added") && t.type === "DEPOSIT") {
+      return t.description.replace(
+        /Added (\d+(?:\.\d+)?) EGP to balance/,
+        "Added $1 EGP to balance"
+      );
+    }
+    if (t.description.includes("Purchased course:") && t.type === "PURCHASE") {
+      return t.description.replace(/Purchased course: (.+)/, "Purchased course: $1");
+    }
+    return t.description;
   };
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">إدارة الرصيد</h1>
+          <h1 className="text-2xl font-bold">Balance</h1>
           <p className="text-muted-foreground">
             {isStudent 
-              ? "عرض رصيد حسابك وسجل المعاملات" 
-              : "أضف رصيد إلى حسابك لشراء الكورسات"
+              ? "View your account balance and transaction history" 
+              : "Add credit to purchase courses"
             }
           </p>
         </div>
       </div>
 
-      {/* Balance Card */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Wallet className="h-5 w-5" />
-            رصيد الحساب
+            Account balance
           </CardTitle>
           <CardDescription>
-            الرصيد المتاح في حسابك
+            Available balance in your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold text-brand">
-            {balance.toFixed(2)} جنيه
+            {balance.toFixed(2)} EGP
           </div>
         </CardContent>
       </Card>
 
-      {/* Add Balance Section - Only for non-students */}
       {!isStudent && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
-              إضافة رصيد
+              Add balance
             </CardTitle>
             <CardDescription>
-              أضف مبلغ إلى رصيد حسابك
+              Deposit an amount to your wallet (staff / testing)
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex gap-4">
               <Input
                 type="number"
-                placeholder="أدخل المبلغ"
+                placeholder="Enter amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 min="0"
@@ -181,28 +190,27 @@ export default function BalancePage() {
                 disabled={isLoading}
                 className="bg-brand text-white hover:bg-brand/90"
               >
-                {isLoading ? "جاري الإضافة..." : "إضافة الرصيد"}
+                {isLoading ? "Adding..." : "Add balance"}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Payment Deposit Section - Only for students */}
       {isStudent && (
         <Card className="border-brand/20 bg-brand/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-brand" />
-              إضافة رصيد عبر فودافون كاش أو إنستا باي
+              Top up via Vodafone Cash or InstaPay
             </CardTitle>
             <CardDescription>
-              اختر طريقة الدفع ثم حوّل المبلغ إلى الرقم المناسب أدناه، وأرسل صورة الإيصال على واتساب خدمة العملاء
+              Choose a method, transfer to the number below, then send a screenshot of the receipt to customer support on WhatsApp
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-card rounded-lg p-3 border border-border">
-              <p className="text-sm font-semibold mb-2">طريقة الدفع</p>
+              <p className="text-sm font-semibold mb-2">Payment method</p>
               <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
@@ -210,7 +218,7 @@ export default function BalancePage() {
                   onClick={() => setSelectedPaymentMethod("VODAFONE_CASH")}
                   className={selectedPaymentMethod === "VODAFONE_CASH" ? "bg-brand text-white hover:bg-brand/90" : ""}
                 >
-                  فودافون كاش
+                  Vodafone Cash
                 </Button>
                 <Button
                   type="button"
@@ -218,13 +226,13 @@ export default function BalancePage() {
                   onClick={() => setSelectedPaymentMethod("INSTAPAY")}
                   className={selectedPaymentMethod === "INSTAPAY" ? "bg-brand text-white hover:bg-brand/90" : ""}
                 >
-                  إنستا باي
+                  InstaPay
                 </Button>
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {selectedPaymentMethod === "VODAFONE_CASH"
-                  ? "حوّل المبلغ من تطبيق Vodafone Cash"
-                  : "حوّل المبلغ من تطبيق InstaPay"}
+                  ? "Send the amount from the Vodafone Cash app"
+                  : "Send the amount from the InstaPay app"}
               </p>
             </div>
 
@@ -232,7 +240,7 @@ export default function BalancePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">
-                    {selectedPaymentMethod === "VODAFONE_CASH" ? "رقم فودافون كاش" : "رقم إنستا باي"}
+                    {selectedPaymentMethod === "VODAFONE_CASH" ? "Vodafone Cash number" : "InstaPay number"}
                   </p>
                   <p className="text-2xl font-bold text-brand">{depositWalletNumber}</p>
                 </div>
@@ -253,17 +261,17 @@ export default function BalancePage() {
 
             <div className="bg-muted/50 rounded-lg p-4 space-y-2">
               <p className="font-semibold text-sm">
-                طريقة الدفع: {selectedPaymentMethod === "VODAFONE_CASH" ? "فودافون كاش" : "إنستا باي"}
+                Method: {selectedPaymentMethod === "VODAFONE_CASH" ? "Vodafone Cash" : "InstaPay"}
               </p>
-              <p className="font-semibold text-sm">خطوات الإيداع:</p>
+              <p className="font-semibold text-sm">How to deposit:</p>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
                 <li>
-                  افتح تطبيق {selectedPaymentMethod === "VODAFONE_CASH" ? "فودافون كاش" : "إنستا باي"} وحوّل المبلغ
-                  المطلوب إلى الرقم أعلاه
+                  Open {selectedPaymentMethod === "VODAFONE_CASH" ? "Vodafone Cash" : "InstaPay"} and transfer the amount
+                  to the number above
                 </li>
-                <li>احفظ صورة إيصال التحويل من التطبيق</li>
-                <li>اضغط على زر "إرسال صورة الإيصال" أدناه</li>
-                <li>سيتم مراجعة طلبك وإضافة الرصيد إلى حسابك خلال 24 ساعة</li>
+                <li>Save a screenshot of the receipt from the app</li>
+                <li>Tap “Send receipt on WhatsApp” below</li>
+                <li>We will review and credit your balance within 24 hours</li>
               </ol>
             </div>
 
@@ -278,33 +286,32 @@ export default function BalancePage() {
                 rel="noopener noreferrer"
               >
                 <MessageCircle className="h-5 w-5 ml-2" />
-                إرسال صورة الإيصال على واتساب
+                Send receipt on WhatsApp
               </a>
             </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Transaction History */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History className="h-5 w-5" />
-            سجل المعاملات
+            Transaction history
           </CardTitle>
           <CardDescription>
-            تاريخ جميع المعاملات المالية
+            Full history of balance changes
           </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoadingTransactions ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand mx-auto"></div>
-              <p className="mt-2 text-muted-foreground">جاري التحميل...</p>
+              <p className="mt-2 text-muted-foreground">Loading...</p>
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">لا توجد معاملات حتى الآن</p>
+              <p className="text-muted-foreground">No transactions yet</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -325,28 +332,23 @@ export default function BalancePage() {
                         <ArrowUpRight className="h-4 w-4" />
                       )}
                     </div>
-                                         <div>
-                       <p className="font-medium">
-                         {transaction.description.includes("Added") && transaction.type === "DEPOSIT" 
-                           ? transaction.description.replace(/Added (\d+(?:\.\d+)?) EGP to balance/, "تم إضافة $1 جنيه إلى الرصيد")
-                           : transaction.description.includes("Purchased course:") && transaction.type === "PURCHASE"
-                           ? transaction.description.replace(/Purchased course: (.+)/, "تم شراء الكورس: $1")
-                           : transaction.description
-                         }
-                       </p>
-                       <p className="text-sm text-muted-foreground">
-                         {formatDate(transaction.createdAt)}
-                       </p>
-                       <p className="text-xs text-muted-foreground">
-                         {transaction.type === "DEPOSIT" ? "إيداع" : "شراء كورس"}
-                       </p>
-                     </div>
+                    <div>
+                      <p className="font-medium">
+                        {formatTransactionDescription(transaction)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(transaction.createdAt)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {transaction.type === "DEPOSIT" ? "Deposit" : "Course purchase"}
+                      </p>
+                    </div>
                   </div>
                   <div className={`font-bold ${
                     transaction.type === "DEPOSIT" ? "text-green-600" : "text-red-600"
                   }`}>
                     {transaction.type === "DEPOSIT" ? "+" : "-"}
-                    {Math.abs(transaction.amount).toFixed(2)} جنيه
+                    {Math.abs(transaction.amount).toFixed(2)} EGP
                   </div>
                 </div>
               ))}
@@ -356,4 +358,4 @@ export default function BalancePage() {
       </Card>
     </div>
   );
-} 
+}

@@ -47,11 +47,11 @@ export default function PurchasePage({
         const data = await response.json();
         setCourse(data);
       } else {
-        toast.error("حدث خطأ أثناء تحميل الكورس");
+        toast.error("Something went wrong while loading the course");
       }
     } catch (error) {
       console.error("Error fetching course:", error);
-      toast.error("حدث خطأ أثناء تحميل الكورس");
+      toast.error("Something went wrong while loading the course");
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +73,7 @@ export default function PurchasePage({
 
   const handleRedeemCode = async () => {
     if (!code.trim()) {
-      toast.error("يرجى إدخال الكود");
+      toast.error("Please enter a code");
       return;
     }
 
@@ -89,7 +89,7 @@ export default function PurchasePage({
 
       if (response.ok) {
         const data = await response.json();
-        toast.success("تم استبدال الكود بنجاح! تم شراء الكورس");
+        toast.success("Code redeemed successfully. Course purchased.");
         setCodeRedeemed(true);
         setTimeout(() => {
           router.push("/dashboard");
@@ -97,18 +97,18 @@ export default function PurchasePage({
       } else {
         const error = await response.text();
         if (error.includes("already been used")) {
-          toast.error("هذا الكود مستخدم بالفعل");
+          toast.error("This code has already been used");
         } else if (error.includes("already purchased")) {
-          toast.error("لقد قمت بشراء هذه الكورس مسبقاً");
+          toast.error("You have already purchased this course");
         } else if (error.includes("Invalid code")) {
-          toast.error("كود غير صحيح");
+          toast.error("Invalid code");
         } else {
-          toast.error(error || "حدث خطأ أثناء استبدال الكود");
+          toast.error(error || "Something went wrong while redeeming the code");
         }
       }
     } catch (error) {
       console.error("Error redeeming code:", error);
-      toast.error("حدث خطأ أثناء استبدال الكود");
+      toast.error("Something went wrong while redeeming the code");
     } finally {
       setIsRedeeming(false);
     }
@@ -125,21 +125,21 @@ export default function PurchasePage({
 
       if (response.ok) {
         const data = await response.json();
-        toast.success("تم شراء الكورس بنجاح!");
+        toast.success("Course purchased successfully!");
         router.push("/dashboard");
       } else {
         const error = await response.text();
         if (error.includes("Insufficient balance")) {
-          toast.error("رصيد غير كافي. يرجى إضافة رصيد إلى حسابك");
+          toast.error("Insufficient balance. Please add funds to your account.");
         } else if (error.includes("already purchased")) {
-          toast.error("لقد قمت بشراء هذه الكورس مسبقاً");
+          toast.error("You have already purchased this course");
         } else {
-          toast.error(error || "حدث خطأ أثناء الشراء");
+          toast.error(error || "Something went wrong while purchasing");
         }
       }
     } catch (error) {
       console.error("Error purchasing course:", error);
-      toast.error("حدث خطأ أثناء الشراء");
+      toast.error("Something went wrong while purchasing");
     } finally {
       setIsPurchasing(false);
     }
@@ -159,9 +159,9 @@ export default function PurchasePage({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">الكورس غير موجودة</h1>
+          <h1 className="text-2xl font-bold mb-4">Course not found</h1>
           <Button asChild>
-            <Link href="/dashboard">العودة إلى لوحة التحكم</Link>
+            <Link href="/dashboard">Back to dashboard</Link>
           </Button>
         </div>
       </div>
@@ -180,9 +180,9 @@ export default function PurchasePage({
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              رجوع
+              Back
             </Button>
-            <h1 className="text-2xl font-bold">شراء الكورس</h1>
+            <h1 className="text-2xl font-bold">Purchase course</h1>
           </div>
 
           {/* Course Details */}
@@ -190,7 +190,7 @@ export default function PurchasePage({
             <CardHeader>
               <CardTitle>{course.title}</CardTitle>
               <CardDescription>
-                {course.description || "لا يوجد وصف للكورس"}
+                {course.description || "No description for this course."}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -204,7 +204,7 @@ export default function PurchasePage({
                 </div>
               )}
               <div className="text-2xl font-bold text-brand">
-                {course.price?.toFixed(2) || "0.00"} جنيه
+                {course.price?.toFixed(2) || "0.00"} EGP
               </div>
             </CardContent>
           </Card>
@@ -214,7 +214,7 @@ export default function PurchasePage({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Wallet className="h-5 w-5" />
-                رصيد الحساب
+                Account balance
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -223,12 +223,12 @@ export default function PurchasePage({
               ) : (
                 <div className="space-y-2">
                   <div className="text-xl font-bold">
-                    {userBalance.toFixed(2)} جنيه
+                    {userBalance.toFixed(2)} EGP
                   </div>
                   {!hasSufficientBalance && (
                     <div className="flex items-center gap-2 text-amber-600">
                       <AlertCircle className="h-4 w-4" />
-                      <span>رصيد غير كافي لشراء هذه الكورس</span>
+                      <span>Insufficient balance to purchase this course</span>
                     </div>
                   )}
                 </div>
@@ -241,21 +241,21 @@ export default function PurchasePage({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Ticket className="h-5 w-5" />
-                لديك كود خصم؟
+                Have a purchase code?
               </CardTitle>
               <CardDescription>
-                أدخل الكود للحصول على الكورس مجاناً
+                Enter your code to unlock this course at no charge.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex gap-2">
                 <div className="flex-1">
                   <Label htmlFor="code" className="sr-only">
-                    كود الخصم
+                    Purchase code
                   </Label>
                   <Input
                     id="code"
-                    placeholder="أدخل الكود هنا"
+                    placeholder="Enter code here"
                     value={code}
                     onChange={(e) => setCode(e.target.value.toUpperCase())}
                     disabled={isRedeeming || codeRedeemed}
@@ -268,14 +268,14 @@ export default function PurchasePage({
                   className="bg-green-600 hover:bg-green-700 text-white"
                 >
                   {isRedeeming ? (
-                    "جاري الاستبدال..."
+                    "Redeeming..."
                   ) : codeRedeemed ? (
                     <>
-                      <Check className="h-4 w-4 ml-2" />
-                      تم الاستبدال
+                      <Check className="h-4 w-4 mr-2" />
+                      Redeemed
                     </>
                   ) : (
-                    "استبدال الكود"
+                    "Redeem code"
                   )}
                 </Button>
               </div>
@@ -288,7 +288,7 @@ export default function PurchasePage({
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">أو</span>
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
             </div>
           </div>
 
@@ -299,13 +299,13 @@ export default function PurchasePage({
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 text-amber-700 mb-4">
                     <AlertCircle className="h-5 w-5" />
-                    <span className="font-medium">رصيد غير كافي</span>
+                    <span className="font-medium">Insufficient balance</span>
                   </div>
                   <p className="text-amber-700 mb-4">
-                    تحتاج إلى {(course.price || 0) - userBalance} جنيه إضافية لشراء هذه الكورس
+                    You need {(course.price || 0) - userBalance} more EGP to purchase this course.
                   </p>
                   <Button asChild className="bg-brand text-white hover:bg-brand/90">
-                    <Link href="/dashboard/balance">إضافة رصيد</Link>
+                    <Link href="/dashboard/balance">Add balance</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -318,19 +318,19 @@ export default function PurchasePage({
               size="lg"
             >
               {isPurchasing ? (
-                "جاري الشراء..."
+                "Purchasing..."
               ) : (
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-5 w-5" />
-                  شراء الكورس
+                  Purchase course
                 </div>
               )}
             </Button>
 
             {!codeRedeemed && (
               <div className="text-center text-sm text-muted-foreground">
-                <p>سيتم خصم {course.price?.toFixed(2) || "0.00"} جنيه من رصيدك</p>
-                <p>ستتمكن من الوصول إلى الكورس فوراً بعد الشراء</p>
+                <p>{course.price?.toFixed(2) || "0.00"} EGP will be deducted from your balance</p>
+                <p>You will get access to the course immediately after purchase</p>
               </div>
             )}
           </div>
@@ -338,4 +338,4 @@ export default function PurchasePage({
       </div>
     </div>
   );
-} 
+}

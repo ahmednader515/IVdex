@@ -16,7 +16,7 @@ interface LoadingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
   ({ 
     loading = false, 
-    loadingText = "جاري التحميل...",
+    loadingText = "Loading...",
     children, 
     className,
     disabled,

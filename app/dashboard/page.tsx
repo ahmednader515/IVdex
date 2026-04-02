@@ -249,8 +249,8 @@ const CoursesPage = async () => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">مرحباً بك في لوحة التحكم</h1>
-        <p className="text-muted-foreground">طريقك للنجاح و التفوق</p>
+        <h1 className="text-3xl font-bold mb-2">Welcome to your dashboard</h1>
+        <p className="text-muted-foreground">Your path to progress and mastery</p>
       </div>
 
       {/* Stats and Balance Row */}
@@ -259,8 +259,8 @@ const CoursesPage = async () => {
         <div className="bg-gradient-to-r from-brand to-brand/90 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm">الرصيد الحالي</p>
-              <p className="text-2xl font-bold">{user?.balance?.toFixed(2) || "0.00"} جنيه</p>
+              <p className="text-white/80 text-sm">Current balance</p>
+              <p className="text-2xl font-bold">{user?.balance?.toFixed(2) || "0.00"} EGP</p>
             </div>
             <Wallet className="h-8 w-8 text-white/70" />
           </div>
@@ -270,7 +270,7 @@ const CoursesPage = async () => {
         <div className="bg-gradient-to-r from-brand to-brand/90 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm">الكورسات المشتراة</p>
+              <p className="text-white/80 text-sm">Enrolled courses</p>
               <p className="text-2xl font-bold">{studentStats.totalCourses}</p>
             </div>
             <BookOpenIcon className="h-8 w-8 text-white/70" />
@@ -281,7 +281,7 @@ const CoursesPage = async () => {
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm">الدروس المكتملة</p>
+              <p className="text-purple-100 text-sm">Lessons completed</p>
               <p className="text-2xl font-bold">{studentStats.completedChapters}</p>
             </div>
             <Trophy className="h-8 w-8 text-purple-200" />
@@ -292,7 +292,7 @@ const CoursesPage = async () => {
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-orange-100 text-sm">متوسط الدرجات</p>
+              <p className="text-orange-100 text-sm">Average score</p>
               <p className="text-2xl font-bold">{studentStats.averageScore}%</p>
             </div>
             <TrendingUp className="h-8 w-8 text-orange-200" />
@@ -303,7 +303,7 @@ const CoursesPage = async () => {
       {/* Last Watched Chapter - Big Square */}
       {lastWatchedChapter && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">آخر درس كنت تشاهده</h2>
+          <h2 className="text-xl font-semibold mb-4">Continue where you left off</h2>
           <div className="bg-card rounded-xl overflow-hidden border shadow-lg">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Image Section */}
@@ -332,14 +332,14 @@ const CoursesPage = async () => {
                     {lastWatchedChapter.chapter.title}
                   </h3>
                   <p className="text-muted-foreground">
-                    الدرس رقم {lastWatchedChapter.chapter.position}
+                    Lesson {lastWatchedChapter.chapter.position}
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
-                    <span>آخر مشاهدة منذ ساعة</span>
+                    <span>Recently watched</span>
                   </div>
                   
                   <Button 
@@ -349,7 +349,7 @@ const CoursesPage = async () => {
                   >
                     <Link href={`/courses/${lastWatchedChapter.chapter.courseId}/chapters/${lastWatchedChapter.chapter.id}`}>
                       <Play className="h-4 w-4 ml-2" />
-                      متابعة المشاهدة
+                      Resume
                     </Link>
                   </Button>
                 </div>
@@ -361,7 +361,7 @@ const CoursesPage = async () => {
 
       {/* Detailed Statistics */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">إحصائيات التعلم</h2>
+        <h2 className="text-xl font-semibold mb-4">Learning stats</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-card rounded-xl p-6 border">
             <div className="flex items-center gap-3 mb-4">
@@ -369,13 +369,13 @@ const CoursesPage = async () => {
                 <BookOpenIcon className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">إجمالي الدروس</p>
+                <p className="text-sm text-muted-foreground">Total lessons</p>
                 <p className="text-2xl font-bold">{studentStats.totalChapters}</p>
               </div>
             </div>
             <Progress value={(studentStats.completedChapters / Math.max(studentStats.totalChapters, 1)) * 100} className="h-2" />
             <p className="text-sm text-muted-foreground mt-2">
-              {studentStats.completedChapters} من {studentStats.totalChapters} مكتمل
+              {studentStats.completedChapters} of {studentStats.totalChapters} completed
             </p>
           </div>
 
@@ -385,13 +385,13 @@ const CoursesPage = async () => {
                 <Trophy className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">الاختبارات المكتملة</p>
+                <p className="text-sm text-muted-foreground">Quizzes completed</p>
                 <p className="text-2xl font-bold">{studentStats.completedQuizzes}</p>
               </div>
             </div>
             <Progress value={(studentStats.completedQuizzes / Math.max(studentStats.totalQuizzes, 1)) * 100} className="h-2" />
             <p className="text-sm text-muted-foreground mt-2">
-              {studentStats.completedQuizzes} من {studentStats.totalQuizzes} مكتمل
+              {studentStats.completedQuizzes} of {studentStats.totalQuizzes} completed
             </p>
           </div>
         </div>
@@ -399,7 +399,7 @@ const CoursesPage = async () => {
 
             {/* My Courses Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-6">كورساتي</h2>
+        <h2 className="text-xl font-semibold mb-6">My courses</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {coursesWithProgress.map((course) => (
             <div
@@ -429,14 +429,14 @@ const CoursesPage = async () => {
                     <div className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4" />
                       <span>
-                        {course.chapters.length} {course.chapters.length === 1 ? "درس" : "دروس"}
+                        {course.chapters.length} {course.chapters.length === 1 ? "lesson" : "lessons"}
                       </span>
                     </div>
                     {course.quizzes.length > 0 && (
                       <div className="flex items-center gap-1">
                         <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
                         <span>
-                          {course.quizzes.length} {course.quizzes.length === 1 ? "اختبار" : "اختبارات"}
+                          {course.quizzes.length} {course.quizzes.length === 1 ? "quiz" : "quizzes"}
                         </span>
                       </div>
                     )}
@@ -446,7 +446,7 @@ const CoursesPage = async () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground font-medium">التقدم</span>
+                      <span className="text-muted-foreground font-medium">Progress</span>
                       <span className="font-bold text-brand">{Math.round(course.progress)}%</span>
                     </div>
                     <div className="relative">
@@ -465,7 +465,7 @@ const CoursesPage = async () => {
                     asChild
                   >
                     <Link href={course.chapters.length > 0 ? `/courses/${course.id}/chapters/${course.chapters[0].id}` : `/courses/${course.id}`}>
-                      متابعة التعلم
+                      Continue learning
                     </Link>
                   </Button>
                 </div>
@@ -477,11 +477,11 @@ const CoursesPage = async () => {
           <div className="text-center py-16">
             <div className="bg-muted/50 rounded-2xl p-8 max-w-md mx-auto">
               <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">لم تقم بشراء أي كورسات بعد</h3>
-              <p className="text-muted-foreground mb-6">ابدأ رحلة التعلم بشراء أول كورس لك</p>
+              <h3 className="text-lg font-semibold mb-2">You haven&apos;t enrolled in any courses yet</h3>
+              <p className="text-muted-foreground mb-6">Browse the catalog and start your first course</p>
               <Button asChild className="bg-brand hover:bg-brand/90 text-white font-semibold">
                 <Link href="/dashboard/search">
-                  استكشف الكورسات المتاحة
+                  Explore courses
                 </Link>
               </Button>
             </div>

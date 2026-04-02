@@ -31,20 +31,19 @@ export const Navbar = () => {
           <Link href="/" className="flex items-center shrink-0 py-2">
             <Image
               src="/logo.png"
-              alt="Logo"
+              alt="IVDex"
               width={72}
               height={28}
-              className="ml-2 object-contain object-center"
+              className="mr-2 object-contain object-center"
               unoptimized
             />
           </Link>
 
-          {/* Right side items */}
           <div className="flex items-center gap-4">
             {!isValidSession || status === "unauthenticated" ? (
               <>
                 <Button className="bg-brand hover:bg-brand/90 text-white" asChild>
-                  <Link href="/sign-up">انشاء الحساب</Link>
+                  <Link href="/sign-up">Create account</Link>
                 </Button>
                 <Button
                   size="sm"
@@ -52,22 +51,22 @@ export const Navbar = () => {
                   asChild
                   className="border-brand text-brand hover:bg-brand/10"
                 >
-                  <Link href="/sign-in">تسجيل الدخول</Link>
+                  <Link href="/sign-in">Log in</Link>
                 </Button>
               </>
             ) : (
               <>
                 <Button variant="ghost" asChild>
-                  <Link href="/dashboard">لوحة التحكم</Link>
+                  <Link href="/dashboard">Dashboard</Link>
                 </Button>
                 <Button 
                   size="sm" 
                   variant="ghost" 
                   onClick={handleLogout}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200 ease-in-out"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200 ease-in-out dark:hover:bg-red-950/30"
                 >
-                  <LogOut className="h-4 w-4 rtl:ml-2 ltr:mr-2"/>
-                  تسجيل الخروج
+                  <LogOut className="h-4 w-4 mr-2"/>
+                  Log out
                 </Button>
               </>
             )}

@@ -16,7 +16,7 @@ export function SessionMonitor() {
     isLoggingOutRef.current = true;
 
     if (!toastShownRef.current) {
-      toast.error("انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.");
+      toast.error("Your session has expired. Please sign in again.");
       toastShownRef.current = true;
     }
 

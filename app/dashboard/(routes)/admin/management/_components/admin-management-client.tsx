@@ -47,29 +47,29 @@ function AdminManagementShell({ coursesTab }: { coursesTab: ReactNode }) {
   );
 
   return (
-    <div className="space-y-4 p-4 text-right md:space-y-6 md:p-6" dir="rtl">
-      <h1 className="text-right text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
-        إدارة المنصة
+    <div className="space-y-4 p-4 text-left md:space-y-6 md:p-6">
+      <h1 className="text-left text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+        Platform management
       </h1>
       <Tabs value={activeTab} onValueChange={setTab} className="w-full">
-        <TabsList className="ms-auto grid h-auto w-full grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-6">
+        <TabsList className="ml-auto grid h-auto w-full grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-6">
           <TabsTrigger value="users" className="text-[10px] leading-tight sm:text-xs">
-            المستخدمين
+            Users
           </TabsTrigger>
           <TabsTrigger value="balances" className="text-[10px] leading-tight sm:text-xs">
-            الأرصدة
+            Balances
           </TabsTrigger>
           <TabsTrigger value="student-courses" className="text-[10px] leading-tight sm:text-xs">
-            كورسات الطلاب
+            Student courses
           </TabsTrigger>
           <TabsTrigger value="courses-list" className="text-[10px] leading-tight sm:text-xs">
-            الكورسات
+            Courses
           </TabsTrigger>
           <TabsTrigger value="passwords" className="text-[10px] leading-tight sm:text-xs">
-            كلمات المرور
+            Passwords
           </TabsTrigger>
           <TabsTrigger value="create-account" className="text-[10px] leading-tight sm:text-xs">
-            انشاء حساب طالب
+            Create student account
           </TabsTrigger>
         </TabsList>
         <TabsContent value="users" className="mt-4 focus-visible:outline-none">
@@ -100,7 +100,7 @@ export function AdminManagementClient({ coursesTab }: { coursesTab: ReactNode })
     <Suspense
       fallback={
         <div className="p-6">
-          <div className="text-center text-muted-foreground">جاري التحميل...</div>
+          <div className="text-center text-muted-foreground">Loading…</div>
         </div>
       }
     >

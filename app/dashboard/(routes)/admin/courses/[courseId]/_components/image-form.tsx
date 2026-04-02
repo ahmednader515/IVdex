@@ -21,10 +21,10 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const onSubmit = async (values: { imageUrl: string }) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("تم تحديث صورة الكورس");
+      toast.success("Course image updated");
       router.refresh();
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("Something went wrong");
     }
   };
 
@@ -36,9 +36,9 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
       )}
     >
       <div>
-        <h3 className="text-base font-semibold">صورة غلاف الكورس</h3>
+        <h3 className="text-base font-semibold">Course cover image</h3>
         <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-          تُعرض في الصفحة الرئيسية وبطاقة الكورس. يُفضّل نسبة قريبة من 16:9 وصورة واضحة.
+          Shown on the home page and course cards. A clear image near 16:9 works best.
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
       >
         {initialData.imageUrl ? (
           <Image
-            alt="صورة الكورس"
+            alt="Course image"
             fill
             className="object-cover"
             src={initialData.imageUrl}
@@ -59,15 +59,15 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
         ) : (
           <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 p-6 text-center">
             <ImageIcon className="h-12 w-12 text-muted-foreground/70" aria-hidden />
-            <p className="text-sm font-medium text-muted-foreground">لا توجد صورة بعد</p>
-            <p className="text-xs text-muted-foreground">استخدم الرفع أدناه لإضافة غلاف</p>
+            <p className="text-sm font-medium text-muted-foreground">No image yet</p>
+            <p className="text-xs text-muted-foreground">Upload below to add a cover</p>
           </div>
         )}
       </div>
 
       <div className="rounded-lg border border-border/60 bg-muted/30 p-3 sm:p-4">
         <p className="mb-3 text-sm font-medium text-foreground">
-          {initialData.imageUrl ? "تغيير الصورة" : "رفع صورة"}
+          {initialData.imageUrl ? "Change image" : "Upload image"}
         </p>
         <FileUpload
           endpoint="courseImage"

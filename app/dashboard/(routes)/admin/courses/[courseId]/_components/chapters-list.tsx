@@ -70,7 +70,7 @@ export const ChaptersList = ({
                                         <div className="ml-auto pr-2 flex items-center gap-x-2">
                                             {chapter.isFree && (
                                                 <Badge>
-                                                    مجاني
+                                                    Free
                                                 </Badge>
                                             )}
                                             <Badge
@@ -79,7 +79,7 @@ export const ChaptersList = ({
                                                     chapter.isPublished && "bg-primary text-primary-foreground"
                                                 )}
                                             >
-                                                {chapter.isPublished ? "تم النشر" : "غير منشور"}
+                                                {chapter.isPublished ? "Published" : "Draft"}
                                             </Badge>
                                             <button
                                                 onClick={() => onEdit(chapter.id)}

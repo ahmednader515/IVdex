@@ -33,10 +33,10 @@ export function SupportFab() {
         "hover:bg-brand/90 active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
       )}
-      aria-label="الدعم عبر واتساب"
+      aria-label="Support on WhatsApp"
     >
       <MessageCircle className="h-5 w-5" aria-hidden />
-      الدعم
+      Support
     </a>
   );
 }

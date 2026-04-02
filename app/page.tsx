@@ -7,7 +7,6 @@ import {
   Star,
   Users,
   BookOpen,
-  Award,
   Atom,
   Dna,
   FlaskConical,
@@ -17,6 +16,8 @@ import {
   GraduationCap,
   Play,
   Youtube,
+  BadgeCheck,
+  Layers,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,22 +26,14 @@ import { ScrollProgress } from "@/components/scroll-progress";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { TESTIMONIALS, testimonialImageSrc } from "@/lib/testimonials";
 
 const HERO_STATS = [
-  { kind: "subscribers" as const, value: "10K+", label: "مشترك على يوتيوب" },
-  { kind: "youtube" as const, value: "300K+", label: "مشاهدة على يوتيوب" },
-  { kind: "tiktok" as const, value: "20M+", label: "مشاهدة على تيك توك" },
-  { kind: "courses" as const, value: "10+", label: "دورة تدريبية" },
-  { kind: "videos" as const, value: "350+", label: "فيديو" },
+  { kind: "subscribers" as const, value: "10K+", label: "YouTube subscribers" },
+  { kind: "youtube" as const, value: "300K+", label: "YouTube views" },
+  { kind: "courses" as const, value: "10+", label: "Training courses" },
+  { kind: "videos" as const, value: "350+", label: "Videos" },
 ];
-
-function TikTokGlyph({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
-    </svg>
-  );
-}
 
 // Define types based on Prisma schema
 type Course = {
@@ -121,7 +114,7 @@ export default function HomePage() {
       {/* Hero — dark backdrop, cyan motif layer; capped at viewport height */}
       <section
         id="hero-section"
-        className="relative flex h-[100vh] max-h-[100vh] min-h-0 flex-col overflow-hidden bg-[#050505] text-white pt-20"
+        className="relative flex min-h-[100svh] flex-col bg-[#050505] pt-20 text-white max-md:overflow-x-hidden max-md:overflow-y-auto md:h-[100vh] md:max-h-[100vh] md:min-h-0 md:overflow-hidden"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(56,189,248,0.12),transparent)]"
@@ -137,32 +130,56 @@ export default function HomePage() {
           <Atom className="absolute bottom-[12%] right-[30%] h-10 w-10 opacity-70" strokeWidth={1} />
         </div>
 
-        <div className="relative z-10 container mx-auto flex min-h-0 flex-1 flex-col px-4 pb-2 pt-3 md:pb-3 md:pt-5">
-          {/* RTL col1 = visual right: copy + CTAs. Col2 = image (row-span 2). Stats under copy only on md+; mobile: below image */}
-          <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[auto_auto_auto] gap-4 md:grid-cols-2 md:grid-rows-[minmax(0,1fr)_auto] md:items-stretch md:gap-6 lg:gap-10">
+        <div className="relative z-10 container mx-auto flex w-full max-w-full flex-col px-4 pb-6 pt-3 md:min-h-0 md:flex-1 md:px-6 md:pb-3 md:pt-5 lg:px-8">
+          {/*
+            Mobile: single-column flow in DOM order — image → copy → stats (no overlapping rows).
+            md+: 2-col grid; col1 = text+stats, col2 = image spanning both rows.
+          */}
+          <div className="grid w-full grid-cols-1 gap-4 max-md:content-start md:min-h-0 md:flex-1 md:grid-cols-2 md:grid-rows-[minmax(0,1fr)_auto] md:items-stretch md:gap-6 lg:gap-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.06 }}
+              className="relative z-10 flex w-full shrink-0 justify-center pt-1 md:col-start-2 md:row-span-2 md:row-start-1 md:h-full md:items-end md:justify-start md:pt-0"
+            >
+              <Image
+                src="/teacher-image.png"
+                alt="Khaled G. Khalifa"
+                width={720}
+                height={900}
+                priority
+                sizes="(max-width: 768px) 100vw, 48vw"
+                className="h-auto w-auto max-h-[min(38vh,360px)] max-w-[min(100vw-2rem,400px)] object-contain object-bottom md:max-h-[min(72vh,760px)] md:max-w-[min(48vw,640px)]"
+              />
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65 }}
-              className="row-start-1 flex min-h-0 flex-col items-center justify-center text-center md:col-start-1 md:row-start-1 md:max-w-xl md:items-start md:justify-center md:pr-1 md:text-right lg:max-w-xl"
+              className="relative z-10 flex min-h-0 w-full shrink-0 flex-col items-center justify-start text-center max-md:pb-1 md:col-start-1 md:row-start-1 md:max-w-xl md:items-start md:justify-center md:pl-1 md:pr-10 md:text-left lg:max-w-xl lg:pr-14 xl:pr-16"
             >
               <h1 className="mb-2 text-xl font-bold leading-tight tracking-tight text-white md:mb-3 md:text-3xl lg:text-4xl">
-                مرحبًا، أنا <span className="text-sky-400">خالد خليفة</span>
+                Hello, I&apos;m <span className="text-sky-400">Khaled Khalifa</span>
               </h1>
               <div className="mx-auto mb-4 max-w-xl space-y-2 text-xs leading-relaxed text-white/85 md:mx-0 md:text-sm">
+                <p>Bachelor&apos;s degree in Biotechnology and Genetic Engineering</p>
                 <p>
-                  بكالوريوس التكنولوجيا الحيوية والهندسة الوراثية — كلية الزراعة، جامعة عين شمس{" "}
-                  <span className="whitespace-nowrap">(2023)</span>. أتخصص في الأحياء الجزيئية والدقيقة، بخبرة مخبرية
-                  أكاديمية وصناعية.
+                  Specialized in Molecular Biology and Microbiology with strong academic and industrial laboratory
+                  experience.
                 </p>
                 <p>
-                  تطبيقات ميدانية وتدريب في ‎PCR والتشخيص (REME-D)، بحث وتطوير وتعليم مخبري (CEB)، وزراعة أنسجة. محتوى عربي
-                  على يوتيوب (+10 دورات، +300 ألف مشاهدة، +10 آلاف مشترك). معتمد{" "}
-                  <span className="font-medium text-white">TOT</span>.
+                  Performed 1000+ PCR analyses with hands-on expertise in molecular diagnostics workflows.
                 </p>
+                <p>Experience in Research &amp; Development, Technical Support, and laboratory teaching.</p>
+                <p>
+                  Passionate about simplifying complex scientific concepts and delivering practical, real-world knowledge
+                  in molecular biology and biotechnology.
+                </p>
+                <p className="font-semibold text-white">TOT Certificated</p>
               </div>
               <p className="mb-3 w-full max-w-xl text-xs font-medium tracking-wide text-sky-300/95 md:text-sm">
-                إعداد / خالد ج. خليفة
+                By Khaled G. Khalifa
               </p>
               <div className="flex w-full max-w-xl flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-start md:items-start">
                 <Button
@@ -171,7 +188,7 @@ export default function HomePage() {
                   className="w-full rounded-full border-0 bg-brand px-6 text-white shadow-[0_0_28px_-6px_rgba(56,189,248,0.55)] hover:bg-brand/90 sm:w-auto"
                 >
                   <Link href="/sign-up">
-                    ابدأ الآن <ArrowRight className="mr-2 h-4 w-4" />
+                    Start now <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -181,41 +198,24 @@ export default function HomePage() {
                   onClick={scrollToCourses}
                   type="button"
                 >
-                  استكشف الكورسات
+                  Explore courses
                 </Button>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.08 }}
-              className="row-start-2 flex min-h-0 w-full items-end justify-center md:col-start-2 md:row-span-2 md:row-start-1 md:justify-start"
-            >
-              <Image
-                src="/teacher-image.png"
-                alt="خالد ج. خليفة"
-                width={720}
-                height={900}
-                priority
-                className="h-auto w-auto max-h-[min(42vh,400px)] max-w-[min(100vw-2rem,420px)] object-contain object-bottom md:max-h-[min(72vh,760px)] md:max-w-[min(48vw,640px)]"
-              />
-            </motion.div>
-
-            <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="row-start-3 w-full max-w-xl md:col-start-1 md:row-start-2 md:justify-self-start"
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="relative z-10 w-full max-w-xl shrink-0 justify-self-center max-md:mt-1 md:col-start-1 md:row-start-2 md:justify-self-start md:pr-10 lg:pr-14 xl:pr-16"
             >
               <div className="rounded-2xl border border-sky-400/25 bg-zinc-950/85 px-2 py-2.5 shadow-[0_0_28px_-8px_rgba(56,189,248,0.35)] backdrop-blur-md md:rounded-[1.75rem] md:px-4 md:py-3">
-                <div className="grid grid-cols-2 gap-2 gap-y-3 sm:grid-cols-3 md:grid-cols-5 md:gap-1.5">
+                <div className="grid grid-cols-2 gap-2 gap-y-3 sm:grid-cols-2 md:grid-cols-4 md:gap-1.5">
                   {HERO_STATS.map((item) => (
                     <div key={item.kind} className="flex flex-col items-center text-center">
                       <div className="mb-0.5 flex h-7 w-7 items-center justify-center text-sky-400 md:h-8 md:w-8">
                         {item.kind === "subscribers" && <Users className="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" strokeWidth={1.5} />}
                         {item.kind === "youtube" && <Youtube className="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" strokeWidth={1.35} />}
-                        {item.kind === "tiktok" && <TikTokGlyph className="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" />}
                         {item.kind === "courses" && (
                           <GraduationCap className="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" strokeWidth={1.35} />
                         )}
@@ -250,8 +250,10 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">الكورسات المتاحة</h2>
-            <p className="text-muted-foreground">اكتشف مجموعة متنوعة من الكورسات التعليمية المميزة</p>
+            <h2 className="text-3xl font-bold mb-4 italic">Explore Molecular Biology &amp; Biotechnology Courses</h2>
+            <p className="text-muted-foreground">
+              Practical, career-focused training designed for real lab applications.
+            </p>
           </motion.div>
 
           <motion.div
@@ -286,9 +288,9 @@ export default function HomePage() {
                     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                       <BookOpen className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">لا توجد كورسات متاحة حالياً</h3>
+                    <h3 className="text-lg font-semibold mb-2">No courses available yet</h3>
                     <p className="text-muted-foreground mb-4">
-                      سيتم إضافة الكورسات قريباً. تحقق من هذه الصفحة لاحقاً للاطلاع على أحدث الكورسات التعليمية.
+                      New courses are coming soon. Check back for hands-on molecular biology and biotechnology training.
                     </p>
                     <Button 
                       variant="outline" 
@@ -296,7 +298,7 @@ export default function HomePage() {
                       className="bg-brand hover:bg-brand/90 text-white border-brand"
                     >
                       <Link href="/sign-up">
-                        سجل الآن للوصول المبكر
+                        Sign up for early access
                       </Link>
                     </Button>
                   </div>
@@ -332,9 +334,12 @@ export default function HomePage() {
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                         <BookOpen className="h-4 w-4" />
                         <span>
-                          {course.chapters?.length || 0} {course.chapters?.length === 1 ? "درس" : "دروس"}
+                          {course.chapters?.length || 0}{" "}
+                          {course.chapters?.length === 1 ? "lesson" : "lessons"}
                           {course.quizzes && course.quizzes.length > 0 && (
-                            <span className="mr-2">، {course.quizzes.length} {course.quizzes.length === 1 ? "اختبار" : "اختبارات"}</span>
+                            <span className="ml-2">
+                              · {course.quizzes.length} {course.quizzes.length === 1 ? "quiz" : "quizzes"}
+                            </span>
                           )}
                         </span>
                       </div>
@@ -352,7 +357,7 @@ export default function HomePage() {
                           router.push(courseUrl);
                         }}
                       >
-                        {course.progress === 100 ? "عرض الكورس" : "عرض الكورس"}
+                        View course
                       </Button>
                     </div>
                   </motion.div>
@@ -363,7 +368,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials — real comments from /public/comments (English summaries) */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
@@ -373,61 +378,41 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">آراء الطلاب</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Learner testimonials</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              آراء من يتابعون منصة IVDex ودورات التكنولوجيا الحيوية بالعربية مع أ. خالد خليفة
+              Real feedback from students and viewers. Each card links the English summary to the original screenshot you
+              shared.
             </p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                name: "نورا خالد",
-                grade: "طالبة قسم أحياء — كلية العلوم",
-                testimonial:
-                  "شرح PCR والاستخلاص والمفاهيم المخبرية كان واضحًا جدًا بالعربي. IVDex وفرت عليّ البحث في مصادر متفرقة؛ المحتوى عملي وقريب من الواقع المخبري.",
-              },
-              {
-                name: "يوسف إبراهيم",
-                grade: "خريج تكنولوجيا حيوية — يستعد لسوق العمل",
-                testimonial:
-                  "الدورات تغطي أساسيات علم الأحياء الجزيئي والأحياء الدقيقة بطريقة مرتبة. بعد ما تابعت القناة والمنصة، حسّنت فهمي لسير العمل في المختبر التشخيصي.",
-              },
-              {
-                name: "سارة محمود",
-                grade: "باحثة مبتدئة — مختبر أبحاث",
-                testimonial:
-                  "أهم ما في المنصة إن اللغة عربية والتطبيقات من تجربة حقيقية في المختبر. التدريبات والشرح يساعدون أي حد يشتغل أو يدرس في مجال الأحياء الدقيقة يثبت المعلومة.",
-              },
-            ].map((testimonial, index) => (
+            {TESTIMONIALS.map((t, index) => (
               <motion.div
-                key={index}
+                key={`${t.name}-${t.imageFile}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: Math.min(index * 0.04, 0.4) }}
                 viewport={{ once: true }}
-                className="bg-card rounded-lg p-6 shadow-lg"
+                className="bg-card rounded-xl overflow-hidden border shadow-lg flex flex-col"
               >
-                <div className="flex items-center mb-4">
-                  <div className="relative h-12 w-12 rounded-full overflow-hidden">
-                    <Image
-                      src="/male.png"
-                      alt={testimonial.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="mr-4">
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">{testimonial.grade}</p>
-                  </div>
+                <div className="relative h-44 w-full bg-muted shrink-0">
+                  <Image
+                    src={testimonialImageSrc(t.imageFile)}
+                    alt={`Original comment screenshot — ${t.name}`}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized
+                  />
                 </div>
-                <p className="text-muted-foreground">
-                  &ldquo;{testimonial.testimonial}&rdquo;
-                </p>
-                <div className="flex mt-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  ))}
+                <div className="p-5 flex flex-col flex-1">
+                  <h4 className="font-semibold text-lg">{t.name}</h4>
+                  {t.role ? <p className="text-sm text-muted-foreground mb-2">{t.role}</p> : null}
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
+                  <div className="flex mt-4 pt-3 border-t border-border/60">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -451,8 +436,8 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">مميزات المنصة</h2>
-            <p className="text-muted-foreground">اكتشف ما يجعل منصتنا مميزة</p>
+            <h2 className="text-3xl font-bold mb-4 italic">Why This Platform Stands Out</h2>
+            <p className="text-muted-foreground">Built for real-world molecular biology skills, not just theory.</p>
           </motion.div>
 
           <motion.div
@@ -470,10 +455,12 @@ export default function HomePage() {
               className="text-center p-6 rounded-xl bg-card border shadow-sm hover:shadow-md transition-all"
             >
               <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="h-6 w-6 text-brand" />
+                <BadgeCheck className="h-6 w-6 text-brand" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">جودة عالية</h3>
-              <p className="text-muted-foreground">أفضل منصة متخصصة للكورسات</p>
+              <h3 className="text-xl font-semibold mb-2">Free Certificate</h3>
+              <p className="text-muted-foreground">
+                Earn a verified certificate at no cost after successfully passing course assessments.
+              </p>
             </motion.div>
 
             <motion.div
@@ -484,10 +471,12 @@ export default function HomePage() {
               className="text-center p-6 rounded-xl bg-card border shadow-sm hover:shadow-md transition-all"
             >
               <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-6 w-6 text-brand" />
+                <Microscope className="h-6 w-6 text-brand" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">مجتمع نشط</h3>
-              <p className="text-muted-foreground">انضم إلى مجتمع من الطلاب النشطين والمتفوقين والأوائل</p>
+              <h3 className="text-xl font-semibold mb-2">Real Lab Experience</h3>
+              <p className="text-muted-foreground">
+                Learn protocols, troubleshooting, and workflows used in actual molecular labs.
+              </p>
             </motion.div>
 
             <motion.div
@@ -498,10 +487,12 @@ export default function HomePage() {
               className="text-center p-6 rounded-xl bg-card border shadow-sm hover:shadow-md transition-all"
             >
               <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-6 w-6 text-brand" />
+                <Layers className="h-6 w-6 text-brand" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">شهادات تقدير</h3>
-              <p className="text-muted-foreground">احصل على شهادات تقدير عند إكمال الكورسات</p>
+              <h3 className="text-xl font-semibold mb-2">From Basics to Advanced</h3>
+              <p className="text-muted-foreground">
+                Structured learning path covering fundamentals to professional-level applications.
+              </p>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -517,13 +508,15 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">ابدأ رحلة التعلم معنا</h2>
-            <p className="text-muted-foreground mb-8">
-              انضم إلينا اليوم وابدأ رحلة النجاح
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 italic">
+              Start Building Your Molecular Biology Expertise
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Join now and gain the skills you need for real laboratory work and diagnostics.
             </p>
             <Button size="lg" asChild className="bg-brand hover:bg-brand/90 text-white">
               <Link href="/sign-up">
-                سجل الآن <ArrowRight className="mr-2 h-4 w-4" />
+                Sign up <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </motion.div>

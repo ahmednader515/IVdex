@@ -39,41 +39,41 @@ function TeacherManagementContent() {
   );
 
   return (
-    <div className="space-y-4 p-4 md:space-y-6 md:p-6" dir="rtl">
-      <h1 className="text-right text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
-        إدارة الطلاب والحسابات
+    <div className="space-y-4 p-4 md:space-y-6 md:p-6">
+      <h1 className="text-left text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+        Student and account management
       </h1>
       <Tabs value={activeTab} onValueChange={setTab} className="w-full">
-        <TabsList className="flex h-auto w-full flex-row-reverse flex-nowrap items-stretch justify-start gap-2 overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch] rounded-xl bg-transparent p-0 pb-1">
+        <TabsList className="flex h-auto w-full flex-row flex-nowrap items-stretch justify-start gap-2 overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch] rounded-xl bg-transparent p-0 pb-1">
           <TabsTrigger
             value="users"
             className="min-h-11 shrink-0 rounded-xl border border-border/70 bg-card px-4 text-sm font-semibold text-foreground shadow-sm data-[state=active]:border-brand/40 data-[state=active]:bg-brand/10 data-[state=active]:text-brand data-[state=active]:shadow-none"
           >
-            المستخدمين
+            Users
           </TabsTrigger>
           <TabsTrigger
             value="balances"
             className="min-h-11 shrink-0 rounded-xl border border-border/70 bg-card px-4 text-sm font-semibold text-foreground shadow-sm data-[state=active]:border-brand/40 data-[state=active]:bg-brand/10 data-[state=active]:text-brand data-[state=active]:shadow-none"
           >
-            الأرصدة
+            Balances
           </TabsTrigger>
           <TabsTrigger
             value="courses"
             className="min-h-11 shrink-0 rounded-xl border border-border/70 bg-card px-4 text-sm font-semibold text-foreground shadow-sm data-[state=active]:border-brand/40 data-[state=active]:bg-brand/10 data-[state=active]:text-brand data-[state=active]:shadow-none"
           >
-            اضافة و حذف الكورسات
+            Add or remove courses
           </TabsTrigger>
           <TabsTrigger
             value="passwords"
             className="min-h-11 shrink-0 rounded-xl border border-border/70 bg-card px-4 text-sm font-semibold text-foreground shadow-sm data-[state=active]:border-brand/40 data-[state=active]:bg-brand/10 data-[state=active]:text-brand data-[state=active]:shadow-none"
           >
-            كلمات المرور
+            Passwords
           </TabsTrigger>
           <TabsTrigger
             value="create-account"
             className="min-h-11 shrink-0 rounded-xl border border-border/70 bg-card px-4 text-sm font-semibold text-foreground shadow-sm data-[state=active]:border-brand/40 data-[state=active]:bg-brand/10 data-[state=active]:text-brand data-[state=active]:shadow-none"
           >
-            انشاء حساب طالب
+            Create student account
           </TabsTrigger>
         </TabsList>
         <TabsContent value="users" className="mt-4 focus-visible:outline-none">
@@ -101,7 +101,7 @@ export default function TeacherManagementPage() {
     <Suspense
       fallback={
         <div className="p-6">
-          <div className="text-center text-muted-foreground">جاري التحميل...</div>
+          <div className="text-center text-muted-foreground">Loading…</div>
         </div>
       }
     >

@@ -116,7 +116,7 @@ export const CourseSidebar = ({ course }: CourseSidebarProps) => {
     return (
       <div className="h-full border-r flex flex-col overflow-y-auto shadow-lg">
         <div className="p-8 flex flex-col border-b">
-          <h1 className="font-semibold">جاري تحميل الكورس</h1>
+          <h1 className="font-semibold">Loading course...</h1>
         </div>
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -129,7 +129,7 @@ export const CourseSidebar = ({ course }: CourseSidebarProps) => {
     return (
       <div className="h-full border-l flex flex-col overflow-y-auto shadow-lg w-64 md:w-80">
         <div className="p-8 flex flex-col border-b">
-          <h1 className="font-semibold">حدث خطأ</h1>
+          <h1 className="font-semibold">Something went wrong</h1>
         </div>
         <div className="flex items-center justify-center h-full text-red-500">
           {error}
@@ -154,7 +154,7 @@ export const CourseSidebar = ({ course }: CourseSidebarProps) => {
             <div
               key={content.id}
               className={cn(
-                "flex items-center gap-x-2 text-sm font-[500] rtl:pr-4 ltr:pl-4 py-4 transition cursor-pointer",
+                "flex items-center gap-x-2 text-sm font-[500] pl-4 py-4 transition cursor-pointer",
                 isSelected 
                   ? "bg-slate-200 text-slate-900"
                   : "text-slate-500 hover:bg-slate-300/20 hover:text-slate-600",
@@ -167,15 +167,15 @@ export const CourseSidebar = ({ course }: CourseSidebarProps) => {
               ) : (
                 <Circle className="h-4 w-4" />
               )}
-              <span className="rtl:text-right ltr:text-left flex-grow mr-1">
+              <span className="text-left flex-grow mr-1">
                 {content.title}
                 {content.type === 'quiz' && (
-                  <span className="ml-2 text-xs text-green-600">(اختبار)</span>
+                  <span className="ml-2 text-xs text-green-600">(Quiz)</span>
                 )}
               </span>
               {content.type === 'chapter' && content.isFree && (
                 <span className="ml-4 px-2 py-0.5 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
-                  مجاني
+                  Free preview
                 </span>
               )}
             </div>

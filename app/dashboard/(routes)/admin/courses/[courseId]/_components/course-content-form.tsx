@@ -84,7 +84,7 @@ export const CourseContentForm = ({
         try {
             setIsUpdating(true);
             const { data } = await axios.post<{ id: string }>(`/api/courses/${courseId}/chapters`, { title });
-            toast.success("تم انشاء الدرس");
+            toast.success("Lesson created");
             setTitle("");
             setIsCreating(false);
             router.refresh();
@@ -92,7 +92,7 @@ export const CourseContentForm = ({
                 openChapterEditor(data.id);
             }
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -106,17 +106,17 @@ export const CourseContentForm = ({
                     onChapterSheetOpenChange(false);
                 }
                 await axios.delete(`/api/courses/${courseId}/chapters/${id}`);
-                toast.success("تم حذف الدرس");
+                toast.success("Lesson deleted");
             } else {
                 if (activeQuizId === id) {
                     onQuizSheetOpenChange(false);
                 }
                 await axios.delete(`/api/courses/${courseId}/quizzes/${id}`);
-                toast.success("تم حذف الاختبار");
+                toast.success("Quiz deleted");
             }
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -128,10 +128,10 @@ export const CourseContentForm = ({
             await axios.put(`/api/courses/${courseId}/reorder`, {
                 list: updateData
             });
-            toast.success("تم ترتيب المحتوى");
+            toast.success("Content order updated");
             router.refresh();
         } catch {
-            toast.error("حدث خطأ");
+            toast.error("Something went wrong");
         } finally {
             setIsUpdating(false);
         }
@@ -176,16 +176,16 @@ export const CourseContentForm = ({
                 </div>
             )}
             <div className="text-base font-semibold tracking-tight">
-                محتوى الكورس (دروس واختبارات)
+                Course content (lessons and quizzes)
             </div>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                أضف دروساً واختبارات ورتّبها بالسحب. ابدأ بإضافة درس أو اختبار من الأزرار أدناه.
+                Add lessons and quizzes and reorder them by dragging. Start by adding a lesson or quiz using the buttons below.
             </p>
             {isCreating && (
                 <div className="mt-4 space-y-3">
                     <Input
                         disabled={isUpdating}
-                        placeholder="مثال: الدرس الأول — المقدمة"
+                        placeholder="e.g. Lesson 1 — Introduction"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="min-h-12 text-base"
@@ -201,7 +201,7 @@ export const CourseContentForm = ({
                                 setTitle("");
                             }}
                         >
-                            إلغاء
+                            Cancel
                         </Button>
                         <Button
                             onClick={onCreate}
@@ -209,7 +209,7 @@ export const CourseContentForm = ({
                             type="button"
                             className="min-h-11 w-full bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-w-[120px]"
                         >
-                            إنشاء الدرس
+                            Create lesson
                         </Button>
                     </div>
                 </div>
@@ -223,7 +223,7 @@ export const CourseContentForm = ({
                 >
                     {!courseItems.length && (
                         <p className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 py-8 text-center text-sm italic leading-relaxed">
-                            لا يوجد محتوى بعد. استخدم الأزرار أسفل الصفحة لإضافة أول درس أو اختبار.
+                            No content yet. Use the buttons at the bottom of the page to add your first lesson or quiz.
                         </p>
                     )}
                     {courseItems.length > 0 && (
@@ -239,7 +239,7 @@ export const CourseContentForm = ({
             )}
             {!isCreating && courseItems.length > 0 && (
                 <p className="mt-3 text-xs text-muted-foreground sm:mt-4">
-                    اسحب من المقبض ← لإعادة ترتيب الدروس والاختبارات
+                    Drag the handle to reorder lessons and quizzes
                 </p>
             )}
             {!isCreating && (
@@ -251,7 +251,7 @@ export const CourseContentForm = ({
                         onClick={() => router.push(`/dashboard/admin/quizzes/create?courseId=${courseId}`)}
                     >
                         <PlusCircle className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
-                        إضافة اختبار
+                        Add quiz
                     </Button>
                     <Button
                         type="button"
@@ -259,7 +259,7 @@ export const CourseContentForm = ({
                         onClick={() => setIsCreating((current) => !current)}
                     >
                         <PlusCircle className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
-                        إضافة درس
+                        Add lesson
                     </Button>
                 </div>
             )}

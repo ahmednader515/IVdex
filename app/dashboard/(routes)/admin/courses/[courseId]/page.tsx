@@ -118,7 +118,7 @@ export default async function CourseIdPage({
             {!course.isPublished && (
                 <Banner
                     variant="warning"
-                    label="هذه الكورس غير منشورة. لن تكون مرئية للطلاب."
+                    label="This course is a draft. It is not visible to students."
                 />
             )}
             <TeacherCourseHub

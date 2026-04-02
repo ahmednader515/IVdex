@@ -58,10 +58,10 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("تم حفظ السعر");
+      toast.success("Price saved");
       router.refresh();
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("Something went wrong");
     }
   };
 
@@ -79,10 +79,10 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
             name="price"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel className="text-base font-semibold">سعر الكورس (جنيه)</FormLabel>
+                <FormLabel className="text-base font-semibold">Course price (EGP)</FormLabel>
                 <FormDescription className="text-sm leading-relaxed">
-                  اكتب <span className="font-medium text-foreground">0</span> ليكون الكورس{" "}
-                  <span className="font-medium text-foreground">مجانياً</span>.
+                  Enter <span className="font-medium text-foreground">0</span> to make the course{" "}
+                  <span className="font-medium text-foreground">free</span>.
                 </FormDescription>
                 <FormControl>
                   <Input
@@ -131,7 +131,7 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
             type="submit"
             className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
           >
-            {isSubmitting ? "جاري الحفظ..." : "حفظ السعر"}
+            {isSubmitting ? "Saving..." : "Save price"}
           </Button>
         </form>
       </Form>

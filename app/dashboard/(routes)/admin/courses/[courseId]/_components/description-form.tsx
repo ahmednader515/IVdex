@@ -29,7 +29,7 @@ interface DescriptionFormProps {
 
 const formSchema = z.object({
   description: z.string().min(1, {
-    message: "الوصف مطلوب",
+    message: "Description is required",
   }),
 });
 
@@ -54,10 +54,10 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("تم حفظ وصف الكورس");
+      toast.success("Course description saved");
       router.refresh();
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("Something went wrong");
     }
   };
 
@@ -75,14 +75,14 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
             name="description"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel className="text-base font-semibold">وصف الكورس</FormLabel>
+                <FormLabel className="text-base font-semibold">Course description</FormLabel>
                 <FormDescription className="text-sm leading-relaxed">
-                  اشرح للطالب ماذا سيتعلم ولماذا يناسبه هذا الكورس.
+                  Explain what students will learn and why this course fits them.
                 </FormDescription>
                 <FormControl>
                   <Textarea
                     disabled={isSubmitting}
-                    placeholder="اكتب وصفاً كاملاً للكورس..."
+                    placeholder="Write a full description for the course..."
                     className="min-h-[140px] resize-y text-base leading-relaxed md:min-h-[120px]"
                     {...field}
                   />
@@ -96,7 +96,7 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
             type="submit"
             className="mt-2 w-full min-h-11 bg-brand text-white hover:bg-brand/90 sm:w-auto sm:min-h-10"
           >
-            {isSubmitting ? "جاري الحفظ..." : "حفظ الوصف"}
+            {isSubmitting ? "Saving..." : "Save description"}
           </Button>
         </form>
       </Form>

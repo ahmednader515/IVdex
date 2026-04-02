@@ -104,7 +104,7 @@ export async function POST(
           userId,
           amount: -coursePrice,
           type: "PURCHASE",
-          description: `تم شراء الكورس: ${course.title}`,
+          description: `Purchased course: ${course.title}`,
         },
       });
 

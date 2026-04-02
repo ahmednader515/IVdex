@@ -105,13 +105,13 @@ export const ChapterForm = ({
                 </div>
             )}
             <div className="font-medium flex items-center justify-between">
-                الدروس
+                Lessons
                 <Button onClick={toggleCreating} variant="ghost">
-                    {isCreating && (<>الغاء</>)}
+                    {isCreating && (<>Cancel</>)}
                     {!isCreating && (
                     <>
                         <PlusCircle className="h-4 w-4 mr-2" />
-                        إضافة درس
+                        Add lesson
                     </>)}
                 </Button>
             </div>
@@ -136,7 +136,7 @@ export const ChapterForm = ({
                         />
                         <div className="flex items-center gap-x-2">
                             <Button disabled={!isValid || isSubmitting} type="submit">
-                                إنشاء
+                                Create
                             </Button>
                         </div>
                     </form>
@@ -147,7 +147,7 @@ export const ChapterForm = ({
                     "text-sm mt-2",
                     !initialData.chapters.length && "text-muted-foreground italic"
                 )}>
-                    {!initialData.chapters.length && "لا يوجد دروس"}
+                    {!initialData.chapters.length && "No lessons yet"}
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="chapters">
                             {(provided) => (
@@ -184,7 +184,7 @@ export const ChapterForm = ({
                                                     <div className="ml-auto pr-2 flex items-center gap-x-2">
                                                         {chapter.isFree && (
                                                             <Badge>
-                                                                مجاني
+                                                                Free
                                                             </Badge>
                                                         )}
                                                         <Badge
@@ -193,7 +193,7 @@ export const ChapterForm = ({
                                                                 chapter.isPublished && "bg-primary/20 text-primary"
                                                             )}
                                                         >
-                                                            {chapter.isPublished ? "منشور" : "غير منشور"}
+                                                            {chapter.isPublished ? "Published" : "Draft"}
                                                         </Badge>
                                                         <Pencil
                                                             onClick={() =>

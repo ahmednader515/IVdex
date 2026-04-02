@@ -49,13 +49,13 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     if (!passwordChecks.isValid) {
-      toast.error("كلمات المرور غير متطابقة");
+      toast.error("Passwords do not match");
       setIsLoading(false);
       return;
     }
 
     if (!recaptchaToken) {
-      toast.error("يرجى إكمال التحقق من reCaptcha");
+      toast.error("Please complete the reCAPTCHA verification");
       setIsLoading(false);
       return;
     }
@@ -67,7 +67,7 @@ export default function SignUpPage() {
       });
       
       if (response.data.success) {
-        toast.success("تم إنشاء الحساب بنجاح");
+        toast.success("Account created successfully");
         router.push("/sign-in");
       }
     } catch (error) {
@@ -75,22 +75,22 @@ export default function SignUpPage() {
       if (axiosError.response?.status === 400) {
         const errorMessage = axiosError.response.data as string;
         if (errorMessage.includes("Phone number already exists")) {
-          toast.error("رقم الهاتف مسجل مسبقاً");
+          toast.error("This phone number is already registered");
         } else if (errorMessage.includes("Parent phone number already exists")) {
-          toast.error("رقم هاتف ولي الأمر مسجل مسبقاً");
+          toast.error("This parent phone number is already registered");
         } else if (errorMessage.includes("Phone number cannot be the same as parent phone number")) {
-          toast.error("رقم الهاتف لا يمكن أن يكون نفس رقم هاتف ولي الأمر");
+          toast.error("Student and parent phone numbers cannot be the same");
         } else if (errorMessage.includes("Passwords do not match")) {
-          toast.error("كلمات المرور غير متطابقة");
+          toast.error("Passwords do not match");
         } else if (errorMessage.includes("reCAPTCHA")) {
-          toast.error("فشل التحقق من reCaptcha. يرجى المحاولة مرة أخرى");
+          toast.error("reCAPTCHA verification failed. Please try again");
           recaptchaRef.current?.reset();
           setRecaptchaToken(null);
         } else {
-          toast.error("حدث خطأ أثناء إنشاء الحساب");
+          toast.error("Something went wrong while creating your account");
         }
       } else {
-        toast.error("حدث خطأ أثناء إنشاء الحساب");
+        toast.error("Something went wrong while creating your account");
       }
     } finally {
       setIsLoading(false);
@@ -125,10 +125,10 @@ export default function SignUpPage() {
             </div>
             <div className="space-y-4">
               <h3 className="text-2xl font-bold text-brand">
-                مرحباً بك في منصة خالد خليفة التعليمية
+                Welcome to Khaled Khalifa&apos;s learning platform
               </h3>
               <p className="text-lg text-muted-foreground max-w-md">
-                انضم إلينا اليوم وابدأ رحلة التعلم مع أفضل المدرسين
+                Join today and start learning with expert-led courses
               </p>
             </div>
           </div>
@@ -140,15 +140,15 @@ export default function SignUpPage() {
         <div className="w-full max-w-md space-y-6 py-8 mt-8">
           <div className="space-y-2 text-center">
             <h2 className="text-3xl font-bold tracking-tight mt-8">
-              إنشاء حساب جديد
+              Create account
             </h2>
             <p className="text-sm text-muted-foreground">
-              أدخل بياناتك لإنشاء حساب جديد
+              Enter your details to register
             </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">الاسم الكامل</Label>
+              <Label htmlFor="fullName">Full name</Label>
               <Input
                 id="fullName"
                 name="fullName"
@@ -162,7 +162,7 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">رقم الهاتف</Label>
+              <Label htmlFor="phoneNumber">Phone number</Label>
               <Input
                 id="phoneNumber"
                 name="phoneNumber"
@@ -177,7 +177,7 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="parentPhoneNumber">رقم هاتف ولي الأمر</Label>
+              <Label htmlFor="parentPhoneNumber">Parent / guardian phone</Label>
               <Input
                 id="parentPhoneNumber"
                 name="parentPhoneNumber"
@@ -192,7 +192,7 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">كلمة المرور</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -222,7 +222,7 @@ export default function SignUpPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+              <Label htmlFor="confirmPassword">Confirm password</Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -258,7 +258,7 @@ export default function SignUpPage() {
                 ) : (
                   <X className="h-4 w-4 text-red-500" />
                 )}
-                <span className="text-sm text-muted-foreground">كلمات المرور متطابقة</span>
+                <span className="text-sm text-muted-foreground">Passwords match</span>
               </div>
             </div>
 
@@ -270,7 +270,7 @@ export default function SignUpPage() {
                 onExpired={() => setRecaptchaToken(null)}
                 onError={() => {
                   setRecaptchaToken(null);
-                  toast.error("حدث خطأ في التحقق من reCaptcha");
+                  toast.error("reCAPTCHA verification error");
                 }}
               />
             </div>
@@ -280,20 +280,20 @@ export default function SignUpPage() {
               className="w-full h-10 bg-brand hover:bg-brand/90 text-white"
               disabled={isLoading || !passwordChecks.isValid || !recaptchaToken}
             >
-              {isLoading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
+              {isLoading ? "Creating account..." : "Create account"}
             </Button>
           </form>
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">لديك حساب بالفعل؟ </span>
+            <span className="text-muted-foreground">Already have an account? </span>
             <Link 
               href="/sign-in" 
               className="text-primary hover:underline transition-colors"
             >
-              تسجيل الدخول
+              Log in
             </Link>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

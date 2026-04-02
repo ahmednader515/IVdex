@@ -34,7 +34,7 @@ function DeviceConflictContent() {
 
       if (!response.ok) {
         const data = await response.json();
-        toast.error(data.error || "فشل تسجيل الخروج من الأجهزة الأخرى");
+        toast.error(data.error || "Could not sign out other devices");
         return;
       }
 
@@ -46,11 +46,11 @@ function DeviceConflictContent() {
       });
 
       if (result?.error) {
-        toast.error("رقم الهاتف أو كلمة المرور غير صحيحة");
+        toast.error("Invalid phone number or password");
         return;
       }
 
-      toast.success("تم تسجيل الدخول بنجاح");
+      toast.success("Signed in successfully");
 
       // Get user data to determine role and redirect accordingly
       const sessionResponse = await fetch("/api/auth/session", { cache: "no-store" });
@@ -66,7 +66,7 @@ function DeviceConflictContent() {
         router.replace(target);
       }
     } catch (error) {
-      toast.error("حدث خطأ أثناء تسجيل الدخول");
+      toast.error("Something went wrong while signing in");
     } finally {
       setIsLoading(false);
     }
@@ -85,11 +85,11 @@ function DeviceConflictContent() {
         >
           <DialogHeader>
             <DialogTitle className="text-center">
-              الحساب مسجل الدخول على جهاز آخر
+              This account is active on another device
             </DialogTitle>
             <DialogDescription className="text-center">
-              هذا الحساب مسجل الدخول حالياً على جهاز آخر.
-              لتسجيل الدخول على هذا الجهاز، يجب تسجيل الخروج من جميع الأجهزة الأخرى أولاً.
+              This account is currently signed in elsewhere.
+              To sign in on this device, you need to sign out from all other devices first.
             </DialogDescription>
           </DialogHeader>
 
@@ -101,14 +101,14 @@ function DeviceConflictContent() {
               className="hidden"
             />
             <div className="space-y-2">
-              <Label htmlFor="password">كلمة المرور</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="أدخل كلمة المرور"
+                  placeholder="Enter your password"
                   required
                   disabled={isLoading}
                   className="h-10"
@@ -132,10 +132,10 @@ function DeviceConflictContent() {
             <LoadingButton
               type="submit"
               loading={isLoading}
-              loadingText="جاري تسجيل الخروج والدخول..."
+              loadingText="Signing out other sessions..."
               className="w-full h-10 bg-brand hover:bg-brand/90 text-white"
             >
-              تسجيل الخروج من جميع الأجهزة وتسجيل الدخول
+              Sign out everywhere and log in here
             </LoadingButton>
           </form>
         </DialogContent>
@@ -146,9 +146,8 @@ function DeviceConflictContent() {
 
 export default function DeviceConflictPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">جاري التحميل...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
       <DeviceConflictContent />
     </Suspense>
   );
 }
-

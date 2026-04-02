@@ -25,9 +25,9 @@ interface CourseContentListProps {
 
 const getActionLabel = (type: "chapter" | "quiz", isPublished: boolean) => {
     if (type === "chapter") {
-        return isPublished ? "تعديل فيديو" : "اضافة فيديو";
+        return isPublished ? "Edit video" : "Add video";
     }
-    return isPublished ? "تعديل اختبار" : "اضافة اختبار";
+    return isPublished ? "Edit quiz" : "Add quiz";
 };
 
 export const CourseContentList = ({
@@ -91,14 +91,14 @@ export const CourseContentList = ({
                                                         {item.title}
                                                     </span>
                                                     <Badge variant="outline" className="text-xs shrink-0">
-                                                        {item.type === "chapter" ? "درس" : "اختبار"}
+                                                        {item.type === "chapter" ? "Lesson" : "Quiz"}
                                                     </Badge>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/50 pt-3 sm:ml-auto sm:border-0 sm:pt-0 sm:pr-1">
                                             {item.type === "chapter" && item.isFree && (
-                                                <Badge className="shrink-0">مجاني</Badge>
+                                                <Badge className="shrink-0">Free</Badge>
                                             )}
                                             <Badge
                                                 className={cn(
@@ -106,7 +106,7 @@ export const CourseContentList = ({
                                                     item.isPublished && "bg-primary text-primary-foreground"
                                                 )}
                                             >
-                                                {item.isPublished ? "تم النشر" : "غير منشور"}
+                                                {item.isPublished ? "Published" : "Draft"}
                                             </Badge>
                                             <button
                                                 type="button"
@@ -120,17 +120,17 @@ export const CourseContentList = ({
                                                     type="button"
                                                     onClick={() => onQuizResults(item.id)}
                                                     className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 text-sm font-medium text-muted-foreground transition hover:border-brand/30 hover:text-brand sm:min-h-9"
-                                                    title="نتائج الاختبار"
+                                                    title="Quiz results"
                                                 >
                                                     <BarChart2 className="h-4 w-4 shrink-0" />
-                                                    النتائج
+                                                    Results
                                                 </button>
                                             )}
                                             <button
                                                 type="button"
                                                 onClick={() => onDelete(item.id, item.type)}
                                                 className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-destructive transition hover:bg-destructive/10 active:bg-destructive/15"
-                                                aria-label="حذف"
+                                                aria-label="Delete"
                                             >
                                                 <Trash2 className="h-5 w-5" />
                                             </button>

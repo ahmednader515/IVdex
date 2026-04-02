@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         userId: session.user.id,
         amount,
         type: "DEPOSIT",
-        description: `تم إضافة ${amount} جنيه إلى الرصيد`,
+        description: `Added ${amount} EGP to balance`,
       },
     });
 

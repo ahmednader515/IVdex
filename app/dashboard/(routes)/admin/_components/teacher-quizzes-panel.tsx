@@ -61,7 +61,7 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
   };
 
   const handleDeleteQuiz = async (quiz: Quiz) => {
-    if (!confirm("هل أنت متأكد من حذف هذا الاختبار؟")) {
+    if (!confirm("Are you sure you want to delete this quiz?")) {
       return;
     }
 
@@ -72,14 +72,14 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
       });
 
       if (response.ok) {
-        toast.success("تم حذف الاختبار بنجاح");
+        toast.success("Quiz deleted successfully");
         fetchQuizzes();
       } else {
-        toast.error("حدث خطأ أثناء حذف الاختبار");
+        toast.error("Something went wrong while deleting the quiz");
       }
     } catch (error) {
       console.error("Error deleting quiz:", error);
-      toast.error("حدث خطأ أثناء حذف الاختبار");
+      toast.error("Something went wrong while deleting the quiz");
     } finally {
       setIsDeleting(null);
     }
@@ -98,8 +98,8 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
   if (loading) {
     return (
       <div className={embedded ? "py-4" : "p-6"}>
-        <div className="text-right" dir="rtl">
-          جاري التحميل...
+        <div className="text-left">
+          Loading...
         </div>
       </div>
     );
@@ -108,16 +108,16 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
   const wrapClass = embedded ? "space-y-4" : "p-6 space-y-6";
 
   return (
-    <div className={wrapClass} dir="rtl">
+    <div className={wrapClass}>
       {!embedded && (
         <div className="flex items-center justify-between">
-          <h1 className="text-right text-3xl font-bold text-gray-900 dark:text-white">إدارة الاختبارات</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Quiz management</h1>
           <Button
             onClick={() => router.push("/dashboard/admin/quizzes/create")}
             className="bg-brand hover:bg-brand/90 text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
-            إنشاء اختبار جديد
+            Create quiz
           </Button>
         </div>
       )}
@@ -126,20 +126,20 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
         {embedded ? (
           <CardHeader className="space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-right">الاختبارات</CardTitle>
+              <CardTitle className="text-left">Quizzes</CardTitle>
               <Button
                 onClick={() => router.push("/dashboard/admin/quizzes/create")}
                 className="bg-brand hover:bg-brand/90 text-white shrink-0"
                 size="sm"
               >
                 <Plus className="h-4 w-4" />
-                إنشاء جديد
+                New
               </Button>
             </div>
             <div className="relative w-full">
               <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
               <Input
-                placeholder="البحث في الاختبارات..."
+                placeholder="Search quizzes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full min-h-11 ps-10"
@@ -148,11 +148,11 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
           </CardHeader>
         ) : (
           <CardHeader>
-            <CardTitle className="text-right">الاختبارات</CardTitle>
+            <CardTitle className="text-left">Quizzes</CardTitle>
             <div className="relative w-full max-w-sm">
               <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
               <Input
-                placeholder="البحث في الاختبارات..."
+                placeholder="Search quizzes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full min-h-11 ps-10"
@@ -160,59 +160,59 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
             </div>
           </CardHeader>
         )}
-        <CardContent className="text-right">
-          <Table className="text-right">
+        <CardContent className="text-left">
+          <Table className="text-left">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-right">عنوان الاختبار</TableHead>
-                <TableHead className="text-right">الكورس</TableHead>
-                <TableHead className="text-right">الموقع</TableHead>
-                <TableHead className="text-right">الحالة</TableHead>
-                <TableHead className="text-right">عدد الأسئلة</TableHead>
-                <TableHead className="text-right">تاريخ الإنشاء</TableHead>
-                <TableHead className="text-right">الإجراءات</TableHead>
+                <TableHead className="text-left">Title</TableHead>
+                <TableHead className="text-left">Course</TableHead>
+                <TableHead className="text-left">Position</TableHead>
+                <TableHead className="text-left">Status</TableHead>
+                <TableHead className="text-left">Questions</TableHead>
+                <TableHead className="text-left">Created</TableHead>
+                <TableHead className="text-left">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredQuizzes.map((quiz) => (
                 <TableRow key={quiz.id}>
-                  <TableCell label="عنوان الاختبار" className="font-medium">
+                  <TableCell label="Title" className="font-medium">
                     {quiz.title}
                   </TableCell>
-                  <TableCell label="الكورس">
+                  <TableCell label="Course">
                     <Badge variant="outline">{quiz.course.title}</Badge>
                   </TableCell>
-                  <TableCell label="الموقع">
+                  <TableCell label="Position">
                     <Badge variant="secondary">{quiz.position}</Badge>
                   </TableCell>
-                  <TableCell label="الحالة">
+                  <TableCell label="Status">
                     <Badge variant={quiz.isPublished ? "default" : "secondary"}>
-                      {quiz.isPublished ? "منشور" : "غير منشور"}
+                      {quiz.isPublished ? "Published" : "Draft"}
                     </Badge>
                   </TableCell>
-                  <TableCell label="عدد الأسئلة">
-                    <Badge variant="secondary">{quiz.questions.length} سؤال</Badge>
+                  <TableCell label="Questions">
+                    <Badge variant="secondary">{quiz.questions.length} questions</Badge>
                   </TableCell>
-                  <TableCell label="تاريخ الإنشاء">
-                    {new Date(quiz.createdAt).toLocaleDateString("ar-EG")}
+                  <TableCell label="Created">
+                    {new Date(quiz.createdAt).toLocaleDateString("en-US")}
                   </TableCell>
-                  <TableCell label="الإجراءات">
+                  <TableCell label="Actions">
                     <div className="flex flex-wrap items-center gap-2">
                       <Button
                         size="sm"
-                        className="bg-brand hover:bg-brand/90 text-white"
+                        className="bg-brand hover:bg-brand/90 text-white gap-1"
                         onClick={() => handleViewQuiz(quiz)}
                       >
                         <Eye className="h-4 w-4" />
-                        عرض
+                        View
                       </Button>
                       <Button
                         size="sm"
-                        className="bg-brand hover:bg-brand/90 text-white"
+                        className="bg-brand hover:bg-brand/90 text-white gap-1"
                         onClick={() => router.push(`/dashboard/admin/quizzes/${quiz.id}/edit`)}
                       >
                         <Edit className="h-4 w-4" />
-                        تعديل
+                        Edit
                       </Button>
                       <Button
                         size="sm"
@@ -230,25 +230,26 @@ export function TeacherQuizzesPanel({ embedded = false }: { embedded?: boolean }
                               }),
                             });
                             if (response.ok) {
-                              toast.success(quiz.isPublished ? "تم إلغاء النشر" : "تم النشر بنجاح");
+                              toast.success(quiz.isPublished ? "Unpublished" : "Published successfully");
                               fetchQuizzes();
                             }
                           } catch (error) {
-                            toast.error("حدث خطأ");
+                            toast.error("Something went wrong");
                           }
                         }}
                       >
-                        {quiz.isPublished ? "إلغاء النشر" : "نشر"}
+                        {quiz.isPublished ? "Unpublish" : "Publish"}
                       </Button>
 
                       <Button
                         size="sm"
                         variant="destructive"
+                        className="gap-1"
                         onClick={() => handleDeleteQuiz(quiz)}
                         disabled={isDeleting === quiz.id}
                       >
                         <Trash2 className="h-4 w-4" />
-                        {isDeleting === quiz.id ? "جاري الحذف..." : "حذف"}
+                        {isDeleting === quiz.id ? "Deleting..." : "Delete"}
                       </Button>
                     </div>
                   </TableCell>

@@ -52,13 +52,13 @@ export const AttachmentForm = ({
     return (
         <div className="mt-6 border bg-card rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                المرفقات
+                Attachments
                 <Button onClick={toggleEdit} variant="ghost">
-                    {isEditing && (<>الغاء</>)}
+                    {isEditing && (<>Cancel</>)}
                     {!isEditing && (
                         <>
                             <PlusCircle className="h-4 w-4 mr-2" />
-                            إضافة ملف
+                            Add file
                         </>
                     )}
                 </Button>
@@ -67,7 +67,7 @@ export const AttachmentForm = ({
                 <>
                     {initialData.attachments.length === 0 && (
                         <p className="text-sm mt-2 text-muted-foreground italic">
-                            لا يوجد ملفات مرفوعة
+                            No files uploaded yet
                         </p>
                     )}
                     {initialData.attachments.length > 0 && (
@@ -114,7 +114,7 @@ export const AttachmentForm = ({
                         }}
                     />
                     <div className="text-xs text-muted-foreground mt-4">
-                        أضف أي شيء قد يحتاجه الطلاب لإكمال الكورس.
+                        Add anything students may need to complete the course.
                     </div>
                 </div>
             )}

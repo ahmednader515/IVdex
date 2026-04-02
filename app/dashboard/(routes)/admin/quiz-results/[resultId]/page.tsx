@@ -78,12 +78,12 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                 };
                 setResult(parsedData);
             } else {
-                toast.error("لم يتم العثور على النتيجة");
+                toast.error("Result not found");
                 router.push("/dashboard/admin/quiz-results");
             }
         } catch (error) {
             console.error("Error fetching quiz result:", error);
-            toast.error("حدث خطأ أثناء تحميل النتيجة");
+            toast.error("Something went wrong while loading the result");
         } finally {
             setLoading(false);
         }
@@ -102,18 +102,18 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
     };
 
     const getGradeBadge = (percentage: number) => {
-        if (percentage >= 90) return { variant: "default" as const, text: "ممتاز" };
-        if (percentage >= 80) return { variant: "default" as const, text: "جيد جداً" };
-        if (percentage >= 70) return { variant: "secondary" as const, text: "جيد" };
-        if (percentage >= 60) return { variant: "outline" as const, text: "مقبول" };
-        return { variant: "destructive" as const, text: "ضعيف" };
+        if (percentage >= 90) return { variant: "default" as const, text: "Excellent" };
+        if (percentage >= 80) return { variant: "default" as const, text: "Very good" };
+        if (percentage >= 70) return { variant: "secondary" as const, text: "Good" };
+        if (percentage >= 60) return { variant: "outline" as const, text: "Pass" };
+        return { variant: "destructive" as const, text: "Needs work" };
     };
 
     const renderQuestionChoices = (answer: QuizAnswer) => {
         if (answer.question.type === "MULTIPLE_CHOICE" && answer.question.options) {
             return (
                 <div className="space-y-2">
-                    <h5 className="font-medium text-sm">الخيارات:</h5>
+                    <h5 className="font-medium text-sm">Options:</h5>
                     <div className="space-y-1">
                         {answer.question.options.map((option: string, optionIndex: number) => (
                             <div
@@ -132,12 +132,12 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                     {optionIndex + 1}. {option}
                                     {option === answer.answer && (
                                         <Badge variant={answer.isCorrect ? "default" : "destructive"} className="mr-2">
-                                            إجابة الطالب
+                                            Student answer
                                         </Badge>
                                     )}
                                     {option === answer.question.correctAnswer && option !== answer.answer && (
                                         <Badge variant="default" className="mr-2">
-                                            الإجابة الصحيحة
+                                            Correct answer
                                         </Badge>
                                     )}
                                 </span>
@@ -153,7 +153,7 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
     if (loading) {
         return (
             <div className="p-6">
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
@@ -161,7 +161,7 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
     if (!result) {
         return (
             <div className="p-6">
-                <div className="text-center">لم يتم العثور على النتيجة</div>
+                <div className="text-center text-muted-foreground">Result not found</div>
             </div>
         );
     }
@@ -178,10 +178,10 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                         onClick={() => router.push("/dashboard/admin/quiz-results")}
                     >
                         <ArrowLeft className="h-4 w-4 mr-2" />
-                        العودة
+                        Back
                     </Button>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                        تفاصيل النتيجة
+                        Result details
                     </h1>
                 </div>
             </div>
@@ -190,14 +190,14 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                 <div className="md:col-span-2 space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>معلومات الطالب والاختبار</CardTitle>
+                            <CardTitle>Student and quiz</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
                                     <User className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <h4 className="font-medium">الطالب</h4>
+                                        <h4 className="font-medium">Student</h4>
                                         <p className="text-sm text-muted-foreground">{result.user.fullName}</p>
                                         <p className="text-xs text-muted-foreground">{result.user.phoneNumber}</p>
                                     </div>
@@ -205,7 +205,7 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                 <div className="flex items-center space-x-3">
                                     <FileText className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <h4 className="font-medium">الاختبار</h4>
+                                        <h4 className="font-medium">Quiz</h4>
                                         <p className="text-sm text-muted-foreground">{result.quiz.title}</p>
                                         <p className="text-xs text-muted-foreground">{result.quiz.course.title}</p>
                                     </div>
@@ -213,18 +213,18 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                 <div className="flex items-center space-x-3">
                                     <Calendar className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <h4 className="font-medium">تاريخ التقديم</h4>
+                                        <h4 className="font-medium">Submitted date</h4>
                                         <p className="text-sm text-muted-foreground">
-                                            {new Date(result.submittedAt).toLocaleDateString("ar-EG")}
+                                            {new Date(result.submittedAt).toLocaleDateString("en-US")}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <Clock className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <h4 className="font-medium">وقت التقديم</h4>
+                                        <h4 className="font-medium">Submitted time</h4>
                                         <p className="text-sm text-muted-foreground">
-                                            {new Date(result.submittedAt).toLocaleTimeString("ar-EG")}
+                                            {new Date(result.submittedAt).toLocaleTimeString("en-US")}
                                         </p>
                                     </div>
                                 </div>
@@ -234,25 +234,25 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>النتيجة النهائية</CardTitle>
+                            <CardTitle>Final score</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="text-center p-4 border rounded-lg">
                                     <div className="text-2xl font-bold">{result.score} / {result.totalPoints}</div>
-                                    <p className="text-sm text-muted-foreground">الدرجة</p>
+                                    <p className="text-sm text-muted-foreground">Score</p>
                                 </div>
                                 <div className="text-center p-4 border rounded-lg">
                                     <div className={`text-2xl font-bold ${getGradeColor(percentage)}`}>
                                         {percentage}%
                                     </div>
-                                    <p className="text-sm text-muted-foreground">النسبة المئوية</p>
+                                    <p className="text-sm text-muted-foreground">Percent</p>
                                 </div>
                                 <div className="text-center p-4 border rounded-lg">
                                     <Badge variant={grade.variant} className="text-lg px-4 py-2">
                                         {grade.text}
                                     </Badge>
-                                    <p className="text-sm text-muted-foreground mt-2">التقييم</p>
+                                    <p className="text-sm text-muted-foreground mt-2">Grade</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -260,15 +260,15 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>تفاصيل الإجابات</CardTitle>
+                            <CardTitle>Answer breakdown</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {result.answers.map((answer, index) => (
                                 <div key={answer.id} className="border rounded-lg p-4">
                                     <div className="flex items-center justify-between mb-3">
-                                        <h4 className="font-medium">السؤال {index + 1}</h4>
+                                        <h4 className="font-medium">Question {index + 1}</h4>
                                         <div className="flex items-center space-x-2">
-                                            <Badge variant="outline">{answer.question.points} درجة</Badge>
+                                            <Badge variant="outline">{answer.question.points} pts</Badge>
                                             {answer.isCorrect ? (
                                                 <CheckCircle className="h-5 w-5 text-green-600" />
                                             ) : (
@@ -294,16 +294,16 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                     
                                     {answer.question.type === "TRUE_FALSE" && (
                                         <div className="space-y-2">
-                                            <h5 className="font-medium text-sm">الإجابة الصحيحة:</h5>
+                                            <h5 className="font-medium text-sm">Correct answer:</h5>
                                             <div className="space-y-1">
                                                 <div className={`p-2 rounded border ${
                                                     answer.question.correctAnswer === "true"
                                                         ? "bg-green-50 border-green-200"
                                                         : "bg-gray-50"
                                                 }`}>
-                                                    <span className="text-sm">صح</span>
+                                                    <span className="text-sm">True</span>
                                                     {answer.question.correctAnswer === "true" && (
-                                                        <Badge variant="default" className="mr-2">الإجابة الصحيحة</Badge>
+                                                        <Badge variant="default" className="mr-2">Correct</Badge>
                                                     )}
                                                 </div>
                                                 <div className={`p-2 rounded border ${
@@ -311,16 +311,16 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                                         ? "bg-green-50 border-green-200"
                                                         : "bg-gray-50"
                                                 }`}>
-                                                    <span className="text-sm">خطأ</span>
+                                                    <span className="text-sm">False</span>
                                                     {answer.question.correctAnswer === "false" && (
-                                                        <Badge variant="default" className="mr-2">الإجابة الصحيحة</Badge>
+                                                        <Badge variant="default" className="mr-2">Correct</Badge>
                                                     )}
                                                 </div>
                                             </div>
                                             <div className="mt-2">
-                                                <span className="text-sm font-medium">إجابة الطالب: </span>
+                                                <span className="text-sm font-medium">Student answer: </span>
                                                 <Badge variant={answer.isCorrect ? "default" : "destructive"}>
-                                                    {answer.answer === "true" ? "صح" : "خطأ"}
+                                                    {answer.answer === "true" ? "True" : "False"}
                                                 </Badge>
                                             </div>
                                         </div>
@@ -328,12 +328,12 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                     
                                     {answer.question.type === "SHORT_ANSWER" && (
                                         <div className="space-y-2">
-                                            <h5 className="font-medium text-sm">الإجابة الصحيحة:</h5>
+                                            <h5 className="font-medium text-sm">Correct answer:</h5>
                                             <p className="text-sm bg-green-50 p-2 rounded border border-green-200">
                                                 {answer.question.correctAnswer}
                                             </p>
                                             <div className="mt-2">
-                                                <span className="text-sm font-medium">إجابة الطالب: </span>
+                                                <span className="text-sm font-medium">Student answer: </span>
                                                 <p className={`text-sm p-2 rounded border ${
                                                     answer.isCorrect 
                                                         ? "bg-green-50 border-green-200" 
@@ -347,7 +347,7 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                     
                                     <div className="mt-3 pt-3 border-t">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-medium">الدرجات المكتسبة:</span>
+                                            <span className="text-sm font-medium">Points earned:</span>
                                             <span className={`text-sm font-medium ${answer.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
                                                 {answer.points} / {answer.question.points}
                                             </span>
@@ -362,31 +362,31 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                 <div className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>ملخص النتيجة</CardTitle>
+                            <CardTitle>Summary</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span>إجمالي الدرجات</span>
-                                <Badge variant="default">{result.totalPoints} درجة</Badge>
+                                <span>Total points</span>
+                                <Badge variant="default">{result.totalPoints} pts</Badge>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span>الدرجات المكتسبة</span>
-                                <Badge variant="secondary">{result.score} درجة</Badge>
+                                <span>Earned</span>
+                                <Badge variant="secondary">{result.score} pts</Badge>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span>الدرجات المفقودة</span>
-                                <Badge variant="outline">{result.totalPoints - result.score} درجة</Badge>
+                                <span>Missed</span>
+                                <Badge variant="outline">{result.totalPoints - result.score} pts</Badge>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span>عدد الأسئلة الصحيحة</span>
+                                <span>Correct questions</span>
                                 <Badge variant="default">
-                                    {result.answers.filter(a => a.isCorrect).length} سؤال
+                                    {result.answers.filter(a => a.isCorrect).length} question{result.answers.filter(a => a.isCorrect).length !== 1 ? "s" : ""}
                                 </Badge>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span>عدد الأسئلة الخاطئة</span>
+                                <span>Incorrect questions</span>
                                 <Badge variant="destructive">
-                                    {result.answers.filter(a => !a.isCorrect).length} سؤال
+                                    {result.answers.filter(a => !a.isCorrect).length} question{result.answers.filter(a => !a.isCorrect).length !== 1 ? "s" : ""}
                                 </Badge>
                             </div>
                         </CardContent>
@@ -394,7 +394,7 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>الإجراءات</CardTitle>
+                            <CardTitle>Actions</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
                             <Button
@@ -402,14 +402,14 @@ const QuizResultDetailPage = ({ params }: { params: Promise<{ resultId: string }
                                 variant="outline"
                                 onClick={() => router.push(`/dashboard/admin/quiz-results?quizId=${result.quizId}`)}
                             >
-                                عرض جميع نتائج هذا الاختبار
+                                View all results for this quiz
                             </Button>
                             <Button
                                 className="w-full"
                                 variant="outline"
                                 onClick={() => router.push(`/dashboard/admin/quizzes/${result.quizId}`)}
                             >
-                                عرض تفاصيل الاختبار
+                                View quiz details
                             </Button>
                         </CardContent>
                     </Card>

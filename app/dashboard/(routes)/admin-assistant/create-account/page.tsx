@@ -8,9 +8,9 @@ export default async function AdminAssistantCreateAccountPage() {
   if (user?.role !== "ADMIN_ASSISTANT") redirect("/dashboard");
 
   return (
-    <div className="space-y-6 p-6" dir="rtl">
-      <h1 className="text-right text-3xl font-bold text-gray-900 dark:text-white">
-        إنشاء حساب طالب جديد
+    <div className="space-y-6 p-6">
+      <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+        Create student account
       </h1>
       <CreateStudentAccountPanel
         variant="admin"

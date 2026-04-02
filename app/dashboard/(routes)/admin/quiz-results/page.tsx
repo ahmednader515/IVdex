@@ -60,7 +60,7 @@ const QuizResultsContent = () => {
             fetchQuizResults();
             fetchQuizDetails();
         } else {
-            toast.error("لم يتم تحديد الاختبار");
+            toast.error("No quiz selected");
             router.push("/dashboard/admin/courses");
         }
     }, [quizId]);
@@ -86,11 +86,11 @@ const QuizResultsContent = () => {
                 const data = await response.json();
                 setResults(data);
             } else {
-                toast.error("حدث خطأ أثناء تحميل النتائج");
+                toast.error("Something went wrong while loading results");
             }
         } catch (error) {
             console.error("Error fetching quiz results:", error);
-            toast.error("حدث خطأ أثناء تحميل النتائج");
+            toast.error("Something went wrong while loading results");
         } finally {
             setLoading(false);
         }
@@ -125,17 +125,17 @@ const QuizResultsContent = () => {
     };
 
     const getGradeBadge = (percentage: number) => {
-        if (percentage >= 90) return { variant: "default" as const, text: "ممتاز" };
-        if (percentage >= 80) return { variant: "default" as const, text: "جيد جداً" };
-        if (percentage >= 70) return { variant: "secondary" as const, text: "جيد" };
-        if (percentage >= 60) return { variant: "outline" as const, text: "مقبول" };
-        return { variant: "destructive" as const, text: "ضعيف" };
+        if (percentage >= 90) return { variant: "default" as const, text: "Excellent" };
+        if (percentage >= 80) return { variant: "default" as const, text: "Very good" };
+        if (percentage >= 70) return { variant: "secondary" as const, text: "Good" };
+        if (percentage >= 60) return { variant: "outline" as const, text: "Pass" };
+        return { variant: "destructive" as const, text: "Needs work" };
     };
 
     if (loading) {
         return (
             <div className="p-6">
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         );
     }
@@ -143,7 +143,7 @@ const QuizResultsContent = () => {
     if (!quizId) {
         return (
             <div className="p-6">
-                <div className="text-center">لم يتم تحديد الاختبار</div>
+                <div className="text-center text-muted-foreground">No quiz selected</div>
             </div>
         );
     }
@@ -167,10 +167,10 @@ const QuizResultsContent = () => {
                         }}
                     >
                         <ArrowLeft className="h-4 w-4 mr-2" />
-                        العودة إلى المحتوى
+                        Back to content
                     </Button>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                        نتائج الاختبار: {quizDetails?.title || "جاري التحميل..."}
+                        Quiz results: {quizDetails?.title || "Loading…"}
                     </h1>
                 </div>
             </div>
@@ -178,22 +178,22 @@ const QuizResultsContent = () => {
             {quizDetails && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>معلومات الاختبار</CardTitle>
+                        <CardTitle>Quiz information</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <h4 className="font-medium mb-1">عنوان الاختبار</h4>
+                                <h4 className="font-medium mb-1">Quiz title</h4>
                                 <p className="text-sm text-muted-foreground">{quizDetails.title}</p>
                             </div>
                             <div>
-                                <h4 className="font-medium mb-1">الكورس</h4>
+                                <h4 className="font-medium mb-1">Course</h4>
                                 <p className="text-sm text-muted-foreground">{quizDetails.course?.title}</p>
                             </div>
                             <div>
-                                <h4 className="font-medium mb-1">عدد الأسئلة</h4>
+                                <h4 className="font-medium mb-1">Questions</h4>
                                 <Badge variant="secondary">
-                                    {quizDetails.questions?.length || 0} سؤال
+                                    {quizDetails.questions?.length || 0} question{(quizDetails.questions?.length || 0) !== 1 ? "s" : ""}
                                 </Badge>
                             </div>
                         </div>
@@ -204,16 +204,16 @@ const QuizResultsContent = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium">إجمالي النتائج</CardTitle>
+                        <CardTitle className="text-sm font-medium">Total submissions</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{results.length}</div>
-                        <p className="text-xs text-muted-foreground">نتيجة</p>
+                        <p className="text-xs text-muted-foreground">submissions</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium">متوسط الدرجات</CardTitle>
+                        <CardTitle className="text-sm font-medium">Average score</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
@@ -222,12 +222,12 @@ const QuizResultsContent = () => {
                                 : 0
                             }%
                         </div>
-                        <p className="text-xs text-muted-foreground">متوسط</p>
+                        <p className="text-xs text-muted-foreground">average</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium">أعلى درجة</CardTitle>
+                        <CardTitle className="text-sm font-medium">Highest</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-green-600">
@@ -236,12 +236,12 @@ const QuizResultsContent = () => {
                                 : 0
                             }%
                         </div>
-                        <p className="text-xs text-muted-foreground">أفضل نتيجة</p>
+                        <p className="text-xs text-muted-foreground">best</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium">أدنى درجة</CardTitle>
+                        <CardTitle className="text-sm font-medium">Lowest</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-red-600">
@@ -250,18 +250,18 @@ const QuizResultsContent = () => {
                                 : 0
                             }%
                         </div>
-                        <p className="text-xs text-muted-foreground">أسوأ نتيجة</p>
+                        <p className="text-xs text-muted-foreground">lowest</p>
                     </CardContent>
                 </Card>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>نتائج الطلاب</CardTitle>
+                    <CardTitle>Student results</CardTitle>
                     <div className="flex items-center space-x-2">
                         <Search className="h-4 w-4 text-muted-foreground" />
                         <Input
-                            placeholder="البحث في الطلاب..."
+                            placeholder="Search students…"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-sm"
@@ -272,12 +272,12 @@ const QuizResultsContent = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="text-right">الطالب</TableHead>
-                                <TableHead className="text-right">الدرجة</TableHead>
-                                <TableHead className="text-right">النسبة المئوية</TableHead>
-                                <TableHead className="text-right">التقييم</TableHead>
-                                <TableHead className="text-right">تاريخ التقديم</TableHead>
-                                <TableHead className="text-right">الإجراءات</TableHead>
+                                <TableHead className="text-left">Student</TableHead>
+                                <TableHead className="text-left">Score</TableHead>
+                                <TableHead className="text-left">Percent</TableHead>
+                                <TableHead className="text-left">Grade</TableHead>
+                                <TableHead className="text-left">Submitted</TableHead>
+                                <TableHead className="text-left">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -287,7 +287,7 @@ const QuizResultsContent = () => {
                                 
                                 return (
                                     <TableRow key={result.id}>
-                                        <TableCell label="الطالب" className="font-medium">
+                                        <TableCell label="Student" className="font-medium">
                                             <div>
                                                 <div>{result.user.fullName}</div>
                                                 <div className="text-sm text-muted-foreground">
@@ -295,37 +295,37 @@ const QuizResultsContent = () => {
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell label="الدرجة">
+                                        <TableCell label="Score">
                                             <div className="font-medium">
                                                 {result.score} / {result.totalPoints}
                                             </div>
                                         </TableCell>
-                                        <TableCell label="النسبة المئوية">
+                                        <TableCell label="Percent">
                                             <div className={`font-medium ${getGradeColor(percentage)}`}>
                                                 {percentage}%
                                             </div>
                                         </TableCell>
-                                        <TableCell label="التقييم">
+                                        <TableCell label="Grade">
                                             <Badge variant={grade.variant}>
                                                 {grade.text}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell label="تاريخ التقديم">
+                                        <TableCell label="Submitted">
                                             <div className="text-sm text-muted-foreground">
-                                                {new Date(result.submittedAt).toLocaleDateString("ar-EG")}
+                                                {new Date(result.submittedAt).toLocaleDateString("en-US")}
                                             </div>
                                             <div className="text-xs text-muted-foreground">
-                                                {new Date(result.submittedAt).toLocaleTimeString("ar-EG")}
+                                                {new Date(result.submittedAt).toLocaleTimeString("en-US")}
                                             </div>
                                         </TableCell>
-                                        <TableCell label="الإجراءات">
+                                        <TableCell label="Actions">
                                             <Button
                                                 size="sm"
                                                 variant="outline"
                                                 onClick={() => handleViewDetails(result)}
                                             >
                                                 <Eye className="h-4 w-4 mr-2" />
-                                                تفاصيل
+                                                Details
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -336,7 +336,7 @@ const QuizResultsContent = () => {
                     
                     {filteredResults.length === 0 && (
                         <div className="text-center py-8">
-                            <p className="text-muted-foreground">لا توجد نتائج للعرض</p>
+                            <p className="text-muted-foreground">No results to show</p>
                         </div>
                     )}
                 </CardContent>
@@ -349,7 +349,7 @@ const QuizResultsPage = () => {
     return (
         <Suspense fallback={
             <div className="p-6">
-                <div className="text-center">جاري التحميل...</div>
+                <div className="text-center">Loading...</div>
             </div>
         }>
             <QuizResultsContent />

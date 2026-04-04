@@ -14,7 +14,7 @@ export function DashboardDesktopFooter() {
 
   return (
     <footer className="hidden md:block border-t py-6">
-      <div className="container mx-auto px-4 md:rtl:pr-56 md:ltr:pl-56">
+      <div className="container mx-auto px-4 md:pl-56">
         <div className="text-center text-muted-foreground">
           <div className="mb-4 flex flex-wrap justify-center gap-4">
             <a

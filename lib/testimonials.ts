@@ -6,6 +6,8 @@ export type Testimonial = {
   quote: string;
   /** Exact filename under public/comments */
   imageFile: string;
+  /** Optional CSS object-position (e.g. center 40%) to crop tall screenshots */
+  imageObjectPosition?: string;
 };
 
 export const COMMENT_IMAGES_FOLDER = "/comments";
@@ -92,6 +94,8 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "Wonderful, smooth explanations and delivery. Many concepts finally clicked—even things I had misunderstood completely—from the very first video. After this course I'm confident in choosing this path.",
     imageFile: "WhatsApp Image 2026-04-02 at 8.49.30 AM.jpeg",
+    // Crop status bar / header; anchor lower so the comment is centered in the frame
+    imageObjectPosition: "center 12%",
   },
 ];
 

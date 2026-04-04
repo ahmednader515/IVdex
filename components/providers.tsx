@@ -4,7 +4,6 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToastProvider } from "@/components/providers/toaster-provider";
 import { Toaster } from "sonner";
-import { RTLProvider } from "@/components/providers/rtl-provider";
 import { ThemeProvider as BrandThemeProvider } from "@/components/theme-provider";
 import { NavigationProvider } from "@/lib/contexts/navigation-context";
 import { SessionMonitor } from "@/components/session-monitor";
@@ -33,24 +32,22 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       refetchOnMount={true} // ✅ Important: Refetch on mount
     >
       <SessionHandler>
-        <RTLProvider>
-          <BrandThemeProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              storageKey="the-giant-theme"
-              disableTransitionOnChange
-            >
-              <NavigationProvider>
-                <ToastProvider />
-                <SessionMonitor />
-                {children}
-                <Toaster />
-              </NavigationProvider>
-            </ThemeProvider>
-          </BrandThemeProvider>
-        </RTLProvider>
+        <BrandThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            storageKey="the-giant-theme"
+            disableTransitionOnChange
+          >
+            <NavigationProvider>
+              <ToastProvider />
+              <SessionMonitor />
+              {children}
+              <Toaster />
+            </NavigationProvider>
+          </ThemeProvider>
+        </BrandThemeProvider>
       </SessionHandler>
     </SessionProvider>
   );

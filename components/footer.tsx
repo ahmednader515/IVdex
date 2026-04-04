@@ -26,9 +26,7 @@ export const Footer = () => {
       <div className="container mx-auto px-4">
         <div
           className={`text-center text-muted-foreground ${
-            hasSidebar
-              ? "md:rtl:pr-56 md:ltr:pl-56 lg:rtl:pr-80 lg:ltr:pl-80"
-              : ""
+            hasSidebar ? "md:pl-56 lg:pl-56" : ""
           }`}
         >
           <div className="mb-4 flex flex-wrap justify-center gap-4">

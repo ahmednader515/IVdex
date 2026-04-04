@@ -201,7 +201,7 @@ const AnalyticsPage = () => {
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-slate-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -215,19 +215,21 @@ const AnalyticsPage = () => {
         </p>
       </div>
 
-      {/* Key Metrics */}
+      {/* Key Metrics — explicit dark text on pastel panels (readable in dark theme) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6 bg-blue-50 rounded-lg shadow-sm">
-          <h3 className="text-sm font-medium text-muted-foreground">Total revenue</h3>
-          <p className="text-3xl font-bold">EGP {analytics.totalRevenue.toFixed(2)}</p>
+        <Card className="border border-blue-200/80 bg-blue-50 p-6 text-slate-900 shadow-sm dark:border-blue-200/60 dark:bg-blue-50">
+          <h3 className="text-sm font-medium text-slate-600">Total revenue</h3>
+          <p className="mt-1 text-3xl font-bold tabular-nums text-slate-900">
+            EGP {analytics.totalRevenue.toFixed(2)}
+          </p>
         </Card>
-        <Card className="p-6 bg-green-50 rounded-lg shadow-sm">
-          <h3 className="text-sm font-medium text-muted-foreground">Total sales</h3>
-          <p className="text-3xl font-bold">{analytics.totalSales}</p>
+        <Card className="border border-emerald-200/80 bg-emerald-50 p-6 text-slate-900 shadow-sm dark:border-emerald-200/60 dark:bg-emerald-50">
+          <h3 className="text-sm font-medium text-slate-600">Total sales</h3>
+          <p className="mt-1 text-3xl font-bold tabular-nums text-slate-900">{analytics.totalSales}</p>
         </Card>
-        <Card className="p-6 bg-amber-50 rounded-lg shadow-sm">
-          <h3 className="text-sm font-medium text-muted-foreground">Published courses</h3>
-          <p className="text-3xl font-bold">{analytics.courseCount}</p>
+        <Card className="border border-amber-200/80 bg-amber-50 p-6 text-slate-900 shadow-sm dark:border-amber-200/60 dark:bg-amber-50">
+          <h3 className="text-sm font-medium text-slate-600">Published courses</h3>
+          <p className="mt-1 text-3xl font-bold tabular-nums text-slate-900">{analytics.courseCount}</p>
         </Card>
       </div>
 
@@ -262,7 +264,7 @@ const AnalyticsPage = () => {
             </thead>
             <tbody>
               {analytics.courseAnalytics.map((course) => (
-                <tr key={course.id} className="border-b hover:bg-slate-50 transition">
+                <tr key={course.id} className="border-b transition hover:bg-muted/50">
                   <td className="py-3 px-2">{course.title}</td>
                   <td className="text-center py-3 px-2">{course.sales}</td>
                   <td className="text-center py-3 px-2">EGP {course.revenue.toFixed(2)}</td>

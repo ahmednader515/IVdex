@@ -39,7 +39,6 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
-    parentPhoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -85,7 +84,6 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
         setFormData({
           fullName: "",
           phoneNumber: "",
-          parentPhoneNumber: "",
           password: "",
           confirmPassword: "",
         });
@@ -96,10 +94,6 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
         const errorMessage = axiosError.response.data as string;
         if (errorMessage.includes("Phone number already exists")) {
           toast.error("This phone number is already registered");
-        } else if (errorMessage.includes("Parent phone number already exists")) {
-          toast.error("This parent phone number is already registered");
-        } else if (errorMessage.includes("Phone number cannot be the same as parent phone number")) {
-          toast.error("Student phone cannot be the same as parent phone");
         } else if (errorMessage.includes("Passwords do not match")) {
           toast.error("Passwords do not match");
         } else {
@@ -117,7 +111,6 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
     setFormData({
       fullName: "",
       phoneNumber: "",
-      parentPhoneNumber: "",
       password: "",
       confirmPassword: "",
     });
@@ -195,20 +188,6 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                     className="text-left"
                   />
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor={`parentPhoneNumber${suffix}`}>Parent phone *</Label>
-                <Input
-                  id={`parentPhoneNumber${suffix}`}
-                  name="parentPhoneNumber"
-                  type="tel"
-                  value={formData.parentPhoneNumber}
-                  onChange={handleInputChange}
-                  placeholder="Enter parent phone number"
-                  required
-                  className="text-left"
-                />
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

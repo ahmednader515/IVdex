@@ -15,6 +15,7 @@ import {
   BarChart,
   Ticket,
   Shield,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isDashboardSectionActive } from "@/lib/dashboard-nav";
@@ -25,6 +26,7 @@ const guestNav: NavItem[] = [
   { href: "/dashboard", label: "Home", icon: Layout },
   { href: "/dashboard/search", label: "Courses", icon: Compass },
   { href: "/dashboard/balance", label: "Balance", icon: Wallet },
+  { href: "/dashboard/certificates", label: "Certificates", icon: Award },
 ];
 
 const adminNav: NavItem[] = [

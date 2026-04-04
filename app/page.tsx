@@ -399,7 +399,10 @@ export default function HomePage() {
                     src={testimonialImageSrc(t.imageFile)}
                     alt={`Original comment screenshot — ${t.name}`}
                     fill
-                    className="object-cover object-top"
+                    className="object-cover"
+                    style={{
+                      objectPosition: t.imageObjectPosition ?? "center top",
+                    }}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     unoptimized
                   />

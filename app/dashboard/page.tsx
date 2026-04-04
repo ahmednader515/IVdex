@@ -249,8 +249,8 @@ const CoursesPage = async () => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Welcome to your dashboard</h1>
-        <p className="text-muted-foreground">Your path to progress and mastery</p>
+        <h1 className="text-3xl font-bold mb-2 text-white">Welcome to your dashboard</h1>
+        <p className="text-white/70">Your path to progress and mastery</p>
       </div>
 
       {/* Stats and Balance Row */}
@@ -325,19 +325,19 @@ const CoursesPage = async () => {
               {/* Content Section */}
               <div className="p-6 flex flex-col justify-center">
                 <div className="mb-4">
-                  <p className="text-sm text-muted-foreground mb-2">
+                  <p className="text-sm text-white/70 mb-2">
                     {lastWatchedChapter.chapter.course.title}
                   </p>
                   <h3 className="text-2xl font-bold mb-2">
                     {lastWatchedChapter.chapter.title}
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-white/70">
                     Lesson {lastWatchedChapter.chapter.position}
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-white/70">
                     <Clock className="h-4 w-4" />
                     <span>Recently watched</span>
                   </div>
@@ -369,12 +369,12 @@ const CoursesPage = async () => {
                 <BookOpenIcon className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total lessons</p>
+                <p className="text-sm text-white/70">Total lessons</p>
                 <p className="text-2xl font-bold">{studentStats.totalChapters}</p>
               </div>
             </div>
             <Progress value={(studentStats.completedChapters / Math.max(studentStats.totalChapters, 1)) * 100} className="h-2" />
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-white/70 mt-2">
               {studentStats.completedChapters} of {studentStats.totalChapters} completed
             </p>
           </div>
@@ -385,12 +385,12 @@ const CoursesPage = async () => {
                 <Trophy className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Quizzes completed</p>
+                <p className="text-sm text-white/70">Quizzes completed</p>
                 <p className="text-2xl font-bold">{studentStats.completedQuizzes}</p>
               </div>
             </div>
             <Progress value={(studentStats.completedQuizzes / Math.max(studentStats.totalQuizzes, 1)) * 100} className="h-2" />
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-white/70 mt-2">
               {studentStats.completedQuizzes} of {studentStats.totalQuizzes} completed
             </p>
           </div>
@@ -422,10 +422,10 @@ const CoursesPage = async () => {
               </div>
               <div className="p-6">
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold mb-3 line-clamp-2 min-h-[3rem] text-gray-900">
+                  <h3 className="text-xl font-bold mb-3 line-clamp-2 min-h-[3rem] text-white">
                     {course.title}
                   </h3>
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-3 text-sm text-white/70 mb-4">
                     <div className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4" />
                       <span>
@@ -434,7 +434,7 @@ const CoursesPage = async () => {
                     </div>
                     {course.quizzes.length > 0 && (
                       <div className="flex items-center gap-1">
-                        <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
+                        <span className="w-1 h-1 bg-white/50 rounded-full"></span>
                         <span>
                           {course.quizzes.length} {course.quizzes.length === 1 ? "quiz" : "quizzes"}
                         </span>
@@ -446,11 +446,11 @@ const CoursesPage = async () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground font-medium">Progress</span>
+                      <span className="text-white/75 font-medium">Progress</span>
                       <span className="font-bold text-brand">{Math.round(course.progress)}%</span>
                     </div>
                     <div className="relative">
-                      <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div className="w-full bg-white/20 rounded-full h-3">
                         <div 
                           className="bg-gradient-to-r from-brand to-brand/80 h-3 rounded-full transition-all duration-300"
                           style={{ width: `${course.progress}%` }}
@@ -476,9 +476,9 @@ const CoursesPage = async () => {
         {coursesWithProgress.length === 0 && (
           <div className="text-center py-16">
             <div className="bg-muted/50 rounded-2xl p-8 max-w-md mx-auto">
-              <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <BookOpen className="h-16 w-16 text-white/60 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">You haven&apos;t enrolled in any courses yet</h3>
-              <p className="text-muted-foreground mb-6">Browse the catalog and start your first course</p>
+              <p className="text-white/70 mb-6">Browse the catalog and start your first course</p>
               <Button asChild className="bg-brand hover:bg-brand/90 text-white font-semibold">
                 <Link href="/dashboard/search">
                   Explore courses

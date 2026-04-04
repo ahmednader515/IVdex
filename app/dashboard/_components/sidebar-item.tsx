@@ -39,7 +39,7 @@ export const SidebarItem = ({
             type="button"
             data-navigation="true"
             className={cn(
-                "flex items-center gap-x-2 text-muted-foreground text-sm font-[500] rtl:pr-6 ltr:pl-6 transition-all hover:text-primary hover:bg-primary/10",
+                "flex items-center gap-x-2 pl-6 text-sm font-[500] text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary",
                 isActive && "text-primary bg-primary/10 hover:bg-primary/10"
             )}
         >
@@ -56,7 +56,7 @@ export const SidebarItem = ({
 
             <div 
                 className={cn(
-                    "rtl:mr-auto ltr:ml-auto opacity-0 border-2 border-primary h-full transition-all",
+                    "ml-auto h-full border-2 border-primary opacity-0 transition-all",
                     isActive && "opacity-100"
                 )}
             />

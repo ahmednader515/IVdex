@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { BarChart, Compass, Layout, List, Wallet, Shield, Users, FileText, Ticket } from "lucide-react";
+import { BarChart, Compass, Layout, List, Wallet, Shield, Users, FileText, Ticket, Award } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -20,6 +20,11 @@ const guestRoutes = [
         icon: Wallet,
         label: "Balance",
         href: "/dashboard/balance",
+    },
+    {
+        icon: Award,
+        label: "Certificates",
+        href: "/dashboard/certificates",
     },
 ];
 

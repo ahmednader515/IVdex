@@ -22,7 +22,6 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
-    parentPhoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -76,10 +75,6 @@ export default function SignUpPage() {
         const errorMessage = axiosError.response.data as string;
         if (errorMessage.includes("Phone number already exists")) {
           toast.error("This phone number is already registered");
-        } else if (errorMessage.includes("Parent phone number already exists")) {
-          toast.error("This parent phone number is already registered");
-        } else if (errorMessage.includes("Phone number cannot be the same as parent phone number")) {
-          toast.error("Student and parent phone numbers cannot be the same");
         } else if (errorMessage.includes("Passwords do not match")) {
           toast.error("Passwords do not match");
         } else if (errorMessage.includes("reCAPTCHA")) {
@@ -177,21 +172,6 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="parentPhoneNumber">Parent / guardian phone</Label>
-              <Input
-                id="parentPhoneNumber"
-                name="parentPhoneNumber"
-                type="tel"
-                autoComplete="tel"
-                required
-                disabled={isLoading}
-                className="h-10"
-                value={formData.parentPhoneNumber}
-                onChange={handleInputChange}
-                placeholder="+20XXXXXXXXXX"
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
@@ -201,7 +181,7 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   required
                   disabled={isLoading}
-                  className="h-10"
+                  className="h-10 pr-10"
                   value={formData.password}
                   onChange={handleInputChange}
                 />
@@ -209,7 +189,7 @@ export default function SignUpPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -231,7 +211,7 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   required
                   disabled={isLoading}
-                  className="h-10"
+                  className="h-10 pr-10"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                 />
@@ -239,7 +219,7 @@ export default function SignUpPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
@@ -297,3 +277,4 @@ export default function SignUpPage() {
     </div>
   );
 }
+

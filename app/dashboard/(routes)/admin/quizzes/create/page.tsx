@@ -494,7 +494,7 @@ const CreateQuizContent = () => {
                             <p className="text-sm text-muted-foreground">
                                 Drag the new quiz to the desired spot among existing lessons and quizzes.
                             </p>
-                            <p className="text-sm text-blue-600">
+                            <p className="text-sm font-medium text-brand">
                                 Selected position: {selectedPosition}
                             </p>
                         </CardHeader>
@@ -518,24 +518,63 @@ const CreateQuizContent = () => {
                                                             <div
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
-                                                                className={`p-3 border rounded-lg flex items-center justify-between ${
-                                                                    snapshot.isDragging ? "bg-blue-50" : "bg-white"
-                                                                } ${item.id === "new-quiz" ? "border-2 border-dashed border-blue-300 bg-blue-50" : ""}`}
+                                                                className={`flex items-center justify-between rounded-lg border p-3 ${
+                                                                    snapshot.isDragging
+                                                                        ? item.id === "new-quiz"
+                                                                            ? "bg-brand/20"
+                                                                            : "bg-muted/70"
+                                                                        : item.id === "new-quiz"
+                                                                          ? "bg-brand/10"
+                                                                          : "bg-card"
+                                                                } ${
+                                                                    item.id === "new-quiz"
+                                                                        ? "border-2 border-dashed border-brand/50"
+                                                                        : "border-border"
+                                                                }`}
                                                             >
                                                                 <div className="flex items-center space-x-3">
                                                                     <div {...provided.dragHandleProps} className={item.id === "new-quiz" ? "cursor-grab active:cursor-grabbing" : ""}>
-                                                                        <GripVertical className={`h-4 w-4 ${item.id === "new-quiz" ? "text-blue-600" : "text-gray-300 cursor-not-allowed"}`} />
+                                                                        <GripVertical
+                                                                            className={`h-4 w-4 ${
+                                                                                item.id === "new-quiz"
+                                                                                    ? "text-brand"
+                                                                                    : "cursor-not-allowed text-muted-foreground/35"
+                                                                            }`}
+                                                                        />
                                                                     </div>
                                                                     <div>
-                                                                        <div className={`font-medium ${item.id === "new-quiz" ? "text-blue-800" : ""}`}>
+                                                                        <div
+                                                                            className={`font-medium ${
+                                                                                item.id === "new-quiz" ? "text-foreground" : ""
+                                                                            }`}
+                                                                        >
                                                                             {item.title}
                                                                         </div>
-                                                                        <div className={`text-sm ${item.id === "new-quiz" ? "text-blue-600" : "text-muted-foreground"}`}>
+                                                                        <div
+                                                                            className={`text-sm ${
+                                                                                item.id === "new-quiz"
+                                                                                    ? "text-brand/90"
+                                                                                    : "text-muted-foreground"
+                                                                            }`}
+                                                                        >
                                                                             {item.type === "chapter" ? "Lesson" : "Quiz"}
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <Badge variant={item.id === "new-quiz" ? "outline" : (item.isPublished ? "default" : "secondary")} className={item.id === "new-quiz" ? "border-blue-300 text-blue-700" : ""}>
+                                                                <Badge
+                                                                    variant={
+                                                                        item.id === "new-quiz"
+                                                                            ? "outline"
+                                                                            : item.isPublished
+                                                                              ? "default"
+                                                                              : "secondary"
+                                                                    }
+                                                                    className={
+                                                                        item.id === "new-quiz"
+                                                                            ? "border-brand/50 text-brand"
+                                                                            : ""
+                                                                    }
+                                                                >
                                                                     {item.id === "new-quiz" ? "New" : (item.isPublished ? "Published" : "Draft")}
                                                                 </Badge>
                                                             </div>
@@ -553,15 +592,15 @@ const CreateQuizContent = () => {
                                     <p className="text-muted-foreground mb-4">
                                         This course has no lessons or quizzes yet. The quiz will be added in the first position.
                                     </p>
-                                    <div className="p-3 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50">
+                                    <div className="rounded-lg border-2 border-dashed border-brand/40 bg-brand/10 p-3">
                                         <div className="flex items-center justify-center space-x-3">
                                             <div>
-                                                <div className="font-medium text-blue-800">
+                                                <div className="font-medium text-foreground">
                                                     {quizTitle || "New quiz"}
                                                 </div>
-                                                <div className="text-sm text-blue-600">Quiz</div>
+                                                <div className="text-sm text-brand/90">Quiz</div>
                                             </div>
-                                            <Badge variant="outline" className="border-blue-300 text-blue-700">
+                                            <Badge variant="outline" className="border-brand/50 text-brand">
                                                 New
                                             </Badge>
                                         </div>
@@ -650,7 +689,7 @@ const CreateQuizContent = () => {
                                         <Label>Question text</Label>
                                         <div className="flex items-center gap-2">
                                             {listeningQuestionId === question.id && (
-                                                <span className="text-xs text-blue-600">
+                                                <span className="text-xs text-brand">
                                                     Listening…
                                                 </span>
                                             )}

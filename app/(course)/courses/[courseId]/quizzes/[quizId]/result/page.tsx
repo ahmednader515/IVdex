@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, CheckCircle, XCircle, Award } from "lucide-react";
+import { CheckCircle, XCircle, Award } from "lucide-react";
+import { QUIZ_PASS_PERCENTAGE } from "@/lib/quiz";
+import { QuizCertificateDownloadButton } from "@/components/quiz-certificate-download-button";
 
 interface QuizAnswer {
     questionId: string;
@@ -195,6 +197,7 @@ export default function QuizResultPage({
 
     const correctAnswers = result.answers.filter(a => a.isCorrect).length;
     const incorrectAnswers = result.answers.filter(a => !a.isCorrect).length;
+    const isPassed = result.percentage >= QUIZ_PASS_PERCENTAGE;
 
     return (
         <div className="min-h-screen bg-background">
@@ -306,7 +309,14 @@ export default function QuizResultPage({
                     </Card>
 
                     {/* Actions */}
-                    <div className="flex justify-center gap-4">
+                    <div className="flex flex-wrap justify-center gap-4">
+                        {isPassed ? (
+                            <QuizCertificateDownloadButton
+                                courseId={courseId}
+                                quizId={quizId}
+                                label="Download certificate"
+                            />
+                        ) : null}
                         {canRetakeQuiz ? (
                             <Button
                                 onClick={handleTryAgain}

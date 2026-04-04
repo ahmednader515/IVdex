@@ -34,7 +34,7 @@ export const LogoutTest = () => {
         onClick={handleLogout}
         className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200 ease-in-out"
       >
-        <LogOut className="h-4 w-4 rtl:ml-2 ltr:mr-2"/>
+        <LogOut className="h-4 w-4 mr-2"/>
         Sign out
       </Button>
     </div>

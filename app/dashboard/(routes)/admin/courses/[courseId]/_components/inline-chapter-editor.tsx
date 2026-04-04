@@ -107,7 +107,7 @@ export function InlineChapterEditor({
         className="flex w-full max-w-full flex-col gap-0 overflow-hidden border-l p-0 sm:max-w-xl md:max-w-2xl"
       >
         <SheetHeader className="relative space-y-1 border-b px-4 py-4 pr-14 text-left sm:px-6 sm:pr-16">
-          <SheetClose className="absolute left-3 top-3 rounded-md p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+          <SheetClose className="absolute right-3 top-3 rounded-md p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </SheetClose>

@@ -32,7 +32,7 @@ const HERO_STATS = [
   { kind: "subscribers" as const, value: "10K+", label: "YouTube subscribers" },
   { kind: "youtube" as const, value: "300K+", label: "YouTube views" },
   { kind: "courses" as const, value: "10+", label: "Training courses" },
-  { kind: "videos" as const, value: "350+", label: "Videos" },
+  { kind: "videos" as const, value: "100+", label: "Videos" },
 ];
 
 // Define types based on Prisma schema

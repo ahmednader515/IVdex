@@ -3,6 +3,14 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { PDFDocument, rgb } from "pdf-lib";
 
+/**
+ * Blank certificate PDF in `/public` (dynamic fields are drawn on top).
+ * Overwrite that file to change the frame — same basename is fine.
+ * Optional: set env `CERTIFICATE_TEMPLATE_BASENAME` if you use a different filename.
+ */
+const CERTIFICATE_TEMPLATE_BASENAME =
+  process.env.CERTIFICATE_TEMPLATE_BASENAME?.trim() || "IVDex Certificate Temp.pdf";
+
 const certificateFontsDir = path.join(process.cwd(), "lib", "certificate-fonts");
 
 type CertificatePayload = {
@@ -28,11 +36,12 @@ function containsArabicScript(text: string): boolean {
 }
 
 /**
- * Layout calibrated to "IVDex Certificate with name.pdf" (same page size as the blank template).
- * PDF origin: bottom-left. Template already includes static lines ("Presented By…", "For Successfully…").
+ * Layout was calibrated for an earlier template (same page size 842.25×595.5).
+ * PDF origin: bottom-left. The template PDF usually has static lines ("Presented By…", etc.).
+ * If you change the artwork, tweak studentY / courseY / dateY / dateAreaRight below.
  */
 export async function generateCertificatePdf(payload: CertificatePayload): Promise<Uint8Array> {
-  const templatePath = path.join(process.cwd(), "public", "IVDex Certificate Temp.pdf");
+  const templatePath = path.join(process.cwd(), "public", CERTIFICATE_TEMPLATE_BASENAME);
   const templateBytes = await readFile(templatePath);
 
   const pdf = await PDFDocument.load(templateBytes);

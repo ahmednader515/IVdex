@@ -156,7 +156,7 @@ export default async function SearchPage({
 
                             <div className="p-6">
                                 <div className="mb-4">
-                                    <h3 className="text-xl font-bold mb-3 line-clamp-2 min-h-[3rem] text-gray-900">
+                                    <h3 className="text-xl font-bold mb-3 line-clamp-2 min-h-[3rem] text-foreground">
                                         {course.title}
                                     </h3>
                                     

@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { PlyrVideoPlayer } from "@/components/plyr-video-player";
 import { CourseRatingSection } from "@/components/course-rating-section";
+import { ChapterCommentsSection } from "@/components/chapter-comments-section";
 
 interface Chapter {
   id: string;
@@ -34,6 +35,9 @@ interface Chapter {
   userProgress?: {
     isCompleted: boolean;
   }[];
+  course?: {
+    userId: string;
+  };
 }
 
 const ChapterPage = () => {
@@ -306,6 +310,12 @@ const ChapterPage = () => {
               </div>
             )}
           </div>
+
+          <ChapterCommentsSection
+            courseId={routeParams.courseId}
+            chapterId={routeParams.chapterId}
+            courseOwnerId={chapter.course?.userId}
+          />
 
           {/* Chapter Information */}
           <div className="flex flex-col gap-6">

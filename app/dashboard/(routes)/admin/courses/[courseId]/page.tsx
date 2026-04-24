@@ -25,7 +25,8 @@ export default async function CourseIdPage({
         tabParam === "overview" ||
         tabParam === "details" ||
         tabParam === "content" ||
-        tabParam === "students"
+        tabParam === "students" ||
+        tabParam === "comments"
             ? tabParam
             : undefined;
 

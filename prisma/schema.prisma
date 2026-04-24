@@ -29,6 +29,7 @@ model User {
   balanceTransactions     BalanceTransaction[]
   quizResults             QuizResult[]
   courseRatings           CourseRating[]
+  chapterComments         ChapterComment[]
   createdPurchaseCodes    PurchaseCode[] @relation("CodeCreator")
   usedPurchaseCodes       PurchaseCode[] @relation("CodeUser")
 }
@@ -101,11 +102,33 @@ model Chapter {
 
   userProgress UserProgress[]
   attachments ChapterAttachment[] // New relation for multiple documents
+  comments ChapterComment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+}
+
+model ChapterComment {
+  id        String   @id @default(uuid())
+  chapterId String
+  userId    String
+  parentId  String?
+  body      String   @db.Text
+  isHidden  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent  ChapterComment? @relation("ChapterCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies ChapterComment[] @relation("ChapterCommentReplies")
+
+  @@index([chapterId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([chapterId, createdAt])
 }
 
 model ChapterAttachment {

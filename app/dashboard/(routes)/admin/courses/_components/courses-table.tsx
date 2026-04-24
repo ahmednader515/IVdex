@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import Link from "next/link";
-import { Pencil, Search, ImageIcon, Trash2 } from "lucide-react";
+import { Pencil, Search, ImageIcon, Trash2, MessageSquareText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -82,6 +82,19 @@ function CourseActions({
                 <Link href={`/dashboard/admin/courses/${courseId}`}>
                     <Pencil className="h-4 w-4 shrink-0" />
                     Edit course
+                </Link>
+            </Button>
+            <Button
+                variant="outline"
+                className={cn(
+                    "min-h-11 gap-1.5",
+                    layout === "stack" ? "w-full sm:w-auto" : "shrink-0"
+                )}
+                asChild
+            >
+                <Link href={`/dashboard/admin/courses/${courseId}?tab=comments`}>
+                    <MessageSquareText className="h-4 w-4 shrink-0" />
+                    Comments
                 </Link>
             </Button>
             <AlertDialog>

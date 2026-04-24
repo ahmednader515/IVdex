@@ -62,6 +62,8 @@ type CourseWithProgress = Course & {
   quizzes: { id: string }[];
   purchases: Purchase[];
   progress: number;
+  ratingAverage?: number;
+  ratingCount?: number;
 };
 
 export default function HomePage() {
@@ -341,6 +343,16 @@ export default function HomePage() {
                               · {course.quizzes.length} {course.quizzes.length === 1 ? "quiz" : "quizzes"}
                             </span>
                           )}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="font-medium text-foreground tabular-nums">
+                          {Number(course.ratingAverage ?? 0).toFixed(1)}
+                        </span>
+                        <span className="text-muted-foreground/80">
+                          ({course.ratingCount ?? 0})
                         </span>
                       </div>
                       <Button 

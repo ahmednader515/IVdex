@@ -13,6 +13,8 @@ type CourseWithDetails = Course & {
     chapters: { id: string }[];
     purchases: Purchase[];
     progress: number;
+    ratingAverage?: number;
+    ratingCount?: number;
 }
 
 export default async function SearchPage({
@@ -82,6 +84,31 @@ export default async function SearchPage({
         })
     );
 
+    const courseIds = coursesWithProgress.map((c) => c.id);
+    const ratingAgg = courseIds.length
+      ? await db.courseRating.groupBy({
+          by: ["courseId"],
+          where: { courseId: { in: courseIds } },
+          _avg: { rating: true },
+          _count: { rating: true },
+        })
+      : [];
+
+    const ratingByCourseId = new Map(
+      ratingAgg.map((r) => [
+        r.courseId,
+        {
+          ratingAverage: r._avg.rating ?? 0,
+          ratingCount: r._count.rating ?? 0,
+        },
+      ])
+    );
+
+    const coursesWithProgressAndRatings = coursesWithProgress.map((course) => ({
+      ...course,
+      ...(ratingByCourseId.get(course.id) ?? { ratingAverage: 0, ratingCount: 0 }),
+    }));
+
     return (
         <div className="p-6 space-y-6">
             {/* Header Section */}
@@ -117,7 +144,7 @@ export default async function SearchPage({
 
                 {/* Course Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {coursesWithProgress.map((course) => (
+                    {coursesWithProgressAndRatings.map((course) => (
                         <div
                             key={course.id}
                             className="group bg-card rounded-2xl overflow-hidden border shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
@@ -179,6 +206,16 @@ export default async function SearchPage({
                                                 month: 'short'
                                             })}</span>
                                         </div>
+                                    </div>
+
+                                    {/* Rating */}
+                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <span className="font-medium text-foreground tabular-nums">
+                                            {Number(course.ratingAverage ?? 0).toFixed(1)}
+                                        </span>
+                                        <span className="text-muted-foreground/80">
+                                            ({course.ratingCount ?? 0})
+                                        </span>
                                     </div>
                                 </div>
                                 

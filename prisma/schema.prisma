@@ -28,6 +28,7 @@ model User {
   userProgress            UserProgress[]
   balanceTransactions     BalanceTransaction[]
   quizResults             QuizResult[]
+  courseRatings           CourseRating[]
   createdPurchaseCodes    PurchaseCode[] @relation("CodeCreator")
   usedPurchaseCodes       PurchaseCode[] @relation("CodeUser")
 }
@@ -48,9 +49,25 @@ model Course {
   purchases Purchase[]
   quizzes Quiz[]
   purchaseCodes PurchaseCode[]
+  ratings CourseRating[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CourseRating {
+  id        String   @id @default(uuid())
+  courseId  String
+  userId    String
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
 }
 
 model Attachment {

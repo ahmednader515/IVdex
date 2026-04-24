@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Lock, FileText, Downlo
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { PlyrVideoPlayer } from "@/components/plyr-video-player";
+import { CourseRatingSection } from "@/components/course-rating-section";
 
 interface Chapter {
   id: string;
@@ -270,6 +271,8 @@ const ChapterPage = () => {
             </div>
             <Progress value={courseProgress} className="h-2" />
           </div>
+
+          <CourseRatingSection courseId={routeParams.courseId} />
 
           {/* Video Player Section */}
           <div className="aspect-video relative bg-black rounded-lg overflow-hidden">

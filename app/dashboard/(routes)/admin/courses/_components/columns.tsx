@@ -15,6 +15,8 @@ export type Course = {
     isPublished: boolean;
     createdAt: Date;
     imageUrl?: string | null;
+    ratingAverage?: number;
+    ratingCount?: number;
 };
 
 export const columns: ColumnDef<Course>[] = [
@@ -96,6 +98,22 @@ export const columns: ColumnDef<Course>[] = [
                 <Badge variant={isPublished ? "default" : "secondary"}>
                     {isPublished ? "Published" : "Draft"}
                 </Badge>
+            );
+        },
+    },
+    {
+        id: "rating",
+        header: "Rating",
+        meta: { mobileLabel: "Rating" },
+        enableSorting: false,
+        cell: ({ row }) => {
+            const avg = Number(row.original.ratingAverage ?? 0);
+            const count = Number(row.original.ratingCount ?? 0);
+            return (
+                <div className="tabular-nums">
+                    <span className="font-medium">{avg.toFixed(1)}</span>{" "}
+                    <span className="text-muted-foreground">({count})</span>
+                </div>
             );
         },
     },

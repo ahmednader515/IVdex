@@ -234,6 +234,17 @@ export function CoursesTable<TData extends Course, TValue>({
                                     </div>
                                     <div className="min-w-0">
                                         <dt className="block text-left text-xs text-muted-foreground">
+                                            Rating
+                                        </dt>
+                                        <dd className="mt-0.5 block text-left font-medium tabular-nums">
+                                            {Number(c.ratingAverage ?? 0).toFixed(1)}{" "}
+                                            <span className="text-muted-foreground">
+                                                ({c.ratingCount ?? 0})
+                                            </span>
+                                        </dd>
+                                    </div>
+                                    <div className="min-w-0">
+                                        <dt className="block text-left text-xs text-muted-foreground">
                                             Created
                                         </dt>
                                         <dd className="mt-0.5 block text-left font-medium">

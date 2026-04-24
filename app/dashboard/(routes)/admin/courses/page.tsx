@@ -15,7 +15,7 @@ const CoursesPage = async () => {
         return redirect("/");
     }
 
-    const courses = await db.course.findMany({
+    const coursesBase = await db.course.findMany({
         where: {
             userId,
         },
@@ -42,6 +42,31 @@ const CoursesPage = async () => {
         publishedChaptersCount: course.chapters.filter(ch => ch.isPublished).length,
         publishedQuizzesCount: course.quizzes.filter(q => q.isPublished).length,
     })));
+
+    const courseIds = coursesBase.map((c) => c.id);
+    const ratingAgg = courseIds.length
+        ? await db.courseRating.groupBy({
+            by: ["courseId"],
+            where: { courseId: { in: courseIds } },
+            _avg: { rating: true },
+            _count: { rating: true },
+        })
+        : [];
+
+    const ratingByCourseId = new Map(
+        ratingAgg.map((r) => [
+            r.courseId,
+            {
+                ratingAverage: r._avg.rating ?? 0,
+                ratingCount: r._count.rating ?? 0,
+            },
+        ])
+    );
+
+    const courses = coursesBase.map((course) => ({
+        ...course,
+        ...(ratingByCourseId.get(course.id) ?? { ratingAverage: 0, ratingCount: 0 }),
+    }));
 
     const unpublishedCourses = courses.filter(course => !course.isPublished);
     const hasUnpublishedCourses = unpublishedCourses.length > 0;

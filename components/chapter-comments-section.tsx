@@ -144,8 +144,6 @@ export function ChapterCommentsSection({
     }
   };
 
-  if (forbidden) return null;
-
   const { roots, childrenByParentId } = useMemo(() => {
     const byParent = new Map<string, ChapterComment[]>();
     const rootItems: ChapterComment[] = [];
@@ -164,6 +162,8 @@ export function ChapterCommentsSection({
     rootItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return { roots: rootItems, childrenByParentId: byParent };
   }, [comments]);
+
+  if (forbidden) return null;
 
   return (
     <div className="rounded-lg border bg-card p-4">

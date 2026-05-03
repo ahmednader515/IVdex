@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { authOptions } from "@/lib/auth";
 import { SearchInput } from "./_components/search-input";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Clock, Users } from "lucide-react";
+import { BookOpen, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Course, Purchase } from "@prisma/client";
@@ -194,10 +194,6 @@ export default async function SearchPage({
                                             <span className="whitespace-nowrap">
                                                 {course.chapters.length} {course.chapters.length === 1 ? "lesson" : "lessons"}
                                             </span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Users className="h-4 w-4" />
-                                            <span className="whitespace-nowrap">{course.purchases.length} learner{course.purchases.length === 1 ? "" : "s"}</span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <Clock className="h-4 w-4" />

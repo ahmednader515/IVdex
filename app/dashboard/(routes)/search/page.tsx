@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { authOptions } from "@/lib/auth";
 import { SearchInput } from "./_components/search-input";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Clock } from "lucide-react";
+import { BookOpen, Clock, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Course, Purchase } from "@prisma/client";
@@ -12,6 +12,7 @@ import { Course, Purchase } from "@prisma/client";
 type CourseWithDetails = Course & {
     chapters: { id: string }[];
     purchases: Purchase[];
+    _count: { purchases: number };
     progress: number;
     ratingAverage?: number;
     ratingCount?: number;
@@ -51,7 +52,12 @@ export default async function SearchPage({
                 where: {
                     userId: session.user.id,
                 }
-            }
+            },
+            _count: {
+                select: {
+                    purchases: { where: { status: "ACTIVE" } },
+                },
+            },
         },
         orderBy: {
             createdAt: "desc",
@@ -204,14 +210,23 @@ export default async function SearchPage({
                                         </div>
                                     </div>
 
-                                    {/* Rating */}
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                        <span className="font-medium text-foreground tabular-nums">
-                                            {Number(course.ratingAverage ?? 0).toFixed(1)}
-                                        </span>
-                                        <span className="text-muted-foreground/80">
-                                            ({course.ratingCount ?? 0})
-                                        </span>
+                                    {/* Enrolled students & rating */}
+                                    <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
+                                        <div className="flex items-center gap-1 min-w-0">
+                                            <Users className="h-4 w-4 shrink-0" />
+                                            <span className="whitespace-nowrap">
+                                                {course._count.purchases}{" "}
+                                                {course._count.purchases === 1 ? "student" : "students"}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <span className="font-medium text-foreground tabular-nums">
+                                                {Number(course.ratingAverage ?? 0).toFixed(1)}
+                                            </span>
+                                            <span className="text-muted-foreground/80">
+                                                ({course.ratingCount ?? 0})
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 

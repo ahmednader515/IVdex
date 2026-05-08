@@ -29,9 +29,33 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
 
 export async function POST(req: Request) {
   try {
-    const { fullName, phoneNumber, password, confirmPassword, recaptchaToken } = await req.json();
+    const {
+      fullName,
+      phoneNumber,
+      password,
+      confirmPassword,
+      recaptchaToken,
+      collegeOrUniversity,
+      academicDegree,
+      graduationYear,
+      studyOrWorkField,
+    } = await req.json();
 
-    if (!fullName || !phoneNumber || !password || !confirmPassword) {
+    const trimmedCollege = typeof collegeOrUniversity === "string" ? collegeOrUniversity.trim() : "";
+    const trimmedDegree = typeof academicDegree === "string" ? academicDegree.trim() : "";
+    const trimmedYear = typeof graduationYear === "string" ? graduationYear.trim() : "";
+    const trimmedField = typeof studyOrWorkField === "string" ? studyOrWorkField.trim() : "";
+
+    if (
+      !fullName ||
+      !phoneNumber ||
+      !password ||
+      !confirmPassword ||
+      !trimmedCollege ||
+      !trimmedDegree ||
+      !trimmedYear ||
+      !trimmedField
+    ) {
       return new NextResponse("Missing required fields", { status: 400 });
     }
 
@@ -69,6 +93,10 @@ export async function POST(req: Request) {
         fullName,
         phoneNumber,
         parentPhoneNumber: phoneNumber,
+        collegeOrUniversity: trimmedCollege,
+        academicDegree: trimmedDegree,
+        graduationYear: trimmedYear,
+        studyOrWorkField: trimmedField,
         hashedPassword,
         role: "STUDENT",
       },

@@ -14,6 +14,10 @@ model User {
   fullName                String
   phoneNumber             String    @unique
   parentPhoneNumber       String
+  collegeOrUniversity     String?   @db.Text
+  academicDegree          String?   @db.Text
+  graduationYear          String?   @db.Text
+  studyOrWorkField        String?   @db.Text
   hashedPassword          String?
   image                   String?
   role                    String    @default("STUDENT")

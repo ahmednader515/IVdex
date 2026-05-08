@@ -22,6 +22,10 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
+    collegeOrUniversity: "",
+    academicDegree: "",
+    graduationYear: "",
+    studyOrWorkField: "",
     password: "",
     confirmPassword: "",
   });
@@ -169,6 +173,62 @@ export default function SignUpPage() {
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
                 placeholder="+20XXXXXXXXXX"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="collegeOrUniversity">College / University</Label>
+              <Input
+                id="collegeOrUniversity"
+                name="collegeOrUniversity"
+                type="text"
+                autoComplete="organization"
+                required
+                disabled={isLoading}
+                className="h-10"
+                value={formData.collegeOrUniversity}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="academicDegree">Academic degree</Label>
+              <Input
+                id="academicDegree"
+                name="academicDegree"
+                type="text"
+                required
+                disabled={isLoading}
+                className="h-10"
+                value={formData.academicDegree}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="graduationYear">Graduation year</Label>
+              <Input
+                id="graduationYear"
+                name="graduationYear"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                required
+                disabled={isLoading}
+                className="h-10"
+                value={formData.graduationYear}
+                onChange={handleInputChange}
+                placeholder="e.g. 2026"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="studyOrWorkField">Field of study or work</Label>
+              <Input
+                id="studyOrWorkField"
+                name="studyOrWorkField"
+                type="text"
+                required
+                disabled={isLoading}
+                className="h-10"
+                value={formData.studyOrWorkField}
+                onChange={handleInputChange}
               />
             </div>
             <div className="space-y-2">

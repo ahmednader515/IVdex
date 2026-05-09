@@ -44,6 +44,10 @@ interface User {
     fullName: string;
     phoneNumber: string;
     parentPhoneNumber: string;
+    collegeOrUniversity?: string | null;
+    academicDegree?: string | null;
+    graduationYear?: string | null;
+    studyOrWorkField?: string | null;
     role: string;
     balance: number;
     createdAt: string;
@@ -78,6 +82,7 @@ function getRoleLabel(role: string) {
 export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchInput, setSearchInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [editData, setEditData] = useState<EditUserData>({
@@ -88,6 +93,10 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
     });
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [staffPage, setStaffPage] = useState(1);
+    const [studentsPage, setStudentsPage] = useState(1);
+
+    const pageSize = 10;
 
     useEffect(() => {
         fetchUsers();
@@ -201,6 +210,21 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
     const studentUsers = filteredUsers.filter(user => user.role === "STUDENT");
     const staffUsers = filteredUsers.filter(user => user.role === "ADMIN" || user.role === "ADMIN_ASSISTANT");
 
+    const staffTotalPages = Math.max(1, Math.ceil(staffUsers.length / pageSize));
+    const studentsTotalPages = Math.max(1, Math.ceil(studentUsers.length / pageSize));
+    const staffPageSafe = Math.min(Math.max(1, staffPage), staffTotalPages);
+    const studentsPageSafe = Math.min(Math.max(1, studentsPage), studentsTotalPages);
+    const staffStart = (staffPageSafe - 1) * pageSize;
+    const studentsStart = (studentsPageSafe - 1) * pageSize;
+    const staffPageItems = staffUsers.slice(staffStart, staffStart + pageSize);
+    const studentsPageItems = studentUsers.slice(studentsStart, studentsStart + pageSize);
+
+    const applySearch = () => {
+        setSearchTerm(searchInput.trim());
+        setStaffPage(1);
+        setStudentsPage(1);
+    };
+
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
@@ -227,12 +251,23 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                         <div className="flex items-center gap-2">
                             <div className="relative w-full max-w-sm">
                                 <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
-                                <Input
-                                    placeholder="Search by name or phone..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full min-h-11 ps-10"
-                                />
+                                <form
+                                    className="flex gap-2"
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        applySearch();
+                                    }}
+                                >
+                                    <Input
+                                        placeholder="Search by name or phone..."
+                                        value={searchInput}
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        className="w-full min-h-11 ps-10"
+                                    />
+                                    <Button type="submit" variant="outline" className="min-h-11 shrink-0">
+                                        Search
+                                    </Button>
+                                </form>
                             </div>
                         </div>
                     </CardHeader>
@@ -249,7 +284,7 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {staffUsers.map((user) => (
+                                {staffPageItems.map((user) => (
                                     <TableRow key={user.id}>
                                         <TableCell label="Name" className="font-medium">
                                             {user.fullName}
@@ -397,6 +432,32 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                 ))}
                             </TableBody>
                         </Table>
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="text-sm text-muted-foreground">
+                                Showing {staffUsers.length === 0 ? 0 : staffStart + 1}-{Math.min(staffStart + pageSize, staffUsers.length)} of {staffUsers.length}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setStaffPage((p) => Math.max(1, p - 1))}
+                                    disabled={staffPageSafe <= 1}
+                                >
+                                    Previous
+                                </Button>
+                                <div className="text-sm">
+                                    Page {staffPageSafe} / {staffTotalPages}
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setStaffPage((p) => Math.min(staffTotalPages, p + 1))}
+                                    disabled={staffPageSafe >= staffTotalPages}
+                                >
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             )}
@@ -409,12 +470,23 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                         <div className="flex items-center gap-2">
                             <div className="relative w-full max-w-sm">
                                 <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
-                                <Input
-                                    placeholder="Search by name or phone..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full min-h-11 ps-10"
-                                />
+                                <form
+                                    className="flex gap-2"
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        applySearch();
+                                    }}
+                                >
+                                    <Input
+                                        placeholder="Search by name or phone..."
+                                        value={searchInput}
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        className="w-full min-h-11 ps-10"
+                                    />
+                                    <Button type="submit" variant="outline" className="min-h-11 shrink-0">
+                                        Search
+                                    </Button>
+                                </form>
                             </div>
                         </div>
                     </CardHeader>
@@ -425,6 +497,10 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                     <TableHead className="text-left">Name</TableHead>
                                     <TableHead className="text-left">Phone</TableHead>
                                     <TableHead className="text-left">Parent phone</TableHead>
+                                    <TableHead className="text-left">College / University</TableHead>
+                                    <TableHead className="text-left">Academic degree</TableHead>
+                                    <TableHead className="text-left">Graduation year</TableHead>
+                                    <TableHead className="text-left">Field</TableHead>
                                     <TableHead className="text-left">Role</TableHead>
                                     <TableHead className="text-left">Balance</TableHead>
                                     <TableHead className="text-left">Purchased courses</TableHead>
@@ -433,13 +509,17 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {studentUsers.map((user) => (
+                                {studentsPageItems.map((user) => (
                                     <TableRow key={user.id}>
                                         <TableCell label="Name" className="font-medium">
                                             {user.fullName}
                                         </TableCell>
                                         <TableCell label="Phone">{user.phoneNumber}</TableCell>
                                         <TableCell label="Parent phone">{user.parentPhoneNumber}</TableCell>
+                                        <TableCell label="College / University">{user.collegeOrUniversity || "-"}</TableCell>
+                                        <TableCell label="Academic degree">{user.academicDegree || "-"}</TableCell>
+                                        <TableCell label="Graduation year">{user.graduationYear || "-"}</TableCell>
+                                        <TableCell label="Field">{user.studyOrWorkField || "-"}</TableCell>
                                         <TableCell label="Role">
                                             <Badge 
                                                 variant="secondary"
@@ -587,6 +667,32 @@ export function AdminUsersPanel({ embedded = false }: { embedded?: boolean }) {
                                 ))}
                             </TableBody>
                         </Table>
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="text-sm text-muted-foreground">
+                                Showing {studentUsers.length === 0 ? 0 : studentsStart + 1}-{Math.min(studentsStart + pageSize, studentUsers.length)} of {studentUsers.length}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setStudentsPage((p) => Math.max(1, p - 1))}
+                                    disabled={studentsPageSafe <= 1}
+                                >
+                                    Previous
+                                </Button>
+                                <div className="text-sm">
+                                    Page {studentsPageSafe} / {studentsTotalPages}
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setStudentsPage((p) => Math.min(studentsTotalPages, p + 1))}
+                                    disabled={studentsPageSafe >= studentsTotalPages}
+                                >
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             )}

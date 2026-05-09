@@ -39,6 +39,10 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
+    collegeOrUniversity: "",
+    academicDegree: "",
+    graduationYear: "",
+    studyOrWorkField: "",
     password: "",
     confirmPassword: "",
   });
@@ -84,6 +88,10 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
         setFormData({
           fullName: "",
           phoneNumber: "",
+          collegeOrUniversity: "",
+          academicDegree: "",
+          graduationYear: "",
+          studyOrWorkField: "",
           password: "",
           confirmPassword: "",
         });
@@ -111,6 +119,10 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
     setFormData({
       fullName: "",
       phoneNumber: "",
+      collegeOrUniversity: "",
+      academicDegree: "",
+      graduationYear: "",
+      studyOrWorkField: "",
       password: "",
       confirmPassword: "",
     });
@@ -184,6 +196,69 @@ export function CreateStudentAccountPanel({ variant, apiPath, embedded = false }
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                     placeholder="Enter phone number"
+                    required
+                    className="text-left"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor={`collegeOrUniversity${suffix}`}>College / University *</Label>
+                  <Input
+                    id={`collegeOrUniversity${suffix}`}
+                    name="collegeOrUniversity"
+                    type="text"
+                    value={formData.collegeOrUniversity}
+                    onChange={handleInputChange}
+                    placeholder="Enter college or university"
+                    required
+                    className="text-left"
+                    autoComplete="organization"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`academicDegree${suffix}`}>Academic degree *</Label>
+                  <Input
+                    id={`academicDegree${suffix}`}
+                    name="academicDegree"
+                    type="text"
+                    value={formData.academicDegree}
+                    onChange={handleInputChange}
+                    placeholder="Enter academic degree"
+                    required
+                    className="text-left"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor={`graduationYear${suffix}`}>Graduation year *</Label>
+                  <Input
+                    id={`graduationYear${suffix}`}
+                    name="graduationYear"
+                    type="text"
+                    inputMode="numeric"
+                    value={formData.graduationYear}
+                    onChange={handleInputChange}
+                    placeholder="e.g. 2026"
+                    required
+                    className="text-left"
+                    autoComplete="off"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`studyOrWorkField${suffix}`}>Field of study or work *</Label>
+                  <Input
+                    id={`studyOrWorkField${suffix}`}
+                    name="studyOrWorkField"
+                    type="text"
+                    value={formData.studyOrWorkField}
+                    onChange={handleInputChange}
+                    placeholder="Enter field of study or work"
                     required
                     className="text-left"
                   />

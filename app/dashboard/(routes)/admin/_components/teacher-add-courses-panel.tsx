@@ -33,7 +33,10 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
     const [courses, setCourses] = useState<Course[]>([]);
     const [ownedCourses, setOwnedCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchInput, setSearchInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [page, setPage] = useState(1);
+    const pageSize = 10;
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [selectedCourse, setSelectedCourse] = useState<string>("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -166,6 +169,16 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
         user.phoneNumber.includes(searchTerm)
     );
 
+    const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+    const pageSafe = Math.min(Math.max(1, page), totalPages);
+    const start = (pageSafe - 1) * pageSize;
+    const pageItems = filteredUsers.slice(start, start + pageSize);
+
+    const applySearch = () => {
+        setSearchTerm(searchInput.trim());
+        setPage(1);
+    };
+
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
@@ -189,12 +202,23 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                     <CardTitle>Students</CardTitle>
                     <div className="flex items-center gap-2">
                         <Search className="h-4 w-4 text-muted-foreground" />
-                        <Input
-                            placeholder="Search by name or phone…"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="max-w-sm text-left"
-                        />
+                        <form
+                            className="flex w-full max-w-sm gap-2"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                applySearch();
+                            }}
+                        >
+                            <Input
+                                placeholder="Search by name or phone…"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="text-left"
+                            />
+                            <Button type="submit" variant="outline" className="shrink-0">
+                                Search
+                            </Button>
+                        </form>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -209,7 +233,7 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredUsers.map((user) => (
+                            {pageItems.map((user) => (
                                 <TableRow key={user.id}>
                                     <TableCell label="Name" className="font-medium">
                                         {user.fullName}
@@ -258,6 +282,22 @@ export function TeacherAddCoursesPanel({ embedded = false }: { embedded?: boolea
                             ))}
                         </TableBody>
                     </Table>
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="text-sm text-muted-foreground">
+                            Showing {filteredUsers.length === 0 ? 0 : start + 1}-{Math.min(start + pageSize, filteredUsers.length)} of {filteredUsers.length}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={pageSafe <= 1}>
+                                Previous
+                            </Button>
+                            <div className="text-sm">
+                                Page {pageSafe} / {totalPages}
+                            </div>
+                            <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={pageSafe >= totalPages}>
+                                Next
+                            </Button>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 

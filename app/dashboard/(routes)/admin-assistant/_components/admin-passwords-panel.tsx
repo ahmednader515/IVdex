@@ -21,11 +21,15 @@ interface User {
 export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }) {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchInput, setSearchInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newPassword, setNewPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [staffPage, setStaffPage] = useState(1);
+    const [studentsPage, setStudentsPage] = useState(1);
+    const pageSize = 10;
 
     useEffect(() => {
         fetchUsers();
@@ -84,6 +88,21 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
     );
     const studentUsers = filteredUsers.filter(user => user.role === "STUDENT");
 
+    const staffTotalPages = Math.max(1, Math.ceil(staffUsers.length / pageSize));
+    const studentsTotalPages = Math.max(1, Math.ceil(studentUsers.length / pageSize));
+    const staffPageSafe = Math.min(Math.max(1, staffPage), staffTotalPages);
+    const studentsPageSafe = Math.min(Math.max(1, studentsPage), studentsTotalPages);
+    const staffStart = (staffPageSafe - 1) * pageSize;
+    const studentsStart = (studentsPageSafe - 1) * pageSize;
+    const staffPageItems = staffUsers.slice(staffStart, staffStart + pageSize);
+    const studentsPageItems = studentUsers.slice(studentsStart, studentsStart + pageSize);
+
+    const applySearch = () => {
+        setSearchTerm(searchInput.trim());
+        setStaffPage(1);
+        setStudentsPage(1);
+    };
+
     if (loading) {
         return (
             <div className={embedded ? "py-4" : "p-6"}>
@@ -109,12 +128,23 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                         <CardTitle>Staff</CardTitle>
                         <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search by name or phone..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm text-left"
-                            />
+                            <form
+                                className="flex w-full max-w-sm gap-2"
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    applySearch();
+                                }}
+                            >
+                                <Input
+                                    placeholder="Search by name or phone..."
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    className="text-left"
+                                />
+                                <Button type="submit" variant="outline" className="shrink-0">
+                                    Search
+                                </Button>
+                            </form>
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -128,7 +158,7 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {staffUsers.map((user) => (
+                                {staffPageItems.map((user) => (
                                     <TableRow key={user.id}>
                                         <TableCell label="Name" className="font-medium">
                                             {user.fullName}
@@ -167,6 +197,22 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                 ))}
                             </TableBody>
                         </Table>
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="text-sm text-muted-foreground">
+                                Showing {staffUsers.length === 0 ? 0 : staffStart + 1}-{Math.min(staffStart + pageSize, staffUsers.length)} of {staffUsers.length}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button variant="outline" size="sm" onClick={() => setStaffPage((p) => Math.max(1, p - 1))} disabled={staffPageSafe <= 1}>
+                                    Previous
+                                </Button>
+                                <div className="text-sm">
+                                    Page {staffPageSafe} / {staffTotalPages}
+                                </div>
+                                <Button variant="outline" size="sm" onClick={() => setStaffPage((p) => Math.min(staffTotalPages, p + 1))} disabled={staffPageSafe >= staffTotalPages}>
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             )}
@@ -178,12 +224,23 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                         <CardTitle>Students</CardTitle>
                         <div className="flex items-center gap-2">
                             <Search className="h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search by name or phone..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm text-left"
-                            />
+                            <form
+                                className="flex w-full max-w-sm gap-2"
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    applySearch();
+                                }}
+                            >
+                                <Input
+                                    placeholder="Search by name or phone..."
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    className="text-left"
+                                />
+                                <Button type="submit" variant="outline" className="shrink-0">
+                                    Search
+                                </Button>
+                            </form>
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -197,7 +254,7 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {studentUsers.map((user) => (
+                                {studentsPageItems.map((user) => (
                                     <TableRow key={user.id}>
                                         <TableCell label="Name" className="font-medium">
                                             {user.fullName}
@@ -226,6 +283,22 @@ export function AdminPasswordsPanel({ embedded = false }: { embedded?: boolean }
                                 ))}
                             </TableBody>
                         </Table>
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="text-sm text-muted-foreground">
+                                Showing {studentUsers.length === 0 ? 0 : studentsStart + 1}-{Math.min(studentsStart + pageSize, studentUsers.length)} of {studentUsers.length}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button variant="outline" size="sm" onClick={() => setStudentsPage((p) => Math.max(1, p - 1))} disabled={studentsPageSafe <= 1}>
+                                    Previous
+                                </Button>
+                                <div className="text-sm">
+                                    Page {studentsPageSafe} / {studentsTotalPages}
+                                </div>
+                                <Button variant="outline" size="sm" onClick={() => setStudentsPage((p) => Math.min(studentsTotalPages, p + 1))} disabled={studentsPageSafe >= studentsTotalPages}>
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             )}

@@ -17,9 +17,32 @@ export async function POST(req: Request) {
       return new NextResponse("Forbidden - Admin access required", { status: 403 });
     }
 
-    const { fullName, phoneNumber, password, confirmPassword } = await req.json();
+    const {
+      fullName,
+      phoneNumber,
+      password,
+      confirmPassword,
+      collegeOrUniversity,
+      academicDegree,
+      graduationYear,
+      studyOrWorkField,
+    } = await req.json();
 
-    if (!fullName || !phoneNumber || !password || !confirmPassword) {
+    const trimmedCollege = typeof collegeOrUniversity === "string" ? collegeOrUniversity.trim() : "";
+    const trimmedDegree = typeof academicDegree === "string" ? academicDegree.trim() : "";
+    const trimmedYear = typeof graduationYear === "string" ? graduationYear.trim() : "";
+    const trimmedField = typeof studyOrWorkField === "string" ? studyOrWorkField.trim() : "";
+
+    if (
+      !fullName ||
+      !phoneNumber ||
+      !password ||
+      !confirmPassword ||
+      !trimmedCollege ||
+      !trimmedDegree ||
+      !trimmedYear ||
+      !trimmedField
+    ) {
       return new NextResponse("Missing required fields", { status: 400 });
     }
 
@@ -47,6 +70,10 @@ export async function POST(req: Request) {
         fullName,
         phoneNumber,
         parentPhoneNumber: phoneNumber,
+        collegeOrUniversity: trimmedCollege,
+        academicDegree: trimmedDegree,
+        graduationYear: trimmedYear,
+        studyOrWorkField: trimmedField,
         hashedPassword,
         role: "STUDENT", // Always create as student
       },

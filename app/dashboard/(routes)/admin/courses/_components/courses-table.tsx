@@ -136,6 +136,7 @@ export function CoursesTable<TData extends Course, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [filterInput, setFilterInput] = useState("");
     const [filterValue, setFilterValue] = useState("");
     const router = useRouter();
 
@@ -183,12 +184,23 @@ export function CoursesTable<TData extends Course, TValue>({
             <div className="flex items-center py-4">
                 <div className="relative w-full max-w-sm">
                     <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground start-3" />
-                    <Input
-                        placeholder="Search courses…"
-                        value={filterValue}
-                        onChange={(e) => handleFilterChange(e.target.value)}
-                        className="w-full min-h-11 ps-10"
-                    />
+                    <form
+                        className="flex gap-2"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleFilterChange(filterInput.trim());
+                        }}
+                    >
+                        <Input
+                            placeholder="Search courses…"
+                            value={filterInput}
+                            onChange={(e) => setFilterInput(e.target.value)}
+                            className="w-full min-h-11 ps-10"
+                        />
+                        <Button type="submit" variant="outline" className="min-h-11 shrink-0">
+                            Search
+                        </Button>
+                    </form>
                 </div>
             </div>
 
